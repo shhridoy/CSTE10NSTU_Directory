@@ -1,0 +1,22 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.cste10nstu.shhridoy.cste10nstu.MainActivity">
+
+    <item
+        app:showAsAction="always|collapseActionView"
+        android:icon="@android:drawable/ic_search_category_default"
+        android:id="@+id/menu_item_search"
+        app:actionViewClass="android.support.v7.widget.SearchView"
+        android:title="Search"
+        android:orderInCategory="100"/>
+
+    <item
+        app:showAsAction="never"
+        android:icon="@android:drawable/arrow_down_float"
+        android:id="@+id/menu_item_downloadImage"
+        android:title="Download Images"
+        android:orderInCategory="101"
+        />
+
+</menu>
