@@ -275,7 +275,7 @@ public class MainActivity extends AppCompatActivity {
                 String name = c.getString(1);
                 String st_id = c.getString(2);
                 String st_mobile = c.getString(3);
-                ListItems listItems = new ListItems(name, st_id, st_mobile);
+                ListItems listItems = new ListItems(name, "ID: " +st_id, "CONTACT: "+st_mobile);
                 itemsList.add(listItems);
                 adapter = new MyAdapter(itemsList, getApplicationContext());
                 recyclerView.setAdapter(adapter);
