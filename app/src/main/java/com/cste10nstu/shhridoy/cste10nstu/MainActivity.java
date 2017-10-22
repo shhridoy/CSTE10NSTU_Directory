@@ -4,17 +4,13 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
 import android.net.ConnectivityManager;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -23,8 +19,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.AdapterView;
-import android.widget.ExpandableListView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -226,40 +220,6 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        /*
-        //RecyclerView. info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        //Adapte info = (ExpandableListView.ExpandableListContextMenuInfo) item.getMenuInfo();
-        int pos = 2;//item.getIntent().getIntExtra("Position", -1);
-        //int s = (int) adapter.getItemId((int)info.id);
-        String mobileNo = null;
-        DBHelper databaseHelper = new DBHelper(this);
-        Cursor c = databaseHelper.retrieveData();
-        while (c.moveToNext()){
-            if (pos == c.getInt(0)) {
-                mobileNo = c.getString(3);
-            }
-        } */
-
-
-        CharSequence title = item.getTitle();
-
-        if (title == "Call") {
-            Toast.makeText(this, "Calling...", Toast.LENGTH_LONG).show();
-            /*Intent callIntent = new Intent(Intent.ACTION_CALL);
-            callIntent.setData(Uri.parse("tel:"+mobileNo));
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                return true;
-            }
-            startActivity(callIntent);*/
-        } else if (title == "SMS") {
-            Toast.makeText(this, "Messaging...", Toast.LENGTH_LONG).show();
-        }
-
-        return super.onContextItemSelected(item);
-    }
-
     private boolean isInternetOn() {
 
         // get Connectivity Manager object to check connection
@@ -269,7 +229,7 @@ public class MainActivity extends AppCompatActivity {
         // Check for network connections
         assert connec != null;
         if (connec.getNetworkInfo(0).getState() == android.net.NetworkInfo.State.CONNECTED ||
-                connec.getNetworkInfo(0).getState() == android.net.NetworkInfo.State.CONNECTING ||
+                connec.getNetworkInfo(0).getState() == android.net.NetworkInfo.State.CONNECTING &&
                 connec.getNetworkInfo(1).getState() == android.net.NetworkInfo.State.CONNECTING ||
                 connec.getNetworkInfo(1).getState() == android.net.NetworkInfo.State.CONNECTED) {
 
@@ -299,6 +259,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void populateDataBaseInRecyclerView(){
+        itemsList.clear();
         DBHelper databaseHelper = new DBHelper(this);
         Cursor c = databaseHelper.retrieveData();
         if(c.getCount() == 0){

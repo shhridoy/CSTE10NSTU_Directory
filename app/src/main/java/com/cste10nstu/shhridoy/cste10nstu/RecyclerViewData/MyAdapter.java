@@ -7,14 +7,19 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.RecyclerView;
+import android.text.Layout;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.style.AlignmentSpan;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,7 +33,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
     private List<ListItems> itemsList = null;
     private Context context;
-    //private int pos;
 
     public MyAdapter(List<ListItems> itemsList, Context context) {
         this.itemsList = itemsList;
@@ -46,9 +50,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     public void onBindViewHolder(final ViewHolder holder, int position) {
         final ListItems listItem = itemsList.get(position);
 
+
         holder.textViewName.setText(listItem.getName());
-        holder.textViewid.setText(listItem.getId());
-        holder.textViewMobile.setText(listItem.getMobile());
+        holder.textViewid.setText(getSpanableBoldString(listItem.getId(), 3));
+        holder.textViewMobile.setText(getSpanableBoldString(listItem.getMobile(), 8));
 
         if (listItem.getImageUrl() != null) {
             Picasso.with(context)
@@ -60,13 +65,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             Picasso.with(context).load(new File(path)).into(holder.imageView);
         }
 
-
-        holder.rl.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(context, listItem.getName(), Toast.LENGTH_LONG).show();
-            }
-        });
 
         holder.callButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,34 +86,79 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         return itemsList.size();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener{
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnCreateContextMenuListener{
 
         TextView textViewName, textViewid, textViewMobile;
         ImageView imageView;
         ImageButton callButton;
-        RelativeLayout rl;
 
         ViewHolder(View itemView) {
             super(itemView);
-
-            textViewName = (TextView) itemView.findViewById(R.id.nameTV);
-            textViewid = (TextView) itemView.findViewById(R.id.idTv);
+            textViewName = itemView.findViewById(R.id.nameTV);
+            textViewid = itemView.findViewById(R.id.idTv);
             textViewMobile = itemView.findViewById(R.id.mobileTv);
-            imageView = (ImageView) itemView.findViewById(R.id.imageTV);
+            imageView = itemView.findViewById(R.id.imageTV);
             callButton = itemView.findViewById(R.id.callButton);
-            rl = (RelativeLayout) itemView.findViewById(R.id.RLItem);
             itemView.setOnCreateContextMenuListener(this);
+            itemView.setOnClickListener(this);
+        }
 
+        @Override
+        public void onClick(View v) {
+            Toast.makeText(context, textViewName.getText().toString(), Toast.LENGTH_LONG).show();
         }
 
         @Override
         public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
-            //Intent data = new Intent();
-            //data.putExtra("Position", pos);
-            contextMenu.setHeaderTitle(textViewName.getText().toString());
-            contextMenu.add(0, 0, 0, "Call");//groupId, itemId, order, title
-            contextMenu.add(0, 1, 0, "SMS");
+            contextMenu.setHeaderTitle(getSpanableString(textViewName.getText().toString()));
+            MenuItem call = contextMenu.add(Menu.NONE, 1, 1, getSpanableString("Call"));
+            MenuItem sms = contextMenu.add(Menu.NONE, 2, 2, getSpanableString("SMS"));
+            //groupId, itemId, order, title
+            call.setOnMenuItemClickListener(onChange);
+            sms.setOnMenuItemClickListener(onChange);
         }
+
+        private SpannableString getSpanableString (String s) {
+            SpannableString ss = new SpannableString(s);
+            ss.setSpan(new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER), 0, ss.length(), 0);
+            return ss;
+        }
+
+        private final MenuItem.OnMenuItemClickListener onChange = new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                String mobileNo = textViewMobile.getText().toString().substring(9).trim();
+                switch (item.getItemId()) {
+                    case 1:
+                        Intent callIntent = new Intent(Intent.ACTION_CALL);
+                        callIntent.setData(Uri.parse("tel:"+Uri.encode(mobileNo)));
+                        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                            return true;
+                        }
+                        callIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        context.startActivity(callIntent);
+                        return true;
+
+                    case 2:
+                        Toast.makeText(context,"SMS to "+textViewName.getText().toString(),Toast.LENGTH_LONG).show();
+                        Intent smsIntent = new Intent(Intent.ACTION_VIEW);
+                        smsIntent.setData(Uri.parse("smsto:"));
+                        smsIntent.setType("vnd.android-dir/mms-sms");
+                        smsIntent.putExtra("address" , mobileNo);
+                        smsIntent.putExtra("sms_body", "Type sms for "+textViewName.getText().toString());
+                        smsIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        context.startActivity(smsIntent);
+                        return true;
+                }
+                return false;
+            }
+        };
+    }
+
+    private SpannableStringBuilder getSpanableBoldString(String s, int endIndex) {
+        SpannableStringBuilder str = new SpannableStringBuilder(s);
+        str.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD), 0, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return str;
     }
 
     private String imageName(String stdId) {
