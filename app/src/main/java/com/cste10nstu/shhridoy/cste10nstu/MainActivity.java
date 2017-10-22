@@ -1,15 +1,20 @@
 package com.cste10nstu.shhridoy.cste10nstu;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
 import android.net.ConnectivityManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,6 +23,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
+import android.widget.ExpandableListView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -27,7 +34,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.cste10nstu.shhridoy.cste10nstu.MyDatabase.DBHelper;
-import com.cste10nstu.shhridoy.cste10nstu.MyDatabase.DBHelperImage;
 import com.cste10nstu.shhridoy.cste10nstu.RecyclerViewData.ListItems;
 import com.cste10nstu.shhridoy.cste10nstu.RecyclerViewData.MyAdapter;
 
@@ -50,13 +56,11 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private static final String MY_DATA = "https://shhridoy.github.io/json/csteallstudent.js";
-    private static final String IMAGE_URL = "http://scontent-sin6-2.xx.fbcdn.net/v/t31.0-1/c0.0.960.960/p960x960/20414308_1867520743575793_8597735325195163553_o.jpg?oh=0b30d7bcefce8869195b3444020e6875&oe=5A7BC9D5";
     private static List<String> URL_List;
 
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private List<ListItems> itemsList;
-    private DBHelperImage dbHelperImage;
     private String toast;
     private static int num = 0;
 
@@ -77,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (isInternetOn()) {
             loadRecyclerViewData();
-        } else  {
+        } else {
             populateDataBaseInRecyclerView();
         }
 
@@ -89,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
                     loadRecyclerViewData();
                 } else {
                     Snackbar.make(view, "Please check you internet connection!!", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                            .setAction("Action", null).show();
                     //Toast.makeText(getApplicationContext(), "Please check you internet connection!!", Toast.LENGTH_LONG).show();
                 }
             }
@@ -119,13 +123,10 @@ public class MainActivity extends AppCompatActivity {
 
                                 String imageUrl = object.getString("imageId").equals(" ") ?
                                         object.getString("extraImage") :
-                                        "https://graph.facebook.com/"+object.getString("imageId")+"/picture?type=normal";
+                                        "https://graph.facebook.com/" + object.getString("imageId") + "/picture?type=normal";
 
                                 String imageForDownload = object.getString("downloadableImage");
                                 URL_List.add(imageForDownload);
-
-                                /*PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit()
-                                        .putString("std_name "+i, object.getString("name")).apply();*/
 
                                 ListItems list = new ListItems(
                                         object.getString("name"),
@@ -146,8 +147,6 @@ public class MainActivity extends AppCompatActivity {
                             if (toast != null) {
                                 Toast.makeText(getApplicationContext(), toast, Toast.LENGTH_LONG).show();
                             }
-
-                            //populateDataBaseInRecyclerView();
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -225,6 +224,40 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        /*
+        //RecyclerView. info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        //Adapte info = (ExpandableListView.ExpandableListContextMenuInfo) item.getMenuInfo();
+        int pos = 2;//item.getIntent().getIntExtra("Position", -1);
+        //int s = (int) adapter.getItemId((int)info.id);
+        String mobileNo = null;
+        DBHelper databaseHelper = new DBHelper(this);
+        Cursor c = databaseHelper.retrieveData();
+        while (c.moveToNext()){
+            if (pos == c.getInt(0)) {
+                mobileNo = c.getString(3);
+            }
+        } */
+
+
+        CharSequence title = item.getTitle();
+
+        if (title == "Call") {
+            Toast.makeText(this, "Calling...", Toast.LENGTH_LONG).show();
+            /*Intent callIntent = new Intent(Intent.ACTION_CALL);
+            callIntent.setData(Uri.parse("tel:"+mobileNo));
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                return true;
+            }
+            startActivity(callIntent);*/
+        } else if (title == "SMS") {
+            Toast.makeText(this, "Messaging...", Toast.LENGTH_LONG).show();
+        }
+
+        return super.onContextItemSelected(item);
     }
 
     private boolean isInternetOn() {
@@ -342,7 +375,7 @@ public class MainActivity extends AppCompatActivity {
             super.onPreExecute();
 
             progressDialog = new ProgressDialog(MainActivity.this);
-            progressDialog.setTitle("Download in progress...");
+            progressDialog.setTitle("Downloading image "+(num+1));
             progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
             progressDialog.setMax(100);
             progressDialog.setProgress(0);
@@ -353,7 +386,9 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
             progressDialog.hide();
-            Toast.makeText(MainActivity.this, result+" "+(num+1)+" image", Toast.LENGTH_SHORT).show();
+            if (num == 54) {
+                Toast.makeText(MainActivity.this,  "Download is completed.", Toast.LENGTH_LONG).show();
+            }
             num++;
             imageDownload();
         }
