@@ -16,7 +16,14 @@
         android:icon="@android:drawable/arrow_down_float"
         android:id="@+id/menu_item_downloadImage"
         android:title="Download Images"
-        android:orderInCategory="101"
-        />
+        android:orderInCategory="101" />
+
+    <item
+        app:showAsAction="never"
+        android:icon="@android:drawable/arrow_down_float"
+        android:id="@+id/menu_item_nextActivity"
+        android:title="Next Activity"
+        android:orderInCategory="102" />
+
 
 </menu>
