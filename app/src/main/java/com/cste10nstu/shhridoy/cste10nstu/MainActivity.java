@@ -1,7 +1,8 @@
 package com.cste10nstu.shhridoy.cste10nstu;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -21,6 +22,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -47,6 +49,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -81,6 +84,9 @@ public class MainActivity extends AppCompatActivity {
             populateDataBaseInRecyclerView();
         }
 
+        final EditText hour = findViewById(R.id.EditHour);
+        final EditText min = findViewById(R.id.EditMinute);
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,7 +96,13 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     Snackbar.make(view, "Please check you internet connection!!", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
-                    //Toast.makeText(getApplicationContext(), "Please check you internet connection!!", Toast.LENGTH_LONG).show();
+                    if (hour.getText().toString().length() > 0 && min.getText().toString().length() > 0) {
+                        setNotification(Integer.parseInt(hour.getText().toString()), Integer.parseInt(min.getText().toString()));
+                        Toast.makeText(getApplicationContext(), "Notification set at "+hour.getText().toString()+":"+min.getText().toString(), Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Set hour and minute", Toast.LENGTH_LONG).show();
+                    }
+
                 }
             }
         });
@@ -133,7 +145,8 @@ public class MainActivity extends AppCompatActivity {
 
                                 saveData(object.getString("name"),
                                         object.getString("id"),
-                                        object.getString("mobile"));
+                                        object.getString("mobile"),
+                                        object.getString("dateOfBirth"));
 
                                 itemsList.add(list);
                                 adapter = new MyAdapter(itemsList, getApplicationContext());
@@ -163,6 +176,27 @@ public class MainActivity extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
+    private void setNotification (int hour, int min) {
+        Calendar calendar = Calendar.getInstance();
+        //calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        calendar.set(Calendar.MINUTE, min);
+        //calendar.set(Calendar.SECOND, 30);
+
+        Intent intent = new Intent(this, NotificationReceiver.class);
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                this,
+                100,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT
+        );
+
+        AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+        if (alarmManager != null) {
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -268,10 +302,10 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
-    private void saveData(String studentName, String studentId, String studentMblNo){
+    private void saveData(String studentName, String studentId, String studentMblNo, String dateOfBirth){
         DBHelper dbHelper = new DBHelper(this);
         try{
-            dbHelper.insertData(studentName, studentId, studentMblNo);
+            dbHelper.insertData(studentName, studentId, studentMblNo, dateOfBirth);
             toast = "Data sync is completed!";
         } catch (SQLiteException e){
             toast = "No update found!";

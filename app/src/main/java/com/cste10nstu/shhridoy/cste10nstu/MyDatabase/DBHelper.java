@@ -16,7 +16,7 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String name = "TITLE";
     private static final String student_id = "STUDENT_ID";
     private static final String mobile_no = "MOBILE_NO";
-    private static final String image_url = "IMAGE_URL";
+    private static final String date_of_birth = "BIRTH_DATE";
 
     private static final int DB_VERSION = 1;
 
@@ -25,8 +25,8 @@ public class DBHelper extends SQLiteOpenHelper {
             id +" INTEGER PRIMARY KEY AUTOINCREMENT, " +
             name +" TEXT, " +
             student_id +" TEXT UNIQUE, " +
-            mobile_no + " TEXT UNIQUE);";
-            //image_url + " TEXT);";
+            mobile_no + " TEXT UNIQUE, " +
+            date_of_birth + " TEXT);";
 
     private static final String DROP_TB = "DROP TABLE IF EXISTS " + TB_NAME;
 
@@ -45,12 +45,12 @@ public class DBHelper extends SQLiteOpenHelper {
         onCreate(sqLiteDatabase);
     }
 
-    public void insertData(String Name, String St_id, String Mbl_no) {
+    public void insertData(String Name, String St_id, String Mbl_no, String DateOfBirth) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(name, Name);
         contentValues.put(student_id, St_id);
         contentValues.put(mobile_no, Mbl_no);
-        //contentValues.put(image_url, Image_url);
+        contentValues.put(date_of_birth, DateOfBirth);
         this.getWritableDatabase().insertOrThrow(TB_NAME, "", contentValues);
         this.getWritableDatabase().close();
     }

@@ -8,11 +8,12 @@
     tools:context="com.cste10nstu.shhridoy.cste10nstu.SecondActivity"
     tools:showIn="@layout/activity_second">
 
-    <Button
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/notificationButton"
+        android:id="@+id/TextView"
+        android:textAppearance="?android:attr/textAppearanceLarge"
         android:gravity="center"
-        android:text="Click for Notification"/>
+        android:text="Name"/>
 
 </android.support.constraint.ConstraintLayout>

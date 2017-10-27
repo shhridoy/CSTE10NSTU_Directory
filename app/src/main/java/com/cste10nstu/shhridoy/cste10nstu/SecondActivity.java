@@ -1,57 +1,40 @@
 package com.cste10nstu.shhridoy.cste10nstu;
 
 import android.app.AlarmManager;
-import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.format.DateFormat;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cste10nstu.shhridoy.cste10nstu.NotificationReceiver;
+
 import java.util.Calendar;
+import java.util.Date;
 
 public class SecondActivity extends AppCompatActivity {
-
-    private NotificationCompat.Builder notification;
-    private static final int UNIQUE_ID = 123242;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_second);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        //notification = new NotificationCompat.Builder(this);
-        //notification.setAutoCancel(true);
+        String name = getIntent().getStringExtra("Name");
 
-        boolean alarm = (PendingIntent.getBroadcast(this, 0, new Intent("ALARM_ACTION"), PendingIntent.FLAG_NO_CREATE) == null);
-
-        if (alarm) {
-            Intent alarmInent = new Intent("ALARM_ACTION");
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(this,0, alarmInent,0);
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTimeInMillis(System.currentTimeMillis());
-            calendar.add(Calendar.SECOND, 3);
-            AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-            BroadcastManager broadcastManager = new BroadcastManager();
-            IntentFilter filter = new IntentFilter("ALARM_ACTION");
-            registerReceiver(broadcastManager, filter);
-            if (alarmManager != null) {
-                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),60000, pendingIntent);
-            }
-        }
+        TextView tv = findViewById(R.id.TextView);
+        tv.setText(name);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -59,9 +42,21 @@ public class SecondActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+
+
             }
         });
 
+        /*Long alertTime = new GregorianCalendar().getTimeInMillis() + 7*1000;
+                Intent alertIntent = new Intent(SecondActivity.this, AlertReceiver.class);
+                AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                if (alarmManager != null) {
+                    alarmManager.set(
+                            AlarmManager.RTC_WAKEUP,
+                            System.currentTimeMillis()+6000,
+                            PendingIntent.getBroadcast(SecondActivity.this, 1, alertIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+                    );
+                }*/
 
         /*AlarmManager alarms = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
         Receiver receiver = new Receiver();
