@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
             populateDataBaseInRecyclerView();
         }
 
-        setNotification(1, 0);
+        setNotification(0, 30);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
