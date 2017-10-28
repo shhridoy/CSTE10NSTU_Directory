@@ -84,8 +84,7 @@ public class MainActivity extends AppCompatActivity {
             populateDataBaseInRecyclerView();
         }
 
-        final EditText hour = findViewById(R.id.EditHour);
-        final EditText min = findViewById(R.id.EditMinute);
+        setNotification(1, 0);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -96,13 +95,6 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     Snackbar.make(view, "Please check you internet connection!!", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
-                    if (hour.getText().toString().length() > 0 && min.getText().toString().length() > 0) {
-                        setNotification(Integer.parseInt(hour.getText().toString()), Integer.parseInt(min.getText().toString()));
-                        Toast.makeText(getApplicationContext(), "Notification set at "+hour.getText().toString()+":"+min.getText().toString(), Toast.LENGTH_LONG).show();
-                    } else {
-                        Toast.makeText(getApplicationContext(), "Set hour and minute", Toast.LENGTH_LONG).show();
-                    }
-
                 }
             }
         });

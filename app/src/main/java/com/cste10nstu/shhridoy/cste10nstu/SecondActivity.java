@@ -33,8 +33,9 @@ public class SecondActivity extends AppCompatActivity {
 
         String name = getIntent().getStringExtra("Name");
 
-        TextView tv = findViewById(R.id.TextView);
+        TextView tv = findViewById(R.id.NameTextView);
         tv.setText(name);
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -46,64 +47,6 @@ public class SecondActivity extends AppCompatActivity {
 
             }
         });
-
-        /*Long alertTime = new GregorianCalendar().getTimeInMillis() + 7*1000;
-                Intent alertIntent = new Intent(SecondActivity.this, AlertReceiver.class);
-                AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-                if (alarmManager != null) {
-                    alarmManager.set(
-                            AlarmManager.RTC_WAKEUP,
-                            System.currentTimeMillis()+6000,
-                            PendingIntent.getBroadcast(SecondActivity.this, 1, alertIntent, PendingIntent.FLAG_UPDATE_CURRENT)
-                    );
-                }*/
-
-        /*AlarmManager alarms = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
-        Receiver receiver = new Receiver();
-        IntentFilter filter = new IntentFilter("ALARM_ACTION");
-        registerReceiver(receiver, filter);
-
-        Intent intent = new Intent("ALARM_ACTION");
-        intent.putExtra("param", "My scheduled action");
-        PendingIntent operation = PendingIntent.getBroadcast(this, 0, intent, 0);
-        // I choose 3s after the launch of my application
-        alarms.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+3000, operation) ;*/
-
-       /* findViewById(R.id.notificationButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                notification.setSmallIcon(R.drawable.ic_launcher_background);
-                notification.setTicker("This is my Ticker");
-                notification.setWhen(System.currentTimeMillis());
-                notification.setContentTitle("This is my Title");
-                notification.setContentText("This is the body of my text Notification");
-
-                Intent intent = new Intent(SecondActivity.this, SecondActivity.class);
-                PendingIntent pendingIntent = PendingIntent.getActivity(SecondActivity.this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                notification.setContentIntent(pendingIntent);
-
-                Notification n = notification.build();
-                //create the notification
-                n.vibrate = new long[]{150, 300, 150, 400};
-                n.flags = Notification.FLAG_AUTO_CANCEL;
-
-                NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-                if (manager != null) {
-                    manager.notify(UNIQUE_ID, n);
-                }
-
-                //create a vibration
-                try {
-
-                    Uri som = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-                    Ringtone toque = RingtoneManager.getRingtone(getApplicationContext(), som);
-                    toque.play();
-                } catch (Exception e) {
-                    Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-                }
-
-            }
-        }); */
     }
 
 }
