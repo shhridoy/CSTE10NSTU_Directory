@@ -84,8 +84,6 @@ public class MainActivity extends AppCompatActivity {
             populateDataBaseInRecyclerView();
         }
 
-        setNotification(0, 30);
-
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
                     Snackbar.make(view, "Please check you internet connection!!", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
                 }
+                setNotification();
             }
         });
     }
@@ -168,11 +167,11 @@ public class MainActivity extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
-    private void setNotification (int hour, int min) {
+    private void setNotification () {
         Calendar calendar = Calendar.getInstance();
         //calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.set(Calendar.HOUR_OF_DAY, hour);
-        calendar.set(Calendar.MINUTE, min);
+        calendar.set(Calendar.HOUR_OF_DAY, 1);
+        calendar.set(Calendar.MINUTE, 0);
         //calendar.set(Calendar.SECOND, 30);
 
         Intent intent = new Intent(this, NotificationReceiver.class);

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/md_grey_200"
+    android:background="@color/md_grey_300"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.cste10nstu.shhridoy.cste10nstu.SecondActivity"
     tools:showIn="@layout/activity_second">
@@ -25,12 +25,14 @@
                 android:id="@+id/ImageViewSecond"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:src="@mipmap/ic_launcher"/>
+                android:src="@mipmap/ic_launcher"
+                tools:ignore="ContentDescription" />
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center">
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_gravity="center">
                 <TextView
                     android:id="@+id/NameTextView"
                     android:layout_width="match_parent"
@@ -40,8 +42,7 @@
                     android:textAlignment="center"
                     android:textAppearance="?android:attr/textAppearanceLarge"
                     android:textStyle="bold"
-                    android:textColor="@color/md_grey_800"
-                    android:layout_marginBottom="5dp"/>
+                    android:textColor="@color/md_grey_800" />
                 <TextView
                     android:id="@+id/IdTextView"
                     android:layout_width="match_parent"
@@ -54,6 +55,56 @@
                     android:textColor="@color/md_grey_800"/>
             </LinearLayout>
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/TV1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/LL1"
+            android:text="Mobile"
+            android:textColor="#ffffff"
+            android:textStyle="bold"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:paddingLeft="10dp"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:paddingRight="10dp"
+            android:background="@color/md_grey_500"/>
+
+        <ListView
+            android:id="@+id/MobileListView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/TV1"
+            android:dividerHeight="2dp"
+            android:divider="@color/md_grey_300"
+            tools:ignore="NestedScrolling">
+        </ListView>
+
+        <TextView
+            android:id="@+id/TV2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/MobileListView"
+            android:text="Email"
+            android:textColor="#ffffff"
+            android:textStyle="bold"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:paddingLeft="10dp"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:paddingRight="10dp"
+            android:background="@color/md_grey_500"/>
+
+        <ListView
+            android:id="@+id/EmailListView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/TV2"
+            android:dividerHeight="2dp"
+            android:divider="@color/md_grey_300"
+            tools:ignore="NestedScrolling">
+        </ListView>
 
         <!--
 

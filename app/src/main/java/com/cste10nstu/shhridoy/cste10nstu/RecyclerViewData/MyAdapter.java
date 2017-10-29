@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.net.Uri;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.RecyclerView;
@@ -20,14 +21,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cste10nstu.shhridoy.cste10nstu.R;
+import com.cste10nstu.shhridoy.cste10nstu.SecondActivity;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.util.List;
+import java.util.logging.Handler;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
@@ -56,19 +60,27 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         holder.textViewMobile.setText(getSpanableBoldString(listItem.getMobile(), 8));
 
         if (listItem.getImageUrl() != null) {
-            Picasso.with(context)
-                    .load(listItem.getImageUrl())
-                    .into(holder.imageView);
+            Picasso.with(context).load(listItem.getImageUrl()).into(holder.imageView);
+            holder.imageUrl = listItem.getImageUrl();
         } else {
             String fileName = imageName(listItem.getId().trim());
             String path = "sdcard/cste10nstu/"+fileName;
             Picasso.with(context).load(new File(path)).into(holder.imageView);
+            holder.imagePath = path;
         }
 
 
         holder.callButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                holder.callButton.setBackgroundColor(Color.LTGRAY);
+                new android.os.Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        holder.callButton.setBackgroundColor(Color.WHITE);
+                    }
+                }, 250);
+
                 Intent callIntent = new Intent(Intent.ACTION_CALL);
                 callIntent.setData(Uri.parse("tel:"+Uri.encode(listItem.getMobile().substring(9).trim())));
                 if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
@@ -91,6 +103,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         TextView textViewName, textViewid, textViewMobile;
         ImageView imageView;
         ImageButton callButton;
+        RelativeLayout rlItem;
+        String imageUrl, imagePath;
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -99,17 +113,42 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             textViewMobile = itemView.findViewById(R.id.mobileTv);
             imageView = itemView.findViewById(R.id.imageTV);
             callButton = itemView.findViewById(R.id.callButton);
+            rlItem = itemView.findViewById(R.id.RLItem);
             itemView.setOnCreateContextMenuListener(this);
             itemView.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
-            Toast.makeText(context, textViewName.getText().toString(), Toast.LENGTH_LONG).show();
+            //Toast.makeText(context, textViewName.getText().toString(), Toast.LENGTH_LONG).show();
+            rlItem.setBackgroundColor(Color.LTGRAY);
+            new android.os.Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    rlItem.setBackgroundColor(Color.WHITE);
+                }
+            }, 250);
+            Intent intent = new Intent(context, SecondActivity.class);
+            intent.putExtra("Name", textViewName.getText().toString());
+            intent.putExtra("Id", textViewid.getText().toString().substring(4).trim());
+            intent.putExtra("Mobile", textViewMobile.getText().toString().substring(9).trim());
+            intent.putExtra("ImageUrl", imageUrl);
+            intent.putExtra("ImagePath", imagePath);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
         }
 
         @Override
         public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
+
+            rlItem.setBackgroundColor(Color.LTGRAY);
+            new android.os.Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    rlItem.setBackgroundColor(Color.WHITE);
+                }
+            }, 250);
+
             contextMenu.setHeaderTitle(getSpanableString(textViewName.getText().toString()));
             MenuItem call = contextMenu.add(Menu.NONE, 1, 1, getSpanableString("Call"));
             MenuItem sms = contextMenu.add(Menu.NONE, 2, 2, getSpanableString("SMS"));

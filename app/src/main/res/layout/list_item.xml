@@ -83,14 +83,16 @@
 
             <ImageButton
                 android:id="@+id/callButton"
-                android:src="@android:drawable/ic_menu_call"
+                android:src="@drawable/ic_action_call"
                 android:layout_width="40dp"
-                android:layout_height="60dp"
+                android:layout_height="wrap_content"
                 android:background="#ffffff"
                 android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
-                android:contentDescription="Image Call" />
+                android:contentDescription="Image Call"
+                android:layout_alignTop="@id/RLItem"
+                android:layout_alignBottom="@id/RLItem"/>
 
         </RelativeLayout>
 
