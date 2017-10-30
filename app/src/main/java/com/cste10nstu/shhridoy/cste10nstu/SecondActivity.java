@@ -12,7 +12,6 @@ import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.cste10nstu.shhridoy.cste10nstu.ListViewData.ContactCustomAdapter;
 import com.squareup.picasso.Picasso;
@@ -22,11 +21,11 @@ import java.util.ArrayList;
 
 public class SecondActivity extends AppCompatActivity {
 
-    ListView lvMobile, lvEmail;
+    ListView lvMobile, lvEmail, lvSocial;
     TextView tvName, tvId;
     ImageView imageView;
-    ArrayList<String> arrayList1, arrayList2;
-    ContactCustomAdapter contactCustomAdapter, contactCustomAdapter2;
+    ArrayList<String> arrayListMobile, arrayListEmail, arrayListFB;
+    ContactCustomAdapter contactCustomAdapter, contactCustomAdapter2, contactCustomAdapter3;
     String name, id, mobile, imageUrl, imagePath;
 
     @Override
@@ -60,31 +59,37 @@ public class SecondActivity extends AppCompatActivity {
             tvId.setText(id);
         }
 
-        arrayList1 = new ArrayList<>();
+        arrayListMobile = new ArrayList<>();
         if (mobile != null) {
-            arrayList1.add(mobile);
+            arrayListMobile.add(mobile);
         } else {
-            arrayList1.add("01742423628");
+            arrayListMobile.add("01742423628");
         }
-        arrayList1.add("01878045480");
-        contactCustomAdapter = new ContactCustomAdapter(this, arrayList1, 1);
+        arrayListMobile.add("01878045480");
+        contactCustomAdapter = new ContactCustomAdapter(this, arrayListMobile, 1);
         lvMobile.setAdapter(contactCustomAdapter);
 
-        arrayList2 = new ArrayList<>();
-        arrayList2.add("md.saifulhq@gmail.com");
-        arrayList2.add("shhridoy.cste@gmail.com");
-        contactCustomAdapter2 = new ContactCustomAdapter(this, arrayList2, 2);
+        arrayListEmail = new ArrayList<>();
+        arrayListEmail.add("md.saifulhq@gmail.com");
+        arrayListEmail.add("shhridoy.cste@gmail.com");
+        contactCustomAdapter2 = new ContactCustomAdapter(this, arrayListEmail, 2);
         lvEmail.setAdapter(contactCustomAdapter2);
+
+        arrayListFB = new ArrayList<>();
+        arrayListFB.add("https://www.facebook.com/unwantedhridoy.cptrii");
+        contactCustomAdapter3 = new ContactCustomAdapter(this, arrayListFB, 3);
+        lvSocial.setAdapter(contactCustomAdapter3);
 
         ListUtils.setDynamicHeight(lvMobile);
         ListUtils.setDynamicHeight(lvEmail);
+        ListUtils.setDynamicHeight(lvSocial);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-
+                fab.hide();
             }
         });
     }
@@ -95,6 +100,7 @@ public class SecondActivity extends AppCompatActivity {
         tvId = findViewById(R.id.IdTextView);
         lvMobile = findViewById(R.id.MobileListView);
         lvEmail = findViewById(R.id.EmailListView);
+        lvSocial = findViewById(R.id.SocialListView);
     }
 
     public static class ListUtils {

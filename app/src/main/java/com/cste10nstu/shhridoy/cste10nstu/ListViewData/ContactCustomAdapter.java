@@ -1,9 +1,12 @@
 package com.cste10nstu.shhridoy.cste10nstu.ListViewData;
 
 import android.Manifest;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Handler;
@@ -12,9 +15,11 @@ import android.text.Layout;
 import android.text.SpannableString;
 import android.text.style.AlignmentSpan;
 import android.view.ContextMenu;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -24,6 +29,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cste10nstu.shhridoy.cste10nstu.MyDatabase.DBHelper;
 import com.cste10nstu.shhridoy.cste10nstu.R;
 
 import java.util.ArrayList;
@@ -68,7 +74,10 @@ public class ContactCustomAdapter extends BaseAdapter {
 
         if (tag == 2) {
             imageView.setImageResource(R.drawable.ic_action_mail);
-            imageButton.setImageResource(R.drawable.ic_action_copy);
+            imageButton.setImageResource(R.drawable.ic_action_cpoy);
+        } else if (tag == 3) {
+            imageView.setImageResource(R.drawable.ic_action_f);
+            imageButton.setImageResource(R.drawable.ic_action_cpoy);
         }
 
         textView.setText(arrayList.get(position));
@@ -76,10 +85,21 @@ public class ContactCustomAdapter extends BaseAdapter {
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (tag == 2) {
-                    Toast.makeText(context, arrayList.get(position)+" copied to clipboard! (TEST)", Toast.LENGTH_LONG).show();
+                if (tag == 1) {
+                    Intent smsIntent = new Intent(Intent.ACTION_VIEW);
+                    smsIntent.setData(Uri.parse("smsto:"));
+                    smsIntent.setType("vnd.android-dir/mms-sms");
+                    smsIntent.putExtra("address" , arrayList.get(position).trim());
+                    smsIntent.putExtra("sms_body", "Type sms for "+getName(arrayList.get(position)));
+                    smsIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(smsIntent);
                 } else {
-                    Toast.makeText(context, "Sending message to "+arrayList.get(position)+" (TEST)", Toast.LENGTH_LONG).show();
+                    ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+                    ClipData clip = ClipData.newPlainText("Email", arrayList.get(position).trim());
+                    if (clipboard != null) {
+                        clipboard.setPrimaryClip(clip);
+                        Toast.makeText(context, arrayList.get(position)+" copied to clipboard!", Toast.LENGTH_LONG).show();
+                    }
                 }
                 imageButton.setBackgroundColor(Color.LTGRAY);
                 new Handler().postDelayed(new Runnable() {
@@ -91,23 +111,46 @@ public class ContactCustomAdapter extends BaseAdapter {
             }
         });
 
-        view.setOnClickListener(new View.OnClickListener() {
+        relativeLayout.setOnTouchListener(new View.OnTouchListener() {
+
             @Override
-            public void onClick(View view) {
+            public boolean onTouch(View v, MotionEvent event) {
                 relativeLayout.setBackgroundColor(Color.LTGRAY);
                 imageView.setBackgroundColor(Color.LTGRAY);
-                new Handler().postDelayed(new Runnable() {
+                new android.os.Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         relativeLayout.setBackgroundColor(Color.WHITE);
                         imageView.setBackgroundColor(Color.WHITE);
                     }
                 }, 250);
+                return false;
+            }
+        });
 
-                if (tag == 2) {
-                    Toast.makeText(context, "Sending email to "+arrayList.get(position)+" (TEST)", Toast.LENGTH_LONG).show();
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (tag == 1) {
+                    Intent callIntent = new Intent(Intent.ACTION_CALL);
+                    callIntent.setData(Uri.parse("tel:"+Uri.encode(arrayList.get(position).trim())));
+                    if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                        return;
+                    }
+                    callIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(callIntent);
+                } else if (tag == 2) {
+                    Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+                            "mailto",arrayList.get(position).trim(), null));
+                    emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Subject");
+                    emailIntent.putExtra(Intent.EXTRA_TEXT, "Body");
+                    emailIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(Intent.createChooser(emailIntent, "Send email..."));
+
                 } else {
-                    Toast.makeText(context, "Calling to "+arrayList.get(position)+" (TEST)", Toast.LENGTH_LONG).show();
+                    Uri uri = Uri.parse(arrayList.get(position).trim());
+                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                    context.startActivity(intent);
                 }
             }
         });
@@ -115,28 +158,24 @@ public class ContactCustomAdapter extends BaseAdapter {
         final MenuItem.OnMenuItemClickListener onChange = new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                String mobileNo = arrayList.get(position);
                 switch (item.getItemId()) {
                     case 1:
-                        /*Intent callIntent = new Intent(Intent.ACTION_CALL);
-                        callIntent.setData(Uri.parse("tel:"+Uri.encode(mobileNo)));
-                        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                            return true;
+                        ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+                        ClipData clip = ClipData.newPlainText("Email", arrayList.get(position).trim());
+                        if (clipboard != null) {
+                            clipboard.setPrimaryClip(clip);
+                            Toast.makeText(context, arrayList.get(position)+" copied to clipboard!", Toast.LENGTH_LONG).show();
                         }
-                        callIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        context.startActivity(callIntent); */
-                        Toast.makeText(context, "Content copy to clipboard. (TEST)", Toast.LENGTH_LONG).show();
                         return true;
                     case 2:
-                        /*Toast.makeText(context,"SMS to "+arrayList.get(position),Toast.LENGTH_LONG).show();
-                        Intent smsIntent = new Intent(Intent.ACTION_VIEW);
-                        smsIntent.setData(Uri.parse("smsto:"));
-                        smsIntent.setType("vnd.android-dir/mms-sms");
-                        smsIntent.putExtra("address" , mobileNo);
-                        smsIntent.putExtra("sms_body", "Type sms for "+arrayList.get(position));
-                        smsIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        context.startActivity(smsIntent);*/
-                        Toast.makeText(context, "Sharing intent (TEST)", Toast.LENGTH_LONG).show();
+                        String textShare = getName(arrayList.get(position))+"\n"+arrayList.get(position);
+                        Intent shareIntent = new Intent();
+                        shareIntent.setAction(Intent.ACTION_SEND);
+                        shareIntent.putExtra(Intent.EXTRA_TEXT, textShare);
+                        shareIntent.setType("text/plain");
+                        context.startActivity(Intent.createChooser(
+                                shareIntent, tag == 2 ? "Share email address via" : "Share via"
+                        ));
                         return true;
                 }
                 return false;
@@ -146,20 +185,9 @@ public class ContactCustomAdapter extends BaseAdapter {
         view.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
             @Override
             public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
-
-                relativeLayout.setBackgroundColor(Color.LTGRAY);
-                imageView.setBackgroundColor(Color.LTGRAY);
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        relativeLayout.setBackgroundColor(Color.WHITE);
-                        imageView.setBackgroundColor(Color.WHITE);
-                    }
-                }, 250);
-
                 contextMenu.setHeaderTitle(getSpanableString(arrayList.get(position)));
-                MenuItem copy = contextMenu.add(Menu.NONE, 1, 1, getSpanableString("Copy to clipboard."));
-                MenuItem share = contextMenu.add(Menu.NONE, 2, 2, getSpanableString("Share the contact."));
+                MenuItem copy = contextMenu.add(Menu.NONE, 1, 1, getSpanableString("Copy to clipboard"));
+                MenuItem share = contextMenu.add(Menu.NONE, 2, 2, tag == 2 ? getSpanableString("Share email address") : getSpanableString("Share the contact"));
                 //groupId, itemId, order, title
                 copy.setOnMenuItemClickListener(onChange);
                 share.setOnMenuItemClickListener(onChange);
@@ -174,5 +202,22 @@ public class ContactCustomAdapter extends BaseAdapter {
         SpannableString ss = new SpannableString(s);
         ss.setSpan(new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER), 0, ss.length(), 0);
         return ss;
+    }
+
+    private String getName (String mobile_no) {
+        DBHelper databaseHelper = new DBHelper(context);
+        Cursor c = databaseHelper.retrieveData();
+        String Name = "Saiful Haque";
+        while (c.moveToNext()){
+            String name = c.getString(1);
+            String st_id = c.getString(2);
+            String st_mobile = c.getString(3);
+            String date_of_birth = c.getString(4);
+            if (mobile_no.equals(st_mobile)) {
+                Name = name;
+                break;
+            }
+        }
+        return Name;
     }
 }

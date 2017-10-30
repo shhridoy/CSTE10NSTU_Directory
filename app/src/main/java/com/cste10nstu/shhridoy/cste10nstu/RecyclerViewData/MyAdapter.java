@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Debug;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.Layout;
@@ -13,10 +14,12 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.style.AlignmentSpan;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -69,6 +72,21 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             holder.imagePath = path;
         }
 
+        holder.rlItem.setOnTouchListener(new View.OnTouchListener() {
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                holder.rlItem.setBackgroundColor(Color.LTGRAY);
+                new android.os.Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        holder.rlItem.setBackgroundColor(Color.WHITE);
+                    }
+                }, 250);
+                return false;
+            }
+        });
+
 
         holder.callButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,14 +138,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
         @Override
         public void onClick(View v) {
-            //Toast.makeText(context, textViewName.getText().toString(), Toast.LENGTH_LONG).show();
-            rlItem.setBackgroundColor(Color.LTGRAY);
-            new android.os.Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    rlItem.setBackgroundColor(Color.WHITE);
-                }
-            }, 250);
             Intent intent = new Intent(context, SecondActivity.class);
             intent.putExtra("Name", textViewName.getText().toString());
             intent.putExtra("Id", textViewid.getText().toString().substring(4).trim());
@@ -140,15 +150,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
         @Override
         public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
-
-            rlItem.setBackgroundColor(Color.LTGRAY);
-            new android.os.Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    rlItem.setBackgroundColor(Color.WHITE);
-                }
-            }, 250);
-
             contextMenu.setHeaderTitle(getSpanableString(textViewName.getText().toString()));
             MenuItem call = contextMenu.add(Menu.NONE, 1, 1, getSpanableString("Call"));
             MenuItem sms = contextMenu.add(Menu.NONE, 2, 2, getSpanableString("SMS"));
@@ -179,7 +180,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                         return true;
 
                     case 2:
-                        Toast.makeText(context,"SMS to "+textViewName.getText().toString(),Toast.LENGTH_LONG).show();
                         Intent smsIntent = new Intent(Intent.ACTION_VIEW);
                         smsIntent.setData(Uri.parse("smsto:"));
                         smsIntent.setType("vnd.android-dir/mms-sms");
