@@ -21,8 +21,9 @@ import java.util.ArrayList;
 
 public class SecondActivity extends AppCompatActivity {
 
+    Toolbar toolbar;
     ListView lvMobile, lvEmail, lvSocial;
-    TextView tvName, tvId;
+    TextView tvName, tvId, tvBirtDate, tvHomeTown;
     ImageView imageView;
     ArrayList<String> arrayListMobile, arrayListEmail, arrayListFB;
     ContactCustomAdapter contactCustomAdapter, contactCustomAdapter2, contactCustomAdapter3;
@@ -33,7 +34,7 @@ public class SecondActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_second);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        initializeViews();
         setSupportActionBar(toolbar);
 
         Intent i = getIntent();
@@ -42,8 +43,6 @@ public class SecondActivity extends AppCompatActivity {
         mobile = i.getStringExtra("Mobile");
         imageUrl = i.getStringExtra("ImageUrl");
         imagePath = i.getStringExtra("ImagePath");
-
-        initializeViews();
 
         if (imageUrl != null) {
             Picasso.with(this).load(imageUrl).into(imageView);
@@ -95,12 +94,15 @@ public class SecondActivity extends AppCompatActivity {
     }
 
     private void initializeViews () {
+        toolbar = findViewById(R.id.toolbar);
         imageView = findViewById(R.id.ImageViewSecond);
         tvName = findViewById(R.id.NameTextView);
         tvId = findViewById(R.id.IdTextView);
         lvMobile = findViewById(R.id.MobileListView);
         lvEmail = findViewById(R.id.EmailListView);
         lvSocial = findViewById(R.id.SocialListView);
+        tvBirtDate = findViewById(R.id.TVBirthDate);
+        tvHomeTown = findViewById(R.id.TVHomeTown);
     }
 
     public static class ListUtils {

@@ -21,8 +21,8 @@
     <item
         app:showAsAction="never"
         android:icon="@android:drawable/arrow_down_float"
-        android:id="@+id/menu_item_nextActivity"
-        android:title="Next Activity"
+        android:id="@+id/menu_item_smstoall"
+        android:title="Send SMS to All"
         android:orderInCategory="102" />
 
 

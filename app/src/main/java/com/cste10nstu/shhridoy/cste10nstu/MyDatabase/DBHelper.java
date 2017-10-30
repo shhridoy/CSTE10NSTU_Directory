@@ -17,6 +17,7 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String student_id = "STUDENT_ID";
     private static final String mobile_no = "MOBILE_NO";
     private static final String date_of_birth = "BIRTH_DATE";
+    private static final String down_image_url = "DOWN_IMAGE_URL";
 
     private static final int DB_VERSION = 1;
 
@@ -26,7 +27,8 @@ public class DBHelper extends SQLiteOpenHelper {
             name +" TEXT, " +
             student_id +" TEXT UNIQUE, " +
             mobile_no + " TEXT UNIQUE, " +
-            date_of_birth + " TEXT);";
+            date_of_birth + " TEXT, " +
+            down_image_url + " TEXT UNIQUE);";
 
     private static final String DROP_TB = "DROP TABLE IF EXISTS " + TB_NAME;
 
@@ -45,12 +47,13 @@ public class DBHelper extends SQLiteOpenHelper {
         onCreate(sqLiteDatabase);
     }
 
-    public void insertData(String Name, String St_id, String Mbl_no, String DateOfBirth) {
+    public void insertData(String Name, String St_id, String Mbl_no, String DateOfBirth, String dwn_img_url) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(name, Name);
         contentValues.put(student_id, St_id);
         contentValues.put(mobile_no, Mbl_no);
         contentValues.put(date_of_birth, DateOfBirth);
+        contentValues.put(down_image_url, dwn_img_url);
         this.getWritableDatabase().insertOrThrow(TB_NAME, "", contentValues);
         this.getWritableDatabase().close();
     }
