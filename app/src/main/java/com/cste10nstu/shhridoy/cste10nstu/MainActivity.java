@@ -68,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String MY_DATA = "https://shhridoy.github.io/json/csteallstudent.js";
     private static List<String> URL_List;
     private static int num = 0;
+    private static int LENGTH;
 
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
@@ -117,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
             if (isInternetOn()) {
                 loadRecyclerViewData();
             } else {
-                Snackbar.make(findViewById(R.id.coordinatorMain), "Please check you internet connection!!", Snackbar.LENGTH_LONG)
+                Snackbar.make(findViewById(R.id.coordinatorMain), "Please turn your internet connection on to sync the data first time!!", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         } else {
@@ -202,11 +203,16 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     // TODO Auto-generated method stub
-                    if (num >= 55) {
-                        num = 0;
+                    if (isInternetOn()) {
+                        if (num >= LENGTH) {
+                            num = 0;
+                        }
+                        DownloadTask downloadTask = new DownloadTask();
+                        downloadTask.execute(URL_List.get(num));
+                    } else {
+                        Snackbar.make(findViewById(R.id.coordinatorMain), "Please check you internet connection!!", Snackbar.LENGTH_LONG)
+                                .setAction("Action", null).show();
                     }
-                    DownloadTask downloadTask = new DownloadTask();
-                    downloadTask.execute(URL_List.get(num));
                 }
             });
 
@@ -260,8 +266,10 @@ public class MainActivity extends AppCompatActivity {
                             itemsList.clear();
                             URL_List.clear();
                             mobileNoList.clear();
+                            LENGTH = 0;
 
                             JSONArray jsonArray = new JSONArray(response);
+                            LENGTH = jsonArray.length();
 
                             for (int i = 0; i < jsonArray.length(); i++) {
                                 JSONObject object = (JSONObject) jsonArray.get(i);
@@ -287,7 +295,13 @@ public class MainActivity extends AppCompatActivity {
                                         object.getString("id"),
                                         object.getString("mobile"),
                                         object.getString("dateOfBirth"),
-                                        object.getString("downloadableImage")
+                                        object.getString("downloadableImage"),
+                                        object.getString("mobile_2"),
+                                        object.getString("email_1"),
+                                        object.getString("email_2"),
+                                        object.getString("facebook_link"),
+                                        object.getString("others"),
+                                        object.getString("home_city")
                                 );
 
                                 itemsList.add(list);
@@ -322,11 +336,14 @@ public class MainActivity extends AppCompatActivity {
         itemsList.clear();
         URL_List.clear();
         mobileNoList.clear();
+        LENGTH = 0;
+
         dbHelper = new DBHelper(this);
         cursor = dbHelper.retrieveData();
         if(cursor.getCount() == 0){
             Toast.makeText(this, "Data doesn't sync yet!!",Toast.LENGTH_LONG).show();
         } else {
+            int i = 0;
             while (cursor.moveToNext()){
                 // Index starts from 1
                 String name = cursor.getString(1);
@@ -341,23 +358,51 @@ public class MainActivity extends AppCompatActivity {
                 itemsList.add(listItems);
                 adapter = new MyAdapter(itemsList, getApplicationContext());
                 recyclerView.setAdapter(adapter);
+                i++;
             }
+            LENGTH = i;
         }
     }
 
-    private void saveData(String studentName, String studentId, String studentMblNo, String dateOfBirth, String dwn_img_url){
+    private void saveData (
+            String studentName, String studentId, String studentMblNo,
+            String dateOfBirth, String dwn_img_url, String Mbl_no_2,
+            String Email_1, String Email_2, String FB_Url,
+            String Other_Url, String Home_City){
+
         dbHelper = new DBHelper(this);
         try{
-            dbHelper.insertData(studentName, studentId, studentMblNo, dateOfBirth, dwn_img_url);
+            dbHelper.insertData(
+                    studentName, studentId, studentMblNo,
+                    dateOfBirth, dwn_img_url, Mbl_no_2,
+                    Email_1, Email_2, FB_Url,
+                    Other_Url, Home_City
+            );
             toast = "Data sync is completed!";
         } catch (SQLiteException e){
-            toast = "No update found!";
+            toast = "No new data found!";
         }
     }
 
-    private void updateData (String oldNo, String newNo) {
-        DBHelper dbHelper = new DBHelper(this);
-        dbHelper.updateData(oldNo, newNo);
+    private void updateData (
+            int id,
+            String studentName, String studentId, String studentMblNo,
+            String dateOfBirth, String dwn_img_url, String Mbl_no_2,
+            String Email_1, String Email_2, String FB_Url,
+            String Other_Url, String Home_City) {
+
+                dbHelper = new DBHelper(this);
+                boolean updated = dbHelper.updateData(
+                        id, studentName, studentId, studentMblNo,
+                        dateOfBirth, dwn_img_url, Mbl_no_2, Email_1,
+                        Email_2, FB_Url, Other_Url, Home_City
+                );
+
+                if (updated) {
+                    toast = "Data has been up to date!";
+                } else {
+                    toast = "Date doesn't updated!";
+                }
     }
 
     private void setNotification () {
@@ -534,7 +579,7 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
             progressDialog.hide();
-            if (num == 54) {
+            if (num == LENGTH-1) {
                 Toast.makeText(MainActivity.this,  "Download is completed.", Toast.LENGTH_LONG).show();
             }
             num++;
@@ -549,7 +594,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void imageDownload() {
-        if (num < 55) {
+        if (num < LENGTH) {
             DownloadTask downloadTask = new DownloadTask();
             downloadTask.execute(URL_List.get(num));
         }

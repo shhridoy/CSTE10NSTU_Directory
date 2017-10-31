@@ -1,6 +1,7 @@
 package com.cste10nstu.shhridoy.cste10nstu;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -14,6 +15,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.cste10nstu.shhridoy.cste10nstu.ListViewData.ContactCustomAdapter;
+import com.cste10nstu.shhridoy.cste10nstu.ListViewData.CustomAdapter;
+import com.cste10nstu.shhridoy.cste10nstu.MyDatabase.DBHelper;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -27,7 +30,10 @@ public class SecondActivity extends AppCompatActivity {
     ImageView imageView;
     ArrayList<String> arrayListMobile, arrayListEmail, arrayListFB;
     ContactCustomAdapter contactCustomAdapter, contactCustomAdapter2, contactCustomAdapter3;
-    String name, id, mobile, imageUrl, imagePath;
+    String name, imageUrl, imagePath;
+
+    String Id, Mobile_1, Mobile_2, DateOfBirth, Email_1, Email_2, Facebook_Url, Other_Url, Home_city;
+    DBHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,10 +45,10 @@ public class SecondActivity extends AppCompatActivity {
 
         Intent i = getIntent();
         name = i.getStringExtra("Name");
-        id = i.getStringExtra("Id");
-        mobile = i.getStringExtra("Mobile");
         imageUrl = i.getStringExtra("ImageUrl");
         imagePath = i.getStringExtra("ImagePath");
+
+        fetchDataFromDB(name);
 
         if (imageUrl != null) {
             Picasso.with(this).load(imageUrl).into(imageView);
@@ -54,43 +60,72 @@ public class SecondActivity extends AppCompatActivity {
             tvName.setText(name);
         }
 
-        if (id != null) {
-            tvId.setText(id);
+        if (Id != null) {
+            tvId.setText(Id);
         }
 
         arrayListMobile = new ArrayList<>();
-        if (mobile != null) {
-            arrayListMobile.add(mobile);
-        } else {
-            arrayListMobile.add("01742423628");
+        if (Mobile_1 != null) {
+            arrayListMobile.add(Mobile_1);
         }
-        arrayListMobile.add("01878045480");
+        if (Mobile_2 != null && !Mobile_2.equals(" ")) {
+            arrayListMobile.add(Mobile_2);
+        }
         contactCustomAdapter = new ContactCustomAdapter(this, arrayListMobile, 1);
         lvMobile.setAdapter(contactCustomAdapter);
 
         arrayListEmail = new ArrayList<>();
-        arrayListEmail.add("md.saifulhq@gmail.com");
-        arrayListEmail.add("shhridoy.cste@gmail.com");
+        if (Email_1 != null && !Email_1.equals(" ")) {
+            arrayListEmail.add(Email_1);
+        } else {
+            arrayListEmail.add("none");
+        }
+        if (Email_2 != null && !Email_2.equals(" ")) {
+            arrayListEmail.add(Email_2);
+        }
         contactCustomAdapter2 = new ContactCustomAdapter(this, arrayListEmail, 2);
         lvEmail.setAdapter(contactCustomAdapter2);
 
         arrayListFB = new ArrayList<>();
-        arrayListFB.add("https://www.facebook.com/unwantedhridoy.cptrii");
+        if (Facebook_Url != null) {
+            arrayListFB.add(Facebook_Url);
+        }
+        if (Other_Url != null && !Other_Url.equals(" ")) {
+            arrayListFB.add(Other_Url);
+        }
         contactCustomAdapter3 = new ContactCustomAdapter(this, arrayListFB, 3);
         lvSocial.setAdapter(contactCustomAdapter3);
+
+        if (DateOfBirth != null) {
+            tvBirtDate.setText(DateOfBirth);
+        }
+
+        if (Home_city != null) {
+            tvHomeTown.setText(Home_city);
+        }
 
         ListUtils.setDynamicHeight(lvMobile);
         ListUtils.setDynamicHeight(lvEmail);
         ListUtils.setDynamicHeight(lvSocial);
+    }
 
-        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-                fab.hide();
+    private void fetchDataFromDB (String STD_NAME) {
+        dbHelper = new DBHelper(this);
+        Cursor cursor = dbHelper.retrieveData();
+        while (cursor.moveToNext()) {
+            if (cursor.getString(1).equals(STD_NAME)){
+                Id = cursor.getString(2);
+                Mobile_1 = cursor.getString(3);
+                DateOfBirth = cursor.getString(4);
+                Mobile_2 = cursor.getString(6);
+                Email_1 = cursor.getString(7);
+                Email_2 = cursor.getString(8);
+                Facebook_Url = cursor.getString(9);
+                Other_Url = cursor.getString(10);
+                Home_city = cursor.getString(11);
+                break;
             }
-        });
+        }
     }
 
     private void initializeViews () {

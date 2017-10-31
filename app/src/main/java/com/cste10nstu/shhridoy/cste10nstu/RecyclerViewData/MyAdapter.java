@@ -142,8 +142,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         public void onClick(View v) {
             Intent intent = new Intent(context, SecondActivity.class);
             intent.putExtra("Name", textViewName.getText().toString());
-            intent.putExtra("Id", textViewid.getText().toString().substring(4).trim());
-            intent.putExtra("Mobile", textViewMobile.getText().toString().substring(9).trim());
             intent.putExtra("ImageUrl", imageUrl);
             intent.putExtra("ImagePath", imagePath);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
