@@ -11,7 +11,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
 import android.net.ConnectivityManager;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -66,19 +65,20 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private static final String MY_DATA = "https://shhridoy.github.io/json/csteallstudent.js";
-    private static List<String> URL_List;
-    private static int num = 0;
-    private static int LENGTH;
+    private static List<String> URL_List; // contains all downloadable image URL
+    private static int num = 0; // controls the sync task operation while downloading images
+    private static int LENGTH; // contains the length of the json array or number of rows in database
 
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private List<ListItems> itemsList;
     private String toast;
-    private List<String> mobileNoList;
+    private List<String> mobileNoList; // contains all mobile no. for messaging
     FloatingActionButton fab;
 
     private DBHelper dbHelper;
     private Cursor cursor;
+    private Boolean noData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,7 +93,6 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         fab = findViewById(R.id.fab);
-        fab.hide();
 
         recyclerView.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -114,22 +113,26 @@ public class MainActivity extends AppCompatActivity {
         mobileNoList = new ArrayList<>();
 
         dbHelper = new DBHelper(this);
-        if (dbHelper.retrieveData().getCount() == 0) {
+        noData = dbHelper.retrieveData().getCount() == 0;
+
+        if (noData) {
+            fab.show();
             if (isInternetOn()) {
-                loadRecyclerViewData();
+                loadRecyclerViewFromJson();
             } else {
                 Snackbar.make(findViewById(R.id.coordinatorMain), "Please turn your internet connection on to sync the data first time!!", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         } else {
-            populateRecyclerViewFromDatabase();
+            fab.hide();
+            loadRecyclerViewFromDatabase();
         }
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (isInternetOn()) {
-                    loadRecyclerViewData();
+                    loadRecyclerViewFromJson();
                 } else {
                     Snackbar.make(findViewById(R.id.coordinatorMain), "Please check you internet connection!!", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
@@ -171,7 +174,6 @@ public class MainActivity extends AppCompatActivity {
 
                         final String text = itemsList.get(i).getName().toLowerCase();
                         if (text.contains(query)) {
-
                             filteredList.add(itemsList.get(i));
                         }
                     }
@@ -187,7 +189,7 @@ public class MainActivity extends AppCompatActivity {
             return true;
 
         } else if (id == R.id.menu_item_downloadImage) {
-            AlertDialog.Builder builder=new AlertDialog.Builder(this);
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle(Html.fromHtml("<font color='#1DC4ED'>Warning!!</font>"));
             builder.setMessage(Html.fromHtml("<font color='#000000'>Do you want to download images for offline?</font>"));
             builder.setNegativeButton(Html.fromHtml("No"),new DialogInterface.OnClickListener() {
@@ -248,7 +250,7 @@ public class MainActivity extends AppCompatActivity {
         }, 2000);
     }
 
-    private void loadRecyclerViewData() {
+    private void loadRecyclerViewFromJson() {
         final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Loading data....");
         progressDialog.setCancelable(false);
@@ -290,19 +292,35 @@ public class MainActivity extends AppCompatActivity {
 
                                 mobileNoList.add(object.getString("mobile"));
 
-                                saveData(
-                                        object.getString("name"),
-                                        object.getString("id"),
-                                        object.getString("mobile"),
-                                        object.getString("dateOfBirth"),
-                                        object.getString("downloadableImage"),
-                                        object.getString("mobile_2"),
-                                        object.getString("email_1"),
-                                        object.getString("email_2"),
-                                        object.getString("facebook_link"),
-                                        object.getString("others"),
-                                        object.getString("home_city")
-                                );
+                                if (noData) {
+                                    saveData(
+                                            object.getString("name"),
+                                            object.getString("id"),
+                                            object.getString("mobile"),
+                                            object.getString("dateOfBirth"),
+                                            object.getString("downloadableImage"),
+                                            object.getString("mobile_2"),
+                                            object.getString("email_1"),
+                                            object.getString("email_2"),
+                                            object.getString("facebook_link"),
+                                            object.getString("others"),
+                                            object.getString("home_city")
+                                    );
+                                } else {
+                                    updateData(
+                                            object.getString("name"),
+                                            object.getString("id"),
+                                            object.getString("mobile"),
+                                            object.getString("dateOfBirth"),
+                                            object.getString("downloadableImage"),
+                                            object.getString("mobile_2"),
+                                            object.getString("email_1"),
+                                            object.getString("email_2"),
+                                            object.getString("facebook_link"),
+                                            object.getString("others"),
+                                            object.getString("home_city")
+                                    );
+                                }
 
                                 itemsList.add(list);
                                 adapter = new MyAdapter(itemsList, getApplicationContext());
@@ -324,7 +342,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onErrorResponse(VolleyError error) {
                         progressDialog.dismiss();
                         Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
-                        populateRecyclerViewFromDatabase();
+                        loadRecyclerViewFromDatabase();
                     }
                 });
 
@@ -332,7 +350,7 @@ public class MainActivity extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
-    private void populateRecyclerViewFromDatabase(){
+    private void loadRecyclerViewFromDatabase(){
         itemsList.clear();
         URL_List.clear();
         mobileNoList.clear();
@@ -385,7 +403,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateData (
-            int id,
             String studentName, String studentId, String studentMblNo,
             String dateOfBirth, String dwn_img_url, String Mbl_no_2,
             String Email_1, String Email_2, String FB_Url,
@@ -393,7 +410,7 @@ public class MainActivity extends AppCompatActivity {
 
                 dbHelper = new DBHelper(this);
                 boolean updated = dbHelper.updateData(
-                        id, studentName, studentId, studentMblNo,
+                        studentName, studentId, studentMblNo,
                         dateOfBirth, dwn_img_url, Mbl_no_2, Email_1,
                         Email_2, FB_Url, Other_Url, Home_City
                 );
@@ -622,7 +639,7 @@ public class MainActivity extends AppCompatActivity {
         // Check for network connections
         assert connec != null;
         if (connec.getNetworkInfo(0).getState() == android.net.NetworkInfo.State.CONNECTED ||
-                connec.getNetworkInfo(0).getState() == android.net.NetworkInfo.State.CONNECTING &&
+                connec.getNetworkInfo(0).getState() == android.net.NetworkInfo.State.CONNECTING ||
                         connec.getNetworkInfo(1).getState() == android.net.NetworkInfo.State.CONNECTING ||
                 connec.getNetworkInfo(1).getState() == android.net.NetworkInfo.State.CONNECTED) {
 

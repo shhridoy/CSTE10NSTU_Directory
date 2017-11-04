@@ -54,6 +54,8 @@ public class SecondActivity extends AppCompatActivity {
             Picasso.with(this).load(imageUrl).into(imageView);
         } else if (imagePath != null) {
             Picasso.with(this).load(new File(imagePath)).into(imageView);
+        } else {
+            Picasso.with(this).load(new File("sdcard/cste10nstu/"+name+".jpg")).into(imageView);
         }
 
         if (name != null) {

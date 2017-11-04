@@ -88,7 +88,7 @@ public class DBHelper extends SQLiteOpenHelper {
         this.getWritableDatabase().close();
     }
 
-    public boolean updateData (int Id, String Name, String St_id, String Mbl_no,
+    public boolean updateData (String Name, String St_id, String Mbl_no,
                             String DateOfBirth, String dwn_img_url, String Mbl_no_2, String Email_1,
                             String Email_2, String FB_Url, String Other_Url, String Home_City ) {
 
@@ -105,7 +105,8 @@ public class DBHelper extends SQLiteOpenHelper {
         contentValues.put(other_url, Other_Url);
         contentValues.put(home_city, Home_City);
 
-        int result = this.getWritableDatabase().update(TB_NAME, contentValues, id+"="+Id, null);
+        int result = this.getWritableDatabase().update(TB_NAME, contentValues, student_id+"='"+St_id+"'",null);
+        this.getWritableDatabase().close();
         return result > 0;
     }
 
