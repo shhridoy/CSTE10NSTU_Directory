@@ -1,5 +1,6 @@
 package com.cste10nstu.shhridoy.cste10nstu;
 
+import android.annotation.SuppressLint;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -21,6 +22,7 @@ import java.util.GregorianCalendar;
 
 public class NotificationReceiver extends BroadcastReceiver {
 
+    @SuppressLint("UnsafeProtectedBroadcastReceiver")
     @Override
     public void onReceive(Context context, Intent intent) {
 

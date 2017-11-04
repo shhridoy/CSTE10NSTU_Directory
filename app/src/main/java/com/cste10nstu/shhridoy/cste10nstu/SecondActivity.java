@@ -3,8 +3,6 @@ package com.cste10nstu.shhridoy.cste10nstu;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -14,7 +12,6 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.cste10nstu.shhridoy.cste10nstu.ListViewData.ContactCustomAdapter;
 import com.cste10nstu.shhridoy.cste10nstu.ListViewData.CustomAdapter;
 import com.cste10nstu.shhridoy.cste10nstu.MyDatabase.DBHelper;
 import com.squareup.picasso.Picasso;
@@ -29,7 +26,7 @@ public class SecondActivity extends AppCompatActivity {
     TextView tvName, tvId, tvBirtDate, tvHomeTown;
     ImageView imageView;
     ArrayList<String> arrayListMobile, arrayListEmail, arrayListFB;
-    ContactCustomAdapter contactCustomAdapter, contactCustomAdapter2, contactCustomAdapter3;
+    CustomAdapter customAdapter, customAdapter2, customAdapter3;
     String name, imageUrl, imagePath;
 
     String Id, Mobile_1, Mobile_2, DateOfBirth, Email_1, Email_2, Facebook_Url, Other_Url, Home_city;
@@ -73,8 +70,8 @@ public class SecondActivity extends AppCompatActivity {
         if (Mobile_2 != null && !Mobile_2.equals(" ")) {
             arrayListMobile.add(Mobile_2);
         }
-        contactCustomAdapter = new ContactCustomAdapter(this, arrayListMobile, 1);
-        lvMobile.setAdapter(contactCustomAdapter);
+        customAdapter = new CustomAdapter(this, arrayListMobile, 1);
+        lvMobile.setAdapter(customAdapter);
 
         arrayListEmail = new ArrayList<>();
         if (Email_1 != null && !Email_1.equals(" ")) {
@@ -85,8 +82,8 @@ public class SecondActivity extends AppCompatActivity {
         if (Email_2 != null && !Email_2.equals(" ")) {
             arrayListEmail.add(Email_2);
         }
-        contactCustomAdapter2 = new ContactCustomAdapter(this, arrayListEmail, 2);
-        lvEmail.setAdapter(contactCustomAdapter2);
+        customAdapter2 = new CustomAdapter(this, arrayListEmail, 2);
+        lvEmail.setAdapter(customAdapter2);
 
         arrayListFB = new ArrayList<>();
         if (Facebook_Url != null) {
@@ -95,8 +92,8 @@ public class SecondActivity extends AppCompatActivity {
         if (Other_Url != null && !Other_Url.equals(" ")) {
             arrayListFB.add(Other_Url);
         }
-        contactCustomAdapter3 = new ContactCustomAdapter(this, arrayListFB, 3);
-        lvSocial.setAdapter(contactCustomAdapter3);
+        customAdapter3 = new CustomAdapter(this, arrayListFB, 3);
+        lvSocial.setAdapter(customAdapter3);
 
         if (DateOfBirth != null) {
             tvBirtDate.setText(DateOfBirth);
