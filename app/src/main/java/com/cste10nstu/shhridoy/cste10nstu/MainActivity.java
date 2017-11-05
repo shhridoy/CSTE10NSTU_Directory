@@ -29,8 +29,11 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,6 +44,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.cste10nstu.shhridoy.cste10nstu.ListViewData.ListUtils;
 import com.cste10nstu.shhridoy.cste10nstu.MyDatabase.DBHelper;
 import com.cste10nstu.shhridoy.cste10nstu.RecyclerViewData.ListItems;
 import com.cste10nstu.shhridoy.cste10nstu.RecyclerViewData.MyAdapter;
@@ -224,6 +228,9 @@ public class MainActivity extends AppCompatActivity {
 
         } else if (id == R.id.menu_item_smstoall) {
             typeSMSdialog();
+            return true;
+        } else if (id == R.id.menu_item_birthday_list) {
+            birthdayListDialog();
             return true;
         }
 
@@ -533,6 +540,65 @@ public class MainActivity extends AppCompatActivity {
         alert.show();
     }
 
+    private void birthdayListDialog() {
+        Dialog myDialog = new Dialog(this);
+        myDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        myDialog.setContentView(R.layout.birthday_list_dialog);
+
+        ListView todayLv = myDialog.findViewById(R.id.TodayBirthdayListView);
+        ListView monthLv = myDialog.findViewById(R.id.MonthBirthdayListView);
+        List<String> list1 = new ArrayList<>();
+        List<String> list2 = new ArrayList<>();
+
+        Calendar c = Calendar.getInstance();
+        int currMonth = c.get(Calendar.MONTH)+1; // count month from 0 to 11
+        int currDay = c.get(Calendar.DATE);
+
+        dbHelper = new DBHelper(this);
+        cursor = dbHelper.retrieveData();
+        while (cursor.moveToNext()){
+            String name = cursor.getString(1);
+            String date = cursor.getString(4);
+            String[] splitedDate = date.split("/");
+            if (Integer.parseInt(splitedDate[1]) == currMonth) {
+                if (Integer.parseInt(splitedDate[0]) == currDay) {
+                    list1.add(name);
+                } else {
+                    list2.add(name);
+                }
+            }
+        }
+
+        ArrayAdapter<String> arrayAdapter1 = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_activated_1, list1);
+        todayLv.setAdapter(arrayAdapter1);
+
+        ArrayAdapter<String> arrayAdapter2 = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_activated_1, list2);
+        monthLv.setAdapter(arrayAdapter2);
+
+        todayLv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent intent = new Intent(MainActivity.this, SecondActivity.class);
+                intent.putExtra("Name", adapterView.getItemAtPosition(i).toString());
+                startActivity(intent);
+            }
+        });
+
+        monthLv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent intent = new Intent(MainActivity.this, SecondActivity.class);
+                intent.putExtra("Name", adapterView.getItemAtPosition(i).toString());
+                startActivity(intent);
+            }
+        });
+
+        ListUtils.setDynamicHeight(todayLv);
+        ListUtils.setDynamicHeight(monthLv);
+
+        myDialog.show();
+    }
+
     @SuppressLint("StaticFieldLeak")
     class DownloadTask extends AsyncTask<String, Integer, String> {
 
@@ -598,6 +664,7 @@ public class MainActivity extends AppCompatActivity {
             progressDialog.hide();
             if (num == LENGTH-1) {
                 Toast.makeText(MainActivity.this,  "Download is completed.", Toast.LENGTH_LONG).show();
+                loadRecyclerViewFromDatabase();
             }
             num++;
             imageDownload();

@@ -76,7 +76,11 @@ public class CustomAdapter extends BaseAdapter {
             imageView.setImageResource(R.drawable.ic_action_mail);
             imageButton.setImageResource(R.drawable.ic_action_cpoy);
         } else if (tag == 3) {
-            imageView.setImageResource(R.drawable.ic_action_f);
+            if (position == 0) {
+                imageView.setImageResource(R.drawable.ic_action_f);
+            } else {
+                imageView.setImageResource(R.drawable.ic_action_others);
+            }
             imageButton.setImageResource(R.drawable.ic_action_cpoy);
         }
 

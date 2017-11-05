@@ -1,10 +1,18 @@
 package com.cste10nstu.shhridoy.cste10nstu;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -13,11 +21,16 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.cste10nstu.shhridoy.cste10nstu.ListViewData.CustomAdapter;
+import com.cste10nstu.shhridoy.cste10nstu.ListViewData.ListUtils;
 import com.cste10nstu.shhridoy.cste10nstu.MyDatabase.DBHelper;
+import com.cste10nstu.shhridoy.cste10nstu.RecyclerViewData.ListItems;
+import com.cste10nstu.shhridoy.cste10nstu.RecyclerViewData.MyAdapter;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class SecondActivity extends AppCompatActivity {
 
@@ -25,7 +38,7 @@ public class SecondActivity extends AppCompatActivity {
     ListView lvMobile, lvEmail, lvSocial;
     TextView tvName, tvId, tvBirtDate, tvHomeTown;
     ImageView imageView;
-    ArrayList<String> arrayListMobile, arrayListEmail, arrayListFB;
+    ArrayList<String> arrayListMobile, arrayListEmail, arrayListSocial;
     CustomAdapter customAdapter, customAdapter2, customAdapter3;
     String name, imageUrl, imagePath;
 
@@ -37,13 +50,16 @@ public class SecondActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_second);
 
-        initializeViews();
-        setSupportActionBar(toolbar);
-
         Intent i = getIntent();
         name = i.getStringExtra("Name");
         imageUrl = i.getStringExtra("ImageUrl");
         imagePath = i.getStringExtra("ImagePath");
+
+        initializeViews();
+        setSupportActionBar(toolbar);
+        //noinspection ConstantConditions
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(name);
 
         fetchDataFromDB(name);
 
@@ -85,18 +101,20 @@ public class SecondActivity extends AppCompatActivity {
         customAdapter2 = new CustomAdapter(this, arrayListEmail, 2);
         lvEmail.setAdapter(customAdapter2);
 
-        arrayListFB = new ArrayList<>();
+        arrayListSocial = new ArrayList<>();
         if (Facebook_Url != null) {
-            arrayListFB.add(Facebook_Url);
+            arrayListSocial.add(Facebook_Url);
         }
         if (Other_Url != null && !Other_Url.equals(" ")) {
-            arrayListFB.add(Other_Url);
+            String[] othersAdd = Other_Url.split(" ");
+            arrayListSocial.addAll(Arrays.asList(othersAdd));
         }
-        customAdapter3 = new CustomAdapter(this, arrayListFB, 3);
+        customAdapter3 = new CustomAdapter(this, arrayListSocial, 3);
         lvSocial.setAdapter(customAdapter3);
 
         if (DateOfBirth != null) {
-            tvBirtDate.setText(DateOfBirth);
+            String[] splited = DateOfBirth.split("/");
+            tvBirtDate.setText(stringFormatOfDate(splited[0], splited[1]));
         }
 
         if (Home_city != null) {
@@ -106,6 +124,24 @@ public class SecondActivity extends AppCompatActivity {
         ListUtils.setDynamicHeight(lvMobile);
         ListUtils.setDynamicHeight(lvEmail);
         ListUtils.setDynamicHeight(lvSocial);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        //getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == android.R.id.home) {
+            finish();
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     private void fetchDataFromDB (String STD_NAME) {
@@ -139,25 +175,65 @@ public class SecondActivity extends AppCompatActivity {
         tvHomeTown = findViewById(R.id.TVHomeTown);
     }
 
-    public static class ListUtils {
-        public static void setDynamicHeight(ListView mListView) {
-            ListAdapter mListAdapter = mListView.getAdapter();
-            if (mListAdapter == null) {
-                // when adapter is null
-                return;
-            }
-            int height = 0;
-            int desiredWidth = View.MeasureSpec.makeMeasureSpec(mListView.getWidth(), View.MeasureSpec.UNSPECIFIED);
-            for (int i = 0; i < mListAdapter.getCount(); i++) {
-                View listItem = mListAdapter.getView(i, null, mListView);
-                listItem.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
-                height += listItem.getMeasuredHeight();
-            }
-            ViewGroup.LayoutParams params = mListView.getLayoutParams();
-            params.height = height + (mListView.getDividerHeight() * (mListAdapter.getCount() - 1));
-            mListView.setLayoutParams(params);
-            mListView.requestLayout();
+
+
+    private String stringFormatOfDate (String day, String month) {
+        int d = Integer.parseInt(day);
+        int m = Integer.parseInt(month);
+        String firstPart, secondPart;
+
+        if (d == 1) {
+            firstPart = d+"st";
+        } else if (d == 2) {
+            firstPart = d+"nd";
+        } else if (d == 3) {
+            firstPart = d+"rd";
+        } else {
+            firstPart = d+"th";
         }
+
+        switch (m) {
+            case 1:
+                secondPart = "January";
+                break;
+            case 2:
+                secondPart = "February";
+                break;
+            case 3:
+                secondPart = "March";
+                break;
+            case 4:
+                secondPart = "April";
+                break;
+            case 5:
+                secondPart = "May";
+                break;
+            case 6:
+                secondPart = "June";
+                break;
+            case 7:
+                secondPart = "July";
+                break;
+            case 8:
+                secondPart = "August";
+                break;
+            case 9:
+                secondPart = "September";
+                break;
+            case 10:
+                secondPart = "October";
+                break;
+            case 11:
+                secondPart = "November";
+                break;
+            case 12:
+                secondPart = "December";
+                break;
+            default:
+                secondPart = "December";
+        }
+
+        return firstPart+", "+secondPart;
     }
 
 }

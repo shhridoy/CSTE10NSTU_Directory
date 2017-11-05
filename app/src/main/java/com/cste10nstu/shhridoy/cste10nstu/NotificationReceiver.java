@@ -27,7 +27,7 @@ public class NotificationReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
 
         Calendar c = Calendar.getInstance();
-        int currYear = c.get(Calendar.YEAR);
+        // int currYear = c.get(Calendar.YEAR);
         int currMonth = c.get(Calendar.MONTH)+1; // count month from 0 to 11
         int currDay = c.get(Calendar.DATE);
 
