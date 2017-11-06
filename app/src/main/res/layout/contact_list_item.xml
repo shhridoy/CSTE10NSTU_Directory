@@ -4,71 +4,87 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#ffffff"
-    android:id="@+id/RL">
+    android:background="#ffffff">
 
-    <TextView
-        android:id="@+id/TVCustom"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="01742423628"
-        android:maxLines="1"
-        android:textStyle="normal"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textAlignment="textStart"
-        android:layout_gravity="start"
-        android:textColor="@color/md_grey_900"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
-        android:paddingRight="10dp"
-        android:paddingEnd="10dp"
-        android:paddingStart="10dp"
-        android:paddingLeft="10dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true" />
+        android:background="?android:attr/selectableItemBackground"
+        android:id="@+id/RL">
 
-    <ImageButton
-        android:id="@+id/ImageButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="#ffffff"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_alignBottom="@id/TVCustom"
-        android:layout_alignTop="@id/TVCustom"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
-        android:paddingEnd="15dp"
-        android:paddingStart="15dp"
-        android:src="@drawable/ic_action_message"
-        tools:ignore="ContentDescription" />
+        <RelativeLayout
+            android:id="@+id/TVRL"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/ImageView"
+            android:layout_toStartOf="@+id/ImageView">
 
-    <View
-        android:id="@+id/View"
-        android:layout_width="2dp"
-        android:layout_height="20dp"
-        android:layout_centerVertical="true"
-        android:layout_toStartOf="@id/ImageButton"
-        android:layout_toLeftOf="@id/ImageButton"
-        android:background="@color/md_grey_500"/>
+            <TextView
+                android:id="@+id/TVCustom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="01742423628"
+                android:singleLine="true"
+                android:ellipsize="marquee"
+                android:textStyle="normal"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textAlignment="textStart"
+                android:layout_gravity="start"
+                android:textColor="@color/md_grey_900"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:paddingRight="10dp"
+                android:paddingEnd="10dp"
+                android:paddingStart="10dp"
+                android:paddingLeft="10dp" />
 
-    <ImageView
-        android:id="@+id/ImageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/TVCustom"
-        android:layout_alignTop="@id/TVCustom"
-        android:paddingEnd="10dp"
-        android:paddingRight="10dp"
-        android:paddingStart="10dp"
-        android:paddingLeft="10dp"
-        android:src="@drawable/ic_action_call"
-        android:layout_toStartOf="@id/View"
-        android:layout_toLeftOf="@id/View"
-        android:layout_centerVertical="true"
-        android:background="#ffffff"
-        tools:ignore="ContentDescription" />
+        </RelativeLayout>
+
+        <ImageButton
+            android:id="@+id/ImageButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#ffffff"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_alignBottom="@id/TVRL"
+            android:layout_alignTop="@id/TVRL"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:paddingEnd="15dp"
+            android:paddingStart="15dp"
+            android:src="@drawable/ic_action_message"
+            tools:ignore="ContentDescription" />
+
+        <View
+            android:id="@+id/View"
+            android:layout_width="2dp"
+            android:layout_height="20dp"
+            android:layout_centerVertical="true"
+            android:layout_toStartOf="@id/ImageButton"
+            android:layout_toLeftOf="@id/ImageButton"
+            android:background="@color/md_grey_500"/>
+
+        <ImageView
+            android:id="@+id/ImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/TVRL"
+            android:layout_alignTop="@id/TVRL"
+            android:paddingEnd="10dp"
+            android:paddingRight="10dp"
+            android:paddingStart="10dp"
+            android:paddingLeft="10dp"
+            android:src="@drawable/ic_action_call"
+            android:layout_toStartOf="@id/View"
+            android:layout_toLeftOf="@id/View"
+            android:layout_centerVertical="true"
+            tools:ignore="ContentDescription" />
+
+    </RelativeLayout>
 
 </RelativeLayout>

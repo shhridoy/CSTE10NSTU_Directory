@@ -36,6 +36,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
     private List<ListItems> itemsList = null;
     private Context context;
+    private int previousPosition = 0;
 
     public MyAdapter(List<ListItems> itemsList, Context context) {
         this.itemsList = itemsList;
@@ -58,6 +59,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         holder.textViewid.setText(getSpanableBoldString(listItem.getId(), 3));
         holder.textViewMobile.setText(getSpanableBoldString(listItem.getMobile(), 8));
 
+        if (position > previousPosition) { // scrolling down
+            AnimationUtil.animate(holder, true);
+        } else { // scrolling up
+            AnimationUtil.animate(holder, false);
+        }
+        previousPosition = position;
+
         if (listItem.getImageUrl() != null) {
             Picasso.with(context).load(listItem.getImageUrl()).into(holder.imageView);
             holder.imageUrl = listItem.getImageUrl();
@@ -68,33 +76,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             holder.imagePath = path;
         }
 
-        holder.rlItem.setOnTouchListener(new View.OnTouchListener() {
-
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                holder.rlItem.setBackgroundColor(Color.LTGRAY);
-                new android.os.Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        holder.rlItem.setBackgroundColor(Color.WHITE);
-                    }
-                }, 250);
-                return false;
-            }
-        });
-
 
         holder.callButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                holder.callButton.setBackgroundColor(Color.LTGRAY);
-                new android.os.Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        holder.callButton.setBackgroundColor(Color.WHITE);
-                    }
-                }, 250);
-
                 Intent callIntent = new Intent(Intent.ACTION_CALL);
                 callIntent.setData(Uri.parse("tel:"+Uri.encode(listItem.getMobile().substring(9).trim())));
                 if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {

@@ -44,6 +44,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.cste10nstu.shhridoy.cste10nstu.ListViewData.BirthdayListItems;
+import com.cste10nstu.shhridoy.cste10nstu.ListViewData.CustomAdapter;
 import com.cste10nstu.shhridoy.cste10nstu.ListViewData.ListUtils;
 import com.cste10nstu.shhridoy.cste10nstu.MyDatabase.DBHelper;
 import com.cste10nstu.shhridoy.cste10nstu.RecyclerViewData.ListItems;
@@ -547,8 +549,10 @@ public class MainActivity extends AppCompatActivity {
 
         ListView todayLv = myDialog.findViewById(R.id.TodayBirthdayListView);
         ListView monthLv = myDialog.findViewById(R.id.MonthBirthdayListView);
-        List<String> list1 = new ArrayList<>();
-        List<String> list2 = new ArrayList<>();
+        ListView wentLv = myDialog.findViewById(R.id.WentAwayListview);
+        ArrayList<BirthdayListItems> list1 = new ArrayList<>();
+        ArrayList<BirthdayListItems> list2 = new ArrayList<>();
+        ArrayList<BirthdayListItems> list3 = new ArrayList<>();
 
         Calendar c = Calendar.getInstance();
         int currMonth = c.get(Calendar.MONTH)+1; // count month from 0 to 11
@@ -562,39 +566,30 @@ public class MainActivity extends AppCompatActivity {
             String[] splitedDate = date.split("/");
             if (Integer.parseInt(splitedDate[1]) == currMonth) {
                 if (Integer.parseInt(splitedDate[0]) == currDay) {
-                    list1.add(name);
+                    BirthdayListItems bl = new BirthdayListItems(name, stringFormatOfDate(splitedDate[0], splitedDate[1]));
+                    list1.add(bl);
+                } else if (Integer.parseInt(splitedDate[0]) > currDay) {
+                    BirthdayListItems bl = new BirthdayListItems(name, stringFormatOfDate(splitedDate[0], splitedDate[1]));
+                    list2.add(bl);
                 } else {
-                    list2.add(name);
+                    BirthdayListItems bl = new BirthdayListItems(name, stringFormatOfDate(splitedDate[0], splitedDate[1]));
+                    list3.add(bl);
                 }
             }
         }
 
-        ArrayAdapter<String> arrayAdapter1 = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_activated_1, list1);
-        todayLv.setAdapter(arrayAdapter1);
+        CustomAdapter customAdapter1 = new CustomAdapter(this, 4, list1);
+        todayLv.setAdapter(customAdapter1);
 
-        ArrayAdapter<String> arrayAdapter2 = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_activated_1, list2);
-        monthLv.setAdapter(arrayAdapter2);
+        CustomAdapter customAdapter2 = new CustomAdapter(this, 4, list2);
+        monthLv.setAdapter(customAdapter2);
 
-        todayLv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent = new Intent(MainActivity.this, SecondActivity.class);
-                intent.putExtra("Name", adapterView.getItemAtPosition(i).toString());
-                startActivity(intent);
-            }
-        });
-
-        monthLv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent = new Intent(MainActivity.this, SecondActivity.class);
-                intent.putExtra("Name", adapterView.getItemAtPosition(i).toString());
-                startActivity(intent);
-            }
-        });
+        CustomAdapter customAdapter3 = new CustomAdapter(this, 4, list3);
+        wentLv.setAdapter(customAdapter3);
 
         ListUtils.setDynamicHeight(todayLv);
         ListUtils.setDynamicHeight(monthLv);
+        ListUtils.setDynamicHeight(wentLv);
 
         myDialog.show();
     }
@@ -718,6 +713,65 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return false;
+    }
+
+    private String stringFormatOfDate (String day, String month) {
+        int d = Integer.parseInt(day);
+        int m = Integer.parseInt(month);
+        String firstPart, secondPart;
+
+        if (d == 1) {
+            firstPart = d+"st";
+        } else if (d == 2) {
+            firstPart = d+"nd";
+        } else if (d == 3) {
+            firstPart = d+"rd";
+        } else {
+            firstPart = d+"th";
+        }
+
+        switch (m) {
+            case 1:
+                secondPart = "Jan";
+                break;
+            case 2:
+                secondPart = "Feb";
+                break;
+            case 3:
+                secondPart = "Mar";
+                break;
+            case 4:
+                secondPart = "Apr";
+                break;
+            case 5:
+                secondPart = "May";
+                break;
+            case 6:
+                secondPart = "Jun";
+                break;
+            case 7:
+                secondPart = "Jul";
+                break;
+            case 8:
+                secondPart = "Aug";
+                break;
+            case 9:
+                secondPart = "Sep";
+                break;
+            case 10:
+                secondPart = "Oct";
+                break;
+            case 11:
+                secondPart = "Nov";
+                break;
+            case 12:
+                secondPart = "Dec";
+                break;
+            default:
+                secondPart = "December";
+        }
+
+        return firstPart+", "+secondPart;
     }
 
 }

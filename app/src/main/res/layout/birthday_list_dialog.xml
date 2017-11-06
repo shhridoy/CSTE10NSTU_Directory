@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/md_grey_200">
 
     <LinearLayout
         android:orientation="vertical"
@@ -23,7 +26,10 @@
         <ListView
             android:id="@+id/TodayBirthdayListView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:dividerHeight="0dp"
+            android:divider="@color/md_grey_200"
+            tools:ignore="NestedScrolling">
 
         </ListView>
 
@@ -38,10 +44,45 @@
             android:padding="5dp"
             android:background="@color/md_grey_200"/>
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Upcoming"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textStyle="bold"
+            android:textColor="@color/md_grey_800"
+            android:textAlignment="center"
+            android:padding="5dp"
+            android:background="@color/md_grey_200"/>
+
         <ListView
             android:id="@+id/MonthBirthdayListView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:dividerHeight="0dp"
+            android:divider="@color/md_grey_200"
+            tools:ignore="NestedScrolling">
+
+        </ListView>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Went away"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textStyle="bold"
+            android:textColor="@color/md_grey_800"
+            android:textAlignment="center"
+            android:padding="5dp"
+            android:background="@color/md_grey_200"/>
+
+        <ListView
+            android:id="@+id/WentAwayListview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:dividerHeight="0dp"
+            android:divider="@color/md_grey_200"
+            tools:ignore="NestedScrolling">
 
         </ListView>
 
