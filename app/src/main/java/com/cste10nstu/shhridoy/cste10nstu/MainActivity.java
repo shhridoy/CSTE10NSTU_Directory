@@ -52,6 +52,8 @@ import com.cste10nstu.shhridoy.cste10nstu.MyAnimations.AnimationUtil;
 import com.cste10nstu.shhridoy.cste10nstu.MyDatabase.DBHelper;
 import com.cste10nstu.shhridoy.cste10nstu.RecyclerViewData.ListItems;
 import com.cste10nstu.shhridoy.cste10nstu.RecyclerViewData.MyAdapter;
+import com.hitomi.cmlibrary.CircleMenu;
+import com.hitomi.cmlibrary.OnMenuSelectedListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -90,6 +92,8 @@ public class MainActivity extends AppCompatActivity {
 
     private LinearLayout llContact, llBirthdays, llFavorite;
     private ScrollView scrollView;
+    private CircleMenu circleMenu;
+    String item[] = {"Call", "Message", "Copy", "Facebook", "Email"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,6 +109,20 @@ public class MainActivity extends AppCompatActivity {
         llFavorite = findViewById(R.id.LLFavorite);
         scrollView = findViewById(R.id.scrollView);
         scrollView.setVisibility(View.INVISIBLE);
+        circleMenu = findViewById(R.id.CircleMenu);
+        circleMenu.setMainMenu(Color.parseColor("#CDCDCD"), R.drawable.ic_action_search, R.drawable.ic_action_others)
+                .addSubMenu(Color.RED, R.drawable.ic_action_call)
+                .addSubMenu(Color.GRAY, R.drawable.ic_action_message)
+                .addSubMenu(Color.YELLOW, R.drawable.ic_action_cpoy)
+                .addSubMenu(Color.MAGENTA, R.drawable.ic_action_f)
+                .addSubMenu(Color.GREEN, R.drawable.ic_action_mail)
+                .setOnMenuSelectedListener(new OnMenuSelectedListener() {
+                    @Override
+                    public void onMenuSelected(int i) {
+                        Toast.makeText(getApplicationContext(), "You select "+item[i], Toast.LENGTH_LONG).show();
+                    }
+                });
+        circleMenu.setVisibility(View.INVISIBLE);
 
         recyclerView = findViewById(R.id.RecyclerView);
         recyclerView.setHasFixedSize(true);
@@ -163,6 +181,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 recyclerView.setVisibility(View.VISIBLE);
                 scrollView.setVisibility(View.INVISIBLE);
+                circleMenu.setVisibility(View.INVISIBLE);
                 llContact.setBackgroundColor(getResources().getColor(R.color.md_grey_100));
                 llBirthdays.setBackgroundColor(Color.WHITE);
                 llFavorite.setBackgroundColor(Color.WHITE);
@@ -191,6 +210,7 @@ public class MainActivity extends AppCompatActivity {
                 llContact.setBackgroundColor(Color.WHITE);
                 llBirthdays.setBackgroundColor(Color.WHITE);
                 llFavorite.setBackgroundColor(getResources().getColor(R.color.md_grey_100));
+                circleMenu.setVisibility(View.VISIBLE);
             }
         });
 
@@ -199,6 +219,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 recyclerView.setVisibility(View.INVISIBLE);
                 scrollView.setVisibility(View.VISIBLE);
+                circleMenu.setVisibility(View.INVISIBLE);
                 llContact.setBackgroundColor(Color.WHITE);
                 llBirthdays.setBackgroundColor(getResources().getColor(R.color.md_grey_100));
                 llFavorite.setBackgroundColor(Color.WHITE);
