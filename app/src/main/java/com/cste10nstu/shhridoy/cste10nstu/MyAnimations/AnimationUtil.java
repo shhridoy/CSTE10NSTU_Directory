@@ -31,10 +31,10 @@ public class AnimationUtil {
         view.startAnimation(anim);
     }
 
-    public static void bottomToUpAnimation(View view) {
-        TranslateAnimation animation1 = new TranslateAnimation(0.0f, 0.0f, 1500.0f, 0.0f); // new TranslateAnimation(xFrom,xTo, yFrom,yTo)
-        animation1.setDuration(1500); // animation duration
-        animation1.setRepeatCount(4); // animation repeat count if u want to repeat
+    public static void bottomToUpAnimation(View view, int duration) {
+        TranslateAnimation animation1 = new TranslateAnimation(0.0f, 0.0f, 1000.0f, 0.0f); // new TranslateAnimation(xFrom,xTo, yFrom,yTo)
+        animation1.setDuration(duration); // animation duration
+        //animation1.setRepeatCount(4); // animation repeat count if u want to repeat
         animation1.setFillAfter(true);
         view .startAnimation(animation1);//your_view for mine is imageView
     }

@@ -47,6 +47,7 @@ import com.android.volley.toolbox.Volley;
 import com.cste10nstu.shhridoy.cste10nstu.ListViewData.BirthdayListItems;
 import com.cste10nstu.shhridoy.cste10nstu.ListViewData.CustomAdapter;
 import com.cste10nstu.shhridoy.cste10nstu.ListViewData.ListUtils;
+import com.cste10nstu.shhridoy.cste10nstu.MyAnimations.AnimationUtil;
 import com.cste10nstu.shhridoy.cste10nstu.MyDatabase.DBHelper;
 import com.cste10nstu.shhridoy.cste10nstu.RecyclerViewData.ListItems;
 import com.cste10nstu.shhridoy.cste10nstu.RecyclerViewData.MyAdapter;
@@ -547,6 +548,11 @@ public class MainActivity extends AppCompatActivity {
         myDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         myDialog.setContentView(R.layout.birthday_list_dialog);
 
+        TextView tv01 = myDialog.findViewById(R.id.TV01);
+        TextView tv02 = myDialog.findViewById(R.id.TV02);
+        TextView tv03 = myDialog.findViewById(R.id.TV03);
+        TextView tv04 = myDialog.findViewById(R.id.TV04);
+
         ListView todayLv = myDialog.findViewById(R.id.TodayBirthdayListView);
         ListView monthLv = myDialog.findViewById(R.id.MonthBirthdayListView);
         ListView wentLv = myDialog.findViewById(R.id.WentAwayListview);
@@ -590,6 +596,14 @@ public class MainActivity extends AppCompatActivity {
         ListUtils.setDynamicHeight(todayLv);
         ListUtils.setDynamicHeight(monthLv);
         ListUtils.setDynamicHeight(wentLv);
+
+        AnimationUtil.bottomToUpAnimation(tv01, 500);
+
+        AnimationUtil.bottomToUpAnimation(tv02, 800);
+        AnimationUtil.bottomToUpAnimation(tv03, 800);
+
+        AnimationUtil.bottomToUpAnimation(tv04, 1500);
+        AnimationUtil.bottomToUpAnimation(wentLv, 1500);
 
         myDialog.show();
     }
