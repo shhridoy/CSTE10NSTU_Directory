@@ -93,7 +93,7 @@ public class CustomAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(context, SecondActivity.class);
-                    intent.putExtra("Name", birthdayListItems.getName());
+                    intent.putExtra("Id", getId(birthdayListItems.getName()));
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(intent);
                 }
@@ -256,5 +256,18 @@ public class CustomAdapter extends BaseAdapter {
             }
         }
         return Name;
+    }
+
+    private String getId(String name) {
+        DBHelper dbHelper = new DBHelper(context);
+        Cursor c = dbHelper.retrieveData();
+        String id = "ASH1501037M";
+        while (c.moveToNext()) {
+            if (c.getString(1).equals(name)){
+                id = c.getString(2);
+                break;
+            }
+        }
+        return id;
     }
 }

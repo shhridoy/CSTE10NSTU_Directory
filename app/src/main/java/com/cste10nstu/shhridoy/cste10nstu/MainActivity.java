@@ -565,7 +565,7 @@ public class MainActivity extends AppCompatActivity {
         int currDay = c.get(Calendar.DATE);
 
         dbHelper = new DBHelper(this);
-        cursor = dbHelper.retrieveData();
+        cursor = dbHelper.retrieveDataInOrderToBirthdate();
         while (cursor.moveToNext()){
             String name = cursor.getString(1);
             String date = cursor.getString(4);
@@ -699,7 +699,7 @@ public class MainActivity extends AppCompatActivity {
         String fileName = "default";
         while (cursor.moveToNext()) {
             if (i == cursor.getInt(0)) {
-                fileName = cursor.getString(1);
+                fileName = cursor.getString(2);
                 break;
             }
         }

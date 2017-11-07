@@ -115,4 +115,9 @@ public class DBHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
+    public Cursor retrieveDataInOrderToBirthdate () {
+        Cursor c = this.getReadableDatabase().rawQuery("SELECT * FROM "+TB_NAME+" ORDER BY "+date_of_birth+" ASC",null);
+        return c;
+    }
+
 }

@@ -42,9 +42,11 @@ public class SecondActivity extends AppCompatActivity {
         setContentView(R.layout.activity_second);
 
         Intent i = getIntent();
-        name = i.getStringExtra("Name");
+        Id = i.getStringExtra("Id");
         imageUrl = i.getStringExtra("ImageUrl");
         imagePath = i.getStringExtra("ImagePath");
+
+        fetchDataFromDB(Id);
 
         initializeViews();
         setSupportActionBar(toolbar);
@@ -54,14 +56,12 @@ public class SecondActivity extends AppCompatActivity {
 
         animationFunction();
 
-        fetchDataFromDB(name);
-
         if (imageUrl != null) {
             Picasso.with(this).load(imageUrl).into(imageView);
         } else if (imagePath != null) {
             Picasso.with(this).load(new File(imagePath)).into(imageView);
         } else {
-            Picasso.with(this).load(new File("sdcard/cste10nstu/"+name+".jpg")).into(imageView);
+            Picasso.with(this).load(new File("sdcard/cste10nstu/"+Id+".jpg")).into(imageView);
         }
 
         if (name != null) {
@@ -137,12 +137,12 @@ public class SecondActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void fetchDataFromDB (String STD_NAME) {
+    private void fetchDataFromDB (String std_id) {
         dbHelper = new DBHelper(this);
         Cursor cursor = dbHelper.retrieveData();
         while (cursor.moveToNext()) {
-            if (cursor.getString(1).equals(STD_NAME)){
-                Id = cursor.getString(2);
+            if (cursor.getString(2).equals(std_id)){
+                name = cursor.getString(1);
                 Mobile_1 = cursor.getString(3);
                 DateOfBirth = cursor.getString(4);
                 Mobile_2 = cursor.getString(6);

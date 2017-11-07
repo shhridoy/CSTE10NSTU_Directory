@@ -71,7 +71,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             Picasso.with(context).load(listItem.getImageUrl()).into(holder.imageView);
             holder.imageUrl = listItem.getImageUrl();
         } else {
-            String fileName = listItem.getName()+".jpg";
+            String fileName = listItem.getId().substring(4)+".jpg";
             String path = "sdcard/cste10nstu/"+fileName;
             Picasso.with(context).load(new File(path)).into(holder.imageView);
             holder.imagePath = path;
@@ -121,7 +121,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         @Override
         public void onClick(View v) {
             Intent intent = new Intent(context, SecondActivity.class);
-            intent.putExtra("Name", textViewName.getText().toString());
+            intent.putExtra("Id", textViewid.getText().toString().substring(4).trim());
             intent.putExtra("ImageUrl", imageUrl);
             intent.putExtra("ImagePath", imagePath);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
