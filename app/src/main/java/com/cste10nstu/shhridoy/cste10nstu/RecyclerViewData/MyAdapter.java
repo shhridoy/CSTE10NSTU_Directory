@@ -4,7 +4,6 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.net.Uri;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.RecyclerView;
@@ -25,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.cste10nstu.shhridoy.cste10nstu.MyAnimations.AnimationUtil;
 import com.cste10nstu.shhridoy.cste10nstu.R;
 import com.cste10nstu.shhridoy.cste10nstu.SecondActivity;
 import com.squareup.picasso.Picasso;
@@ -60,11 +60,12 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         holder.textViewMobile.setText(getSpanableBoldString(listItem.getMobile(), 8));
 
         if (position > previousPosition) { // scrolling down
-            AnimationUtil.animate(holder, true);
+            AnimationUtil.animate(holder.itemView, true);
         } else { // scrolling up
-            AnimationUtil.animate(holder, false);
+            AnimationUtil.animate(holder.itemView, false);
         }
         previousPosition = position;
+        AnimationUtil.setFadeAnimation(holder.itemView);
 
         if (listItem.getImageUrl() != null) {
             Picasso.with(context).load(listItem.getImageUrl()).into(holder.imageView);

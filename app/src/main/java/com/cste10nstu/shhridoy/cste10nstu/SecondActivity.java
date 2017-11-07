@@ -1,43 +1,34 @@
 package com.cste10nstu.shhridoy.cste10nstu;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.cste10nstu.shhridoy.cste10nstu.ListViewData.CustomAdapter;
 import com.cste10nstu.shhridoy.cste10nstu.ListViewData.ListUtils;
+import com.cste10nstu.shhridoy.cste10nstu.MyAnimations.AnimationUtil;
 import com.cste10nstu.shhridoy.cste10nstu.MyDatabase.DBHelper;
-import com.cste10nstu.shhridoy.cste10nstu.RecyclerViewData.ListItems;
-import com.cste10nstu.shhridoy.cste10nstu.RecyclerViewData.MyAdapter;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class SecondActivity extends AppCompatActivity {
 
     Toolbar toolbar;
     ListView lvMobile, lvEmail, lvSocial;
-    TextView tvName, tvId, tvBirtDate, tvHomeTown;
+    TextView tvName, tvId, tvBirtDate, tvHomeTown, tv1, tv2, tv3, tv4;
     ImageView imageView;
+    LinearLayout ll1, ll2, ll3;
     ArrayList<String> arrayListMobile, arrayListEmail, arrayListSocial;
     CustomAdapter customAdapter, customAdapter2, customAdapter3;
     String name, imageUrl, imagePath;
@@ -60,6 +51,8 @@ public class SecondActivity extends AppCompatActivity {
         //noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(name);
+
+        animationFunction();
 
         fetchDataFromDB(name);
 
@@ -173,9 +166,31 @@ public class SecondActivity extends AppCompatActivity {
         lvSocial = findViewById(R.id.SocialListView);
         tvBirtDate = findViewById(R.id.TVBirthDate);
         tvHomeTown = findViewById(R.id.TVHomeTown);
+        ll1 = findViewById(R.id.LL1);
+        ll2 = findViewById(R.id.BirthDateLL);
+        ll3 = findViewById(R.id.HomeTownLL);
+        tv1 = findViewById(R.id.TV1);
+        tv2 = findViewById(R.id.TV2);
+        tv3 = findViewById(R.id.TV3);
+        tv4 = findViewById(R.id.TV4);
     }
 
+    private void animationFunction () {
+        AnimationUtil.rightToLeftAnimation(ll1, 600);
 
+        AnimationUtil.leftToRightAnimation(tv1, 900);
+        AnimationUtil.leftToRightAnimation(lvMobile, 900);
+
+        AnimationUtil.rightToLeftAnimation(tv2, 1200);
+        AnimationUtil.rightToLeftAnimation(lvEmail, 1200);
+
+        AnimationUtil.leftToRightAnimation(tv3, 1500);
+        AnimationUtil.leftToRightAnimation(lvSocial, 1500);
+
+        AnimationUtil.rightToLeftAnimation(tv4, 1800);
+        AnimationUtil.rightToLeftAnimation(ll2, 1800);
+        AnimationUtil.rightToLeftAnimation(ll3, 1800);
+    }
 
     private String stringFormatOfDate (String day, String month) {
         int d = Integer.parseInt(day);

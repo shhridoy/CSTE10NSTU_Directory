@@ -1,8 +1,5 @@
 package com.cste10nstu.shhridoy.cste10nstu.ListViewData;
 
-/**
- * Created by Dream Land on 11/7/2017.
- */
 
 public class BirthdayListItems {
 

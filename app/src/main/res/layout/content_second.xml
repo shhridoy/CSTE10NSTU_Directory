@@ -211,15 +211,6 @@
 
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/ExtraTV"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/HomeTownLL"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textStyle="normal"
-            android:textAlignment="center"/>
-
     </RelativeLayout>
 
 </ScrollView>
