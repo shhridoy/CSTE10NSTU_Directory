@@ -4,6 +4,8 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteException;
 import android.net.Uri;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.RecyclerView;
@@ -23,8 +25,10 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cste10nstu.shhridoy.cste10nstu.MyAnimations.AnimationUtil;
+import com.cste10nstu.shhridoy.cste10nstu.MyDatabase.DBHelper;
 import com.cste10nstu.shhridoy.cste10nstu.R;
 import com.cste10nstu.shhridoy.cste10nstu.SecondActivity;
 import com.squareup.picasso.Picasso;
@@ -37,10 +41,12 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     private List<ListItems> itemsList = null;
     private Context context;
     private int previousPosition = 0;
+    private int tag = 0;
 
-    public MyAdapter(List<ListItems> itemsList, Context context) {
+    public MyAdapter(List<ListItems> itemsList, Context context, int tag) {
         this.itemsList = itemsList;
         this.context = context;
+        this.tag = tag;
     }
 
     @Override
@@ -133,9 +139,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             contextMenu.setHeaderTitle(getSpanableString(textViewName.getText().toString()));
             MenuItem call = contextMenu.add(Menu.NONE, 1, 1, getSpanableString("Call"));
             MenuItem sms = contextMenu.add(Menu.NONE, 2, 2, getSpanableString("SMS"));
+            MenuItem addToFav = contextMenu.add(Menu.NONE, 3, 3, tag == 2 ? getSpanableString("Delete from favorite") : getSpanableString("Add to favorite"));
             //groupId, itemId, order, title
             call.setOnMenuItemClickListener(onChange);
             sms.setOnMenuItemClickListener(onChange);
+            addToFav.setOnMenuItemClickListener(onChange);
         }
 
         private SpannableString getSpanableString (String s) {
@@ -168,6 +176,14 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                         smsIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         context.startActivity(smsIntent);
                         return true;
+
+                    case 3:
+                        if (tag == 2) {
+                            Toast.makeText(context, "Testing", Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(context, "Testing", Toast.LENGTH_LONG).show();
+                        }
+                        return true;
                 }
                 return false;
             }
@@ -179,5 +195,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         str.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD), 0, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         return str;
     }
+
 
 }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,11 +9,181 @@
     tools:showIn="@layout/activity_main"
     android:background="@color/md_grey_200">
 
+    <LinearLayout
+        android:id="@+id/LinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/LLContact"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:layout_margin="5dp"
+            android:background="#ffffff">
+            <ImageView
+                android:src="@drawable/ic_action_call"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:ignore="ContentDescription" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Contacts"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/md_grey_800"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/LLFavorite"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:layout_margin="5dp"
+            android:background="#ffffff">
+            <ImageView
+                android:src="@android:drawable/star_big_on"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:ignore="ContentDescription" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Favorites"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/md_grey_800"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/LLBirthdays"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:layout_margin="5dp"
+            android:background="#ffffff">
+            <ImageView
+                android:src="@drawable/ic_action_birthday_red"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:ignore="ContentDescription" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Birthday's"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/md_grey_800"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/RecyclerView"
+        android:layout_below="@id/LinearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
     </android.support.v7.widget.RecyclerView>
 
-</android.support.constraint.ConstraintLayout>
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_below="@id/LinearLayout"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/md_grey_200">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/TV01"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Today's Birthday"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textStyle="bold"
+                android:textColor="@color/md_grey_800"
+                android:textAlignment="center"
+                android:padding="5dp"
+                android:background="@color/md_grey_200"/>
+
+            <ListView
+                android:id="@+id/TodayBirthdayListView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:dividerHeight="0dp"
+                android:divider="@color/md_grey_200"
+                tools:ignore="NestedScrolling">
+
+            </ListView>
+
+            <TextView
+                android:id="@+id/TV02"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Birthday's of this Month"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textStyle="bold"
+                android:textColor="@color/md_grey_800"
+                android:textAlignment="center"
+                android:padding="5dp"
+                android:background="@color/md_grey_200"/>
+
+            <TextView
+                android:id="@+id/TV03"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Upcoming"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textStyle="bold"
+                android:textColor="@color/md_grey_800"
+                android:textAlignment="center"
+                android:padding="5dp"
+                android:background="@color/md_grey_200"/>
+
+            <ListView
+                android:id="@+id/MonthBirthdayListView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:dividerHeight="0dp"
+                android:divider="@color/md_grey_200"
+                tools:ignore="NestedScrolling">
+
+            </ListView>
+
+            <TextView
+                android:id="@+id/TV04"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Went away"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textStyle="bold"
+                android:textColor="@color/md_grey_800"
+                android:textAlignment="center"
+                android:padding="5dp"
+                android:background="@color/md_grey_200"/>
+
+            <ListView
+                android:id="@+id/WentAwayListview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:dividerHeight="0dp"
+                android:divider="@color/md_grey_200"
+                tools:ignore="NestedScrolling">
+
+            </ListView>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</RelativeLayout>

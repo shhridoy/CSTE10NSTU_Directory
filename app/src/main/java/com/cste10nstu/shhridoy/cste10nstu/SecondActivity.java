@@ -46,7 +46,7 @@ public class SecondActivity extends AppCompatActivity {
         imageUrl = i.getStringExtra("ImageUrl");
         imagePath = i.getStringExtra("ImagePath");
 
-        fetchDataFromDB(Id);
+        assignDataFromDatabase(Id);
 
         initializeViews();
         setSupportActionBar(toolbar);
@@ -137,7 +137,7 @@ public class SecondActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void fetchDataFromDB (String std_id) {
+    private void assignDataFromDatabase(String std_id) {
         dbHelper = new DBHelper(this);
         Cursor cursor = dbHelper.retrieveData();
         while (cursor.moveToNext()) {

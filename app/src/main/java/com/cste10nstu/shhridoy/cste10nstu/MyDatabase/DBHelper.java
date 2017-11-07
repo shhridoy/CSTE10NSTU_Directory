@@ -83,6 +83,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     }
 
+
     public void updateData(String oldMobileNo, String newMobileNo) {
         this.getWritableDatabase().execSQL("UPDATE "+TB_NAME+" SET "+mobile_no+" = '"+newMobileNo+"' "+" WHERE "+mobile_no+" = '"+oldMobileNo+"'");
         this.getWritableDatabase().close();

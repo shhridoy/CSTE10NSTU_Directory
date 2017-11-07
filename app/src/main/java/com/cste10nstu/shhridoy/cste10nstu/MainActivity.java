@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -29,12 +30,12 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -87,13 +88,23 @@ public class MainActivity extends AppCompatActivity {
     private Cursor cursor;
     private Boolean noData;
 
+    private LinearLayout llContact, llBirthdays, llFavorite;
+    private ScrollView scrollView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        llContact = findViewById(R.id.LLContact);
+        llContact.setBackgroundColor(getResources().getColor(R.color.md_grey_100));
+        llBirthdays = findViewById(R.id.LLBirthdays);
+        llFavorite = findViewById(R.id.LLFavorite);
+        scrollView = findViewById(R.id.scrollView);
+        scrollView.setVisibility(View.INVISIBLE);
 
         recyclerView = findViewById(R.id.RecyclerView);
         recyclerView.setHasFixedSize(true);
@@ -147,6 +158,55 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        llContact.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                recyclerView.setVisibility(View.VISIBLE);
+                scrollView.setVisibility(View.INVISIBLE);
+                llContact.setBackgroundColor(getResources().getColor(R.color.md_grey_100));
+                llBirthdays.setBackgroundColor(Color.WHITE);
+                llFavorite.setBackgroundColor(Color.WHITE);
+
+                if (noData) {
+                    fab.show();
+                    if (isInternetOn()) {
+                        loadRecyclerViewFromJson();
+                    } else {
+                        Snackbar.make(findViewById(R.id.coordinatorMain), "Please turn your internet connection on to sync the data first time!!", Snackbar.LENGTH_LONG)
+                                .setAction("Action", null).show();
+                    }
+                } else {
+                    fab.hide();
+                    loadRecyclerViewFromDatabase();
+                }
+            }
+        });
+
+        llFavorite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getApplicationContext(), "Favorites clicked", Toast.LENGTH_LONG).show();
+                recyclerView.setVisibility(View.INVISIBLE);
+                scrollView.setVisibility(View.INVISIBLE);
+                llContact.setBackgroundColor(Color.WHITE);
+                llBirthdays.setBackgroundColor(Color.WHITE);
+                llFavorite.setBackgroundColor(getResources().getColor(R.color.md_grey_100));
+            }
+        });
+
+        llBirthdays.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                recyclerView.setVisibility(View.INVISIBLE);
+                scrollView.setVisibility(View.VISIBLE);
+                llContact.setBackgroundColor(Color.WHITE);
+                llBirthdays.setBackgroundColor(getResources().getColor(R.color.md_grey_100));
+                llFavorite.setBackgroundColor(Color.WHITE);
+                scrollView.scrollTo(0, 0);
+                birthdayLists();
+            }
+        });
+
         setNotification();
     }
 
@@ -186,7 +246,7 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
-                    adapter = new MyAdapter(filteredList, MainActivity.this);
+                    adapter = new MyAdapter(filteredList, MainActivity.this, 1);
                     recyclerView.setAdapter(adapter);
                     adapter.notifyDataSetChanged();  // data set changed
                     return false;
@@ -333,7 +393,7 @@ public class MainActivity extends AppCompatActivity {
                                 }
 
                                 itemsList.add(list);
-                                adapter = new MyAdapter(itemsList, getApplicationContext());
+                                adapter = new MyAdapter(itemsList, getApplicationContext(), 1);
                                 recyclerView.setAdapter(adapter);
                             }
 
@@ -384,7 +444,7 @@ public class MainActivity extends AppCompatActivity {
 
                 ListItems listItems = new ListItems(name, "ID: " +st_id, "CONTACT: "+st_mobile);
                 itemsList.add(listItems);
-                adapter = new MyAdapter(itemsList, getApplicationContext());
+                adapter = new MyAdapter(itemsList, getApplicationContext(), 1);
                 recyclerView.setAdapter(adapter);
                 i++;
             }
@@ -786,6 +846,65 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return firstPart+", "+secondPart;
+    }
+
+    private void birthdayLists () {
+        TextView tv01 = findViewById(R.id.TV01);
+        TextView tv02 = findViewById(R.id.TV02);
+        TextView tv03 = findViewById(R.id.TV03);
+        TextView tv04 = findViewById(R.id.TV04);
+
+        ListView todayLv = findViewById(R.id.TodayBirthdayListView);
+        ListView monthLv = findViewById(R.id.MonthBirthdayListView);
+        ListView wentLv = findViewById(R.id.WentAwayListview);
+        ArrayList<BirthdayListItems> list1 = new ArrayList<>();
+        ArrayList<BirthdayListItems> list2 = new ArrayList<>();
+        ArrayList<BirthdayListItems> list3 = new ArrayList<>();
+
+        Calendar c = Calendar.getInstance();
+        int currMonth = c.get(Calendar.MONTH)+1; // count month from 0 to 11
+        int currDay = c.get(Calendar.DATE);
+
+        dbHelper = new DBHelper(this);
+        cursor = dbHelper.retrieveDataInOrderToBirthdate();
+        while (cursor.moveToNext()){
+            String name = cursor.getString(1);
+            String date = cursor.getString(4);
+            String[] splitedDate = date.split("/");
+            if (Integer.parseInt(splitedDate[1]) == currMonth) {
+                if (Integer.parseInt(splitedDate[0]) == currDay) {
+                    BirthdayListItems bl = new BirthdayListItems(name, stringFormatOfDate(splitedDate[0], splitedDate[1]));
+                    list1.add(bl);
+                } else if (Integer.parseInt(splitedDate[0]) > currDay) {
+                    BirthdayListItems bl = new BirthdayListItems(name, stringFormatOfDate(splitedDate[0], splitedDate[1]));
+                    list2.add(bl);
+                } else {
+                    BirthdayListItems bl = new BirthdayListItems(name, stringFormatOfDate(splitedDate[0], splitedDate[1]));
+                    list3.add(bl);
+                }
+            }
+        }
+
+        CustomAdapter customAdapter1 = new CustomAdapter(this, 4, list1);
+        todayLv.setAdapter(customAdapter1);
+
+        CustomAdapter customAdapter2 = new CustomAdapter(this, 4, list2);
+        monthLv.setAdapter(customAdapter2);
+
+        CustomAdapter customAdapter3 = new CustomAdapter(this, 4, list3);
+        wentLv.setAdapter(customAdapter3);
+
+        ListUtils.setDynamicHeight(todayLv);
+        ListUtils.setDynamicHeight(monthLv);
+        ListUtils.setDynamicHeight(wentLv);
+
+        AnimationUtil.bottomToUpAnimation(tv01, 500);
+
+        AnimationUtil.bottomToUpAnimation(tv02, 800);
+        AnimationUtil.bottomToUpAnimation(tv03, 800);
+
+        AnimationUtil.bottomToUpAnimation(tv04, 1500);
+        AnimationUtil.bottomToUpAnimation(wentLv, 1500);
     }
 
 }
