@@ -63,7 +63,7 @@ public class DBHelperFav extends SQLiteOpenHelper {
     }
 
     public Cursor retrieveFavData () {
-        Cursor c = this.getReadableDatabase().rawQuery("SELECT * FROM "+TB_NAME+" ORDER BY "+name+" ASC",null);
+        Cursor c = this.getReadableDatabase().rawQuery("SELECT * FROM "+TB_NAME+" ORDER BY "+student_id+" ASC",null);
         return c;
     }
 }

@@ -7,13 +7,14 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.cste10nstu.shhridoy.cste10nstu.MainActivity"
     tools:showIn="@layout/activity_main"
-    android:background="@color/md_grey_200">
+    android:background="@color/md_grey_300">
 
     <LinearLayout
         android:id="@+id/LinearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginBottom="4dp">
 
         <LinearLayout
             android:id="@+id/LLContact"
@@ -26,7 +27,7 @@
             android:layout_marginEnd="2dp"
             android:background="#ffffff">
             <ImageView
-                android:src="@drawable/ic_action_call"
+                android:src="@drawable/ic_action_contacts"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 tools:ignore="ContentDescription" />
@@ -102,7 +103,7 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/md_grey_200">
+        android:background="@color/md_grey_300">
 
         <LinearLayout
             android:orientation="vertical"
@@ -119,14 +120,14 @@
                 android:textColor="@color/md_grey_800"
                 android:textAlignment="center"
                 android:padding="5dp"
-                android:background="@color/md_grey_200"/>
+                android:background="@color/md_grey_300"/>
 
             <ListView
                 android:id="@+id/TodayBirthdayListView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:dividerHeight="0dp"
-                android:divider="@color/md_grey_200"
+                android:divider="@color/md_grey_300"
                 tools:ignore="NestedScrolling">
 
             </ListView>
@@ -141,7 +142,7 @@
                 android:textColor="@color/md_grey_800"
                 android:textAlignment="center"
                 android:padding="5dp"
-                android:background="@color/md_grey_200"/>
+                android:background="@color/md_grey_300"/>
 
             <TextView
                 android:id="@+id/TV03"
@@ -153,14 +154,14 @@
                 android:textColor="@color/md_grey_800"
                 android:textAlignment="center"
                 android:padding="5dp"
-                android:background="@color/md_grey_200"/>
+                android:background="@color/md_grey_300"/>
 
             <ListView
                 android:id="@+id/MonthBirthdayListView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:dividerHeight="0dp"
-                android:divider="@color/md_grey_200"
+                android:divider="@color/md_grey_300"
                 tools:ignore="NestedScrolling">
 
             </ListView>
@@ -175,14 +176,14 @@
                 android:textColor="@color/md_grey_800"
                 android:textAlignment="center"
                 android:padding="5dp"
-                android:background="@color/md_grey_200"/>
+                android:background="@color/md_grey_300"/>
 
             <ListView
                 android:id="@+id/WentAwayListview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:dividerHeight="0dp"
-                android:divider="@color/md_grey_200"
+                android:divider="@color/md_grey_300"
                 tools:ignore="NestedScrolling">
 
             </ListView>

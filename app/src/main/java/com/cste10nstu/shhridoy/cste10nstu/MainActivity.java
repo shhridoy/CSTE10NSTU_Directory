@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         llContact = findViewById(R.id.LLContact);
-        llContact.setBackgroundColor(getResources().getColor(R.color.md_grey_100));
+        llContact.setBackgroundColor(getResources().getColor(R.color.md_grey_300));
         llBirthdays = findViewById(R.id.LLBirthdays);
         llFavorite = findViewById(R.id.LLFavorite);
         scrollView = findViewById(R.id.scrollView);
@@ -164,7 +164,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 recyclerView.setVisibility(View.VISIBLE);
                 scrollView.setVisibility(View.INVISIBLE);
-                llContact.setBackgroundColor(getResources().getColor(R.color.md_grey_100));
+                llContact.setBackgroundColor(getResources().getColor(R.color.md_grey_300));
                 llBirthdays.setBackgroundColor(Color.WHITE);
                 llFavorite.setBackgroundColor(Color.WHITE);
 
@@ -190,7 +190,7 @@ public class MainActivity extends AppCompatActivity {
                 scrollView.setVisibility(View.INVISIBLE);
                 llContact.setBackgroundColor(Color.WHITE);
                 llBirthdays.setBackgroundColor(Color.WHITE);
-                llFavorite.setBackgroundColor(getResources().getColor(R.color.md_grey_100));
+                llFavorite.setBackgroundColor(getResources().getColor(R.color.md_grey_300));
                 loadFavoriteRyclerview();
             }
         });
@@ -201,7 +201,7 @@ public class MainActivity extends AppCompatActivity {
                 recyclerView.setVisibility(View.INVISIBLE);
                 scrollView.setVisibility(View.VISIBLE);
                 llContact.setBackgroundColor(Color.WHITE);
-                llBirthdays.setBackgroundColor(getResources().getColor(R.color.md_grey_100));
+                llBirthdays.setBackgroundColor(getResources().getColor(R.color.md_grey_300));
                 llFavorite.setBackgroundColor(Color.WHITE);
                 scrollView.scrollTo(0, 0);
                 birthdayLists();
