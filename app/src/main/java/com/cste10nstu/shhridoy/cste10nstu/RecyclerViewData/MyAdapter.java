@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteException;
 import android.net.Uri;
 import android.support.v4.app.ActivityCompat;
@@ -27,8 +28,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cste10nstu.shhridoy.cste10nstu.MainActivity;
 import com.cste10nstu.shhridoy.cste10nstu.MyAnimations.AnimationUtil;
 import com.cste10nstu.shhridoy.cste10nstu.MyDatabase.DBHelper;
+import com.cste10nstu.shhridoy.cste10nstu.MyDatabase.DBHelperFav;
 import com.cste10nstu.shhridoy.cste10nstu.R;
 import com.cste10nstu.shhridoy.cste10nstu.SecondActivity;
 import com.squareup.picasso.Picasso;
@@ -179,9 +182,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
                     case 3:
                         if (tag == 2) {
-                            Toast.makeText(context, "Testing", Toast.LENGTH_LONG).show();
+                            deleteFromFav(textViewName.getText().toString().trim());
                         } else {
-                            Toast.makeText(context, "Testing", Toast.LENGTH_LONG).show();
+                            addToFav(
+                                    textViewName.getText().toString().trim(),
+                                    textViewid.getText().toString().substring(4).trim(),
+                                    textViewMobile.getText().toString().substring(9).trim()
+                            );
                         }
                         return true;
                 }
@@ -196,5 +203,24 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         return str;
     }
 
+    private void addToFav(String nm, String id, String mbl) {
+        DBHelperFav dbHelperFav = new DBHelperFav(context);
+        try {
+            dbHelperFav.insertFavData(nm, id, mbl);
+            Toast.makeText(context, "Contact added to favorite!", Toast.LENGTH_LONG).show();
+        } catch (SQLiteException e) {
+            Toast.makeText(context, "Contact is already exists in favorite!", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void deleteFromFav(String nm) {
+        DBHelperFav dbHelperFav = new DBHelperFav(context);
+        boolean deleted = dbHelperFav.deleteFavData(nm);
+        if (deleted) {
+            Toast.makeText(context, "Contact has been deleted from favorite!", Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(context, "Contact doesn't delete.", Toast.LENGTH_LONG).show();
+        }
+    }
 
 }
