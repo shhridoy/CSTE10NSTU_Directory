@@ -7,15 +7,18 @@
     android:background="@color/md_grey_300"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.cste10nstu.shhridoy.cste10nstu.SecondActivity"
-    tools:showIn="@layout/activity_second">
+    tools:showIn="@layout/activity_second"
+    android:id="@+id/RLContentSecond">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/md_grey_300"
-        tools:ignore="UselessParent">
+        tools:ignore="UselessParent"
+        android:id="@+id/scrollViewSecond">
 
         <android.support.v7.widget.CardView
+            android:id="@+id/CardViewContentSecond"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
@@ -24,6 +27,7 @@
             android:layout_gravity="center_horizontal">
 
             <RelativeLayout
+                android:id="@+id/RLScondDark"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#ffffff">

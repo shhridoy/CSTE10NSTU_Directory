@@ -1,14 +1,16 @@
 package com.cste10nstu.shhridoy.cste10nstu.RecyclerViewData;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.database.SQLException;
 import android.database.sqlite.SQLiteException;
+import android.graphics.Color;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.Layout;
 import android.text.Spannable;
@@ -19,7 +21,6 @@ import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -28,9 +29,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.cste10nstu.shhridoy.cste10nstu.MainActivity;
 import com.cste10nstu.shhridoy.cste10nstu.MyAnimations.AnimationUtil;
-import com.cste10nstu.shhridoy.cste10nstu.MyDatabase.DBHelper;
 import com.cste10nstu.shhridoy.cste10nstu.MyDatabase.DBHelperFav;
 import com.cste10nstu.shhridoy.cste10nstu.R;
 import com.cste10nstu.shhridoy.cste10nstu.SecondActivity;
@@ -45,11 +44,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     private Context context;
     private int previousPosition = 0;
     private int tag = 0;
+    private String theme;
 
     public MyAdapter(List<ListItems> itemsList, Context context, int tag) {
         this.itemsList = itemsList;
         this.context = context;
         this.tag = tag;
+        theme = PreferenceManager.getDefaultSharedPreferences(context).getString("Theme", "White");
     }
 
     @Override
@@ -60,13 +61,14 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         final ListItems listItem = itemsList.get(position);
-
 
         holder.textViewName.setText(listItem.getName());
         holder.textViewid.setText(getSpanableBoldString(listItem.getId(), 3));
         holder.textViewMobile.setText(getSpanableBoldString(listItem.getMobile(), 8));
+
+        themeChange(holder);
 
         if (position > previousPosition) { // scrolling down
             AnimationUtil.animate(holder.itemView, true);
@@ -113,6 +115,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         ImageView imageView;
         ImageButton callButton;
         RelativeLayout rlItem;
+        CardView cardView;
         String imageUrl, imagePath;
 
         ViewHolder(View itemView) {
@@ -123,6 +126,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             imageView = itemView.findViewById(R.id.imageTV);
             callButton = itemView.findViewById(R.id.callButton);
             rlItem = itemView.findViewById(R.id.RLItem);
+            cardView = itemView.findViewById(R.id.CardViewListItem);
             itemView.setOnCreateContextMenuListener(this);
             itemView.setOnClickListener(this);
         }
@@ -220,6 +224,15 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             Toast.makeText(context, "Contact has been deleted from favorite!", Toast.LENGTH_LONG).show();
         } else {
             Toast.makeText(context, "Contact doesn't delete.", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void themeChange(ViewHolder holder) {
+        if (theme.equals("Dark")) {
+            holder.cardView.setCardBackgroundColor(context.getResources().getColor(R.color.md_grey_800));
+            holder.textViewName.setTextColor(Color.WHITE);
+            holder.textViewid.setTextColor(Color.WHITE);
+            holder.textViewMobile.setTextColor(Color.WHITE);
         }
     }
 

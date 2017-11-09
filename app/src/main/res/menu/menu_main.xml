@@ -32,4 +32,11 @@
         android:title="Json URL"
         android:orderInCategory="102" />
 
+    <item
+        app:showAsAction="never"
+        android:icon="@android:drawable/arrow_down_float"
+        android:id="@+id/menu_item_themes"
+        android:title="Themes"
+        android:orderInCategory="104" />
+
 </menu>

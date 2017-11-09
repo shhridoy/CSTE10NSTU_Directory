@@ -54,6 +54,8 @@ import com.cste10nstu.shhridoy.cste10nstu.MyDatabase.DBHelper;
 import com.cste10nstu.shhridoy.cste10nstu.MyDatabase.DBHelperFav;
 import com.cste10nstu.shhridoy.cste10nstu.RecyclerViewData.ListItems;
 import com.cste10nstu.shhridoy.cste10nstu.RecyclerViewData.MyAdapter;
+import com.hitomi.cmlibrary.CircleMenu;
+import com.hitomi.cmlibrary.OnMenuSelectedListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -90,8 +92,12 @@ public class MainActivity extends AppCompatActivity {
     private Cursor cursor;
     private Boolean noData;
 
+    private Toolbar toolbar;
+    private RelativeLayout rlMain;
     private LinearLayout llContact, llBirthdays, llFavorite;
+    private TextView contactTv, favoriteTv, birthdayTv;
     private ScrollView scrollView;
+    private String theme;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,21 +107,24 @@ public class MainActivity extends AppCompatActivity {
         MY_DATA = PreferenceManager.getDefaultSharedPreferences(this)
                 .getString("MY_URL", "https://shhridoy.github.io/json/csteallstudent.js");
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        theme = PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString("Theme", "White");
+
+        initializeViews();
+
+        changingTheme();
+
         setSupportActionBar(toolbar);
 
-        llContact = findViewById(R.id.LLContact);
-        llContact.setBackgroundColor(getResources().getColor(R.color.md_grey_300));
-        llBirthdays = findViewById(R.id.LLBirthdays);
-        llFavorite = findViewById(R.id.LLFavorite);
-        scrollView = findViewById(R.id.scrollView);
+        if (theme.equals("Dark")) {
+            llContact.setBackgroundColor(getResources().getColor(R.color.md_grey_500));
+        } else {
+            llContact.setBackgroundColor(getResources().getColor(R.color.md_grey_300));
+        }
+
         scrollView.setVisibility(View.INVISIBLE);
 
-        recyclerView = findViewById(R.id.RecyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        fab = findViewById(R.id.fab);
 
         recyclerView.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -168,9 +177,15 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 recyclerView.setVisibility(View.VISIBLE);
                 scrollView.setVisibility(View.INVISIBLE);
-                llContact.setBackgroundColor(getResources().getColor(R.color.md_grey_300));
-                llBirthdays.setBackgroundColor(Color.WHITE);
-                llFavorite.setBackgroundColor(Color.WHITE);
+                if (theme.equals("Dark")) {
+                    llContact.setBackgroundColor(getResources().getColor(R.color.md_grey_500));
+                    llBirthdays.setBackgroundColor(getResources().getColor(R.color.md_grey_800));
+                    llFavorite.setBackgroundColor(getResources().getColor(R.color.md_grey_800));
+                } else {
+                    llContact.setBackgroundColor(getResources().getColor(R.color.md_grey_300));
+                    llBirthdays.setBackgroundColor(Color.WHITE);
+                    llFavorite.setBackgroundColor(Color.WHITE);
+                }
 
                 if (noData) {
                     fab.show();
@@ -192,9 +207,15 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 recyclerView.setVisibility(View.VISIBLE);
                 scrollView.setVisibility(View.INVISIBLE);
-                llContact.setBackgroundColor(Color.WHITE);
-                llBirthdays.setBackgroundColor(Color.WHITE);
-                llFavorite.setBackgroundColor(getResources().getColor(R.color.md_grey_300));
+                if (theme.equals("Dark")) {
+                    llFavorite.setBackgroundColor(getResources().getColor(R.color.md_grey_500));
+                    llBirthdays.setBackgroundColor(getResources().getColor(R.color.md_grey_800));
+                    llContact.setBackgroundColor(getResources().getColor(R.color.md_grey_800));
+                } else {
+                    llFavorite.setBackgroundColor(getResources().getColor(R.color.md_grey_300));
+                    llContact.setBackgroundColor(Color.WHITE);
+                    llBirthdays.setBackgroundColor(Color.WHITE);
+                }
                 loadFavoriteRyclerview();
             }
         });
@@ -204,9 +225,15 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 recyclerView.setVisibility(View.INVISIBLE);
                 scrollView.setVisibility(View.VISIBLE);
-                llContact.setBackgroundColor(Color.WHITE);
-                llBirthdays.setBackgroundColor(getResources().getColor(R.color.md_grey_300));
-                llFavorite.setBackgroundColor(Color.WHITE);
+                if (theme.equals("Dark")) {
+                    llBirthdays.setBackgroundColor(getResources().getColor(R.color.md_grey_500));
+                    llContact.setBackgroundColor(getResources().getColor(R.color.md_grey_800));
+                    llFavorite.setBackgroundColor(getResources().getColor(R.color.md_grey_800));
+                } else {
+                    llBirthdays.setBackgroundColor(getResources().getColor(R.color.md_grey_300));
+                    llContact.setBackgroundColor(Color.WHITE);
+                    llFavorite.setBackgroundColor(Color.WHITE);
+                }
                 scrollView.scrollTo(0, 0);
                 birthdayLists();
             }
@@ -300,6 +327,9 @@ public class MainActivity extends AppCompatActivity {
         } else if (id == R.id.menu_item_inpur_url) {
             urlInputDialog();
             return true;
+        } else if (id == R.id.menu_item_themes) {
+            themesDialog();
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -323,6 +353,20 @@ public class MainActivity extends AppCompatActivity {
                 backButoonPressedOnce = false;
             }
         }, 2000);
+    }
+
+    private void initializeViews() {
+        toolbar = findViewById(R.id.toolbar);
+        rlMain = findViewById(R.id.RLContentMain);
+        llContact = findViewById(R.id.LLContact);
+        llBirthdays = findViewById(R.id.LLBirthdays);
+        llFavorite = findViewById(R.id.LLFavorite);
+        scrollView = findViewById(R.id.scrollView);
+        recyclerView = findViewById(R.id.RecyclerView);
+        fab = findViewById(R.id.fab);
+        contactTv = findViewById(R.id.ContactTV);
+        favoriteTv = findViewById(R.id.FavoriteTV);
+        birthdayTv = findViewById(R.id.BirthdayTv);
     }
 
     private void loadRecyclerViewFromJson() {
@@ -652,7 +696,6 @@ public class MainActivity extends AppCompatActivity {
 
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            // TODO Auto-generated method stub
                             dialog.cancel();
                         }
                     });
@@ -660,11 +703,8 @@ public class MainActivity extends AppCompatActivity {
 
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            // TODO Auto-generated method stub
-                            PreferenceManager.getDefaultSharedPreferences(MainActivity.this)
-                                    .edit()
-                                    .putString("MY_URL", urlEt.getText().toString())
-                                    .apply();
+                            PreferenceManager.getDefaultSharedPreferences(MainActivity.this).edit()
+                                    .putString("MY_URL", urlEt.getText().toString()).apply();
                             Toast.makeText(getApplicationContext(), "URL address saved!", Toast.LENGTH_LONG).show();
                             MY_DATA = PreferenceManager.getDefaultSharedPreferences(MainActivity.this)
                                     .getString("MY_URL", "https://shhridoy.github.io/json/csteallstudent.js");
@@ -875,6 +915,13 @@ public class MainActivity extends AppCompatActivity {
         TextView tv03 = findViewById(R.id.TV03);
         TextView tv04 = findViewById(R.id.TV04);
 
+        if (theme.equals("Dark")) {
+            tv01.setTextColor(Color.WHITE);
+            tv02.setTextColor(Color.WHITE);
+            tv03.setTextColor(Color.WHITE);
+            tv04.setTextColor(Color.WHITE);
+        }
+
         ListView todayLv = findViewById(R.id.TodayBirthdayListView);
         ListView monthLv = findViewById(R.id.MonthBirthdayListView);
         ListView wentLv = findViewById(R.id.WentAwayListview);
@@ -926,6 +973,55 @@ public class MainActivity extends AppCompatActivity {
 
         AnimationUtil.bottomToUpAnimation(tv04, 1500);
         AnimationUtil.bottomToUpAnimation(wentLv, 1500);
+    }
+
+    private void themesDialog() {
+        Dialog dialog = new Dialog(this);
+        dialog.setTitle("Choose app theme");
+        dialog.setContentView(R.layout.theme_dialog);
+
+        CircleMenu circleMenu = dialog.findViewById(R.id.CircleMenu);
+        circleMenu.setMainMenu(getResources().getColor(R.color.indigo_400),
+                R.drawable.ic_action_add,
+                R.drawable.ic_action_remove)
+                .addSubMenu(Color.WHITE, R.drawable.ic_action_sun_dark)
+                .addSubMenu(getResources().getColor(R.color.md_grey_800), R.drawable.ic_action_cloud)
+                .setOnMenuSelectedListener(new OnMenuSelectedListener() {
+                    @Override
+                    public void onMenuSelected(int index) {
+                        if (index == 0) {
+                            PreferenceManager.getDefaultSharedPreferences(MainActivity.this).edit()
+                                    .putString("Theme", "White").apply();
+                        } else if (index == 1) {
+                            PreferenceManager.getDefaultSharedPreferences(MainActivity.this).edit()
+                                    .putString("Theme", "Dark").apply();
+                        }
+                        Toast.makeText(getApplicationContext(), "App theme changing", Toast.LENGTH_LONG).show();
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                finish();
+                                startActivity(getIntent());
+                            }
+                        }, 1500);
+                    }
+                });
+
+        dialog.show();
+
+    }
+
+    private void changingTheme() {
+        if (theme.equals("Dark")) {
+            rlMain.setBackgroundColor(getResources().getColor(R.color.md_grey_500));
+            scrollView.setBackgroundColor(getResources().getColor(R.color.md_grey_500));
+            toolbar.setBackgroundColor(getResources().getColor(R.color.md_grey_800));
+            llFavorite.setBackgroundColor(getResources().getColor(R.color.md_grey_800));
+            llBirthdays.setBackgroundColor(getResources().getColor(R.color.md_grey_800));
+            contactTv.setTextColor(Color.WHITE);
+            favoriteTv.setTextColor(Color.WHITE);
+            birthdayTv.setTextColor(Color.WHITE);
+        }
     }
 
 }

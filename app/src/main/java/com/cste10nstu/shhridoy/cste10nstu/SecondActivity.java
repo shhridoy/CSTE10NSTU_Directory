@@ -2,14 +2,19 @@ package com.cste10nstu.shhridoy.cste10nstu;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.cste10nstu.shhridoy.cste10nstu.ListViewData.CustomAdapter;
@@ -26,15 +31,20 @@ public class SecondActivity extends AppCompatActivity {
 
     Toolbar toolbar;
     ListView lvMobile, lvEmail, lvSocial;
-    TextView tvName, tvId, tvBirtDate, tvHomeTown, tv1, tv2, tv3, tv4;
+    TextView tvName, tvId, tvBirtDateTitle, tvBirtDate, tvHomeTownTitle, tvHomeTown, tv1, tv2, tv3, tv4;
     ImageView imageView;
     LinearLayout ll1, ll2, ll3;
+    CardView cardView;
+    RelativeLayout rlSecond, rlSecondInside;
+    ScrollView scrollView;
     ArrayList<String> arrayListMobile, arrayListEmail, arrayListSocial;
     CustomAdapter customAdapter, customAdapter2, customAdapter3;
     String name, imageUrl, imagePath;
 
     String Id, Mobile_1, Mobile_2, DateOfBirth, Email_1, Email_2, Facebook_Url, Other_Url, Home_city;
     DBHelper dbHelper;
+
+    private String theme;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +56,8 @@ public class SecondActivity extends AppCompatActivity {
         imageUrl = i.getStringExtra("ImageUrl");
         imagePath = i.getStringExtra("ImagePath");
 
+        theme = PreferenceManager.getDefaultSharedPreferences(this).getString("Theme", "White");
+
         assignDataFromDatabase(Id);
 
         initializeViews();
@@ -53,6 +65,8 @@ public class SecondActivity extends AppCompatActivity {
         //noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(name);
+
+        changingThemes();
 
         animationFunction();
 
@@ -164,8 +178,14 @@ public class SecondActivity extends AppCompatActivity {
         lvMobile = findViewById(R.id.MobileListView);
         lvEmail = findViewById(R.id.EmailListView);
         lvSocial = findViewById(R.id.SocialListView);
+        tvBirtDateTitle = findViewById(R.id.TVBirthDateTitle);
         tvBirtDate = findViewById(R.id.TVBirthDate);
+        tvHomeTownTitle = findViewById(R.id.TVHomeTownTItle);
         tvHomeTown = findViewById(R.id.TVHomeTown);
+        cardView = findViewById(R.id.CardViewContentSecond);
+        rlSecond = findViewById(R.id.RLContentSecond);
+        scrollView = findViewById(R.id.scrollViewSecond);
+        rlSecondInside = findViewById(R.id.RLScondDark);
         ll1 = findViewById(R.id.LL1);
         ll2 = findViewById(R.id.BirthDateLL);
         ll3 = findViewById(R.id.HomeTownLL);
@@ -173,6 +193,22 @@ public class SecondActivity extends AppCompatActivity {
         tv2 = findViewById(R.id.TV2);
         tv3 = findViewById(R.id.TV3);
         tv4 = findViewById(R.id.TV4);
+    }
+
+    private void changingThemes() {
+        if (theme.equals("Dark")) {
+            scrollView.setBackgroundColor(getResources().getColor(R.color.md_grey_500));
+            rlSecond.setBackgroundColor(getResources().getColor(R.color.md_grey_500));
+            toolbar.setBackgroundColor(getResources().getColor(R.color.md_grey_800));
+            cardView.setCardBackgroundColor(getResources().getColor(R.color.md_grey_800));
+            rlSecondInside.setBackgroundColor(getResources().getColor(R.color.md_grey_800));
+            tvName.setTextColor(Color.WHITE);
+            tvId.setTextColor(Color.WHITE);
+            tvBirtDate.setTextColor(Color.WHITE);
+            tvHomeTown.setTextColor(Color.WHITE);
+            tvBirtDateTitle.setTextColor(Color.WHITE);
+            tvHomeTownTitle.setTextColor(Color.WHITE);
+        }
     }
 
     private void animationFunction () {

@@ -10,7 +10,9 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.widget.CardView;
 import android.text.Layout;
 import android.text.SpannableString;
 import android.text.style.AlignmentSpan;
@@ -23,6 +25,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,17 +43,20 @@ public class CustomAdapter extends BaseAdapter {
     private ArrayList<String> arrayList;
     private int tag;
     private ArrayList<BirthdayListItems> bthdArrayList;
+    private String theme;
 
     public CustomAdapter(Context context, ArrayList<String> arrayList, int tag) {
         this.context = context;
         this.arrayList = arrayList;
         this.tag = tag;
+        theme = PreferenceManager.getDefaultSharedPreferences(context).getString("Theme", "White");
     }
 
     public CustomAdapter(Context context, int tag, ArrayList<BirthdayListItems> bthdArrayList) {
         this.context = context;
         this.tag = tag;
         this.bthdArrayList = bthdArrayList;
+        theme = PreferenceManager.getDefaultSharedPreferences(context).getString("Theme", "White");
     }
 
     @Override
@@ -80,12 +86,18 @@ public class CustomAdapter extends BaseAdapter {
         }
 
         if (tag == 4) {
+            CardView cardView = view.findViewById(R.id.CardViewBirthdayListItem);
             TextView tvName = view.findViewById(R.id.NameTextViewBirthday);
             TextView tvDate = view.findViewById(R.id.BirthdateTextView);
             final BirthdayListItems birthdayListItems = bthdArrayList.get(position);
             tvName.setText(birthdayListItems.getName());
             tvName.setSelected(true);
             tvDate.setText(birthdayListItems.getDateOfBirth());
+            if (theme.equals("Dark")) {
+                cardView.setCardBackgroundColor(context.getResources().getColor(R.color.md_grey_800));
+                tvName.setTextColor(Color.WHITE);
+                tvDate.setTextColor(Color.WHITE);
+            }
             AnimationUtil.bottomToUpAnimation(view, 700+100*position);
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -100,7 +112,7 @@ public class CustomAdapter extends BaseAdapter {
         } else {
             final ImageButton imageButton = view.findViewById(R.id.ImageButton);
             TextView textView = view.findViewById(R.id.TVCustom);
-            final RelativeLayout relativeLayout = view.findViewById(R.id.RL);
+            final RelativeLayout relativeLayout = view.findViewById(R.id.RLContactListItem);
             final ImageView imageView = view.findViewById(R.id.ImageView);
 
             if (tag == 2) {
@@ -117,6 +129,14 @@ public class CustomAdapter extends BaseAdapter {
 
             textView.setText(arrayList.get(position));
             textView.setSelected(true); // for working marque effect to text
+
+            if (theme.equals("Dark")) {
+                relativeLayout.setBackgroundColor(context.getResources().getColor(R.color.md_grey_800));
+                imageButton.setBackgroundColor(context.getResources().getColor(R.color.md_grey_800));
+                textView.setTextColor(Color.WHITE);
+                View view1 = view.findViewById(R.id.View);
+                view1.setBackgroundColor(Color.WHITE);
+            }
 
             imageButton.setOnClickListener(new View.OnClickListener() {
                 @Override

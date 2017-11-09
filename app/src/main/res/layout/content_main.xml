@@ -7,6 +7,7 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.cste10nstu.shhridoy.cste10nstu.MainActivity"
     tools:showIn="@layout/activity_main"
+    android:id="@+id/RLContentMain"
     android:background="@color/md_grey_300">
 
     <LinearLayout
@@ -32,6 +33,7 @@
                 android:layout_height="wrap_content"
                 tools:ignore="ContentDescription" />
             <TextView
+                android:id="@+id/ContactTV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Contacts"
@@ -57,6 +59,7 @@
                 android:layout_height="wrap_content"
                 tools:ignore="ContentDescription" />
             <TextView
+                android:id="@+id/FavoriteTV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Favorites"
@@ -80,6 +83,7 @@
                 android:layout_height="wrap_content"
                 tools:ignore="ContentDescription" />
             <TextView
+                android:id="@+id/BirthdayTv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Birthday's"
@@ -119,8 +123,7 @@
                 android:textStyle="bold"
                 android:textColor="@color/md_grey_800"
                 android:textAlignment="center"
-                android:padding="5dp"
-                android:background="@color/md_grey_300"/>
+                android:padding="5dp"/>
 
             <ListView
                 android:id="@+id/TodayBirthdayListView"
@@ -141,8 +144,7 @@
                 android:textStyle="bold"
                 android:textColor="@color/md_grey_800"
                 android:textAlignment="center"
-                android:padding="5dp"
-                android:background="@color/md_grey_300"/>
+                android:padding="5dp" />
 
             <TextView
                 android:id="@+id/TV03"
@@ -153,8 +155,7 @@
                 android:textStyle="bold"
                 android:textColor="@color/md_grey_800"
                 android:textAlignment="center"
-                android:padding="5dp"
-                android:background="@color/md_grey_300"/>
+                android:padding="5dp" />
 
             <ListView
                 android:id="@+id/MonthBirthdayListView"
@@ -175,8 +176,7 @@
                 android:textStyle="bold"
                 android:textColor="@color/md_grey_800"
                 android:textAlignment="center"
-                android:padding="5dp"
-                android:background="@color/md_grey_300"/>
+                android:padding="5dp" />
 
             <ListView
                 android:id="@+id/WentAwayListview"
