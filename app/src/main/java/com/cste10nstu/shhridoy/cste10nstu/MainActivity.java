@@ -15,6 +15,7 @@ import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
@@ -73,7 +74,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String MY_DATA = "https://shhridoy.github.io/json/csteallstudent.js";
+    private static String MY_DATA;
     private static List<String> URL_List; // contains all downloadable image URL
     private static int num = 0; // controls the sync task operation while downloading images
     private static int LENGTH; // contains the length of the json array or number of rows in database
@@ -96,6 +97,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        MY_DATA = PreferenceManager.getDefaultSharedPreferences(this)
+                .getString("MY_URL", "https://shhridoy.github.io/json/csteallstudent.js");
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -293,8 +297,8 @@ public class MainActivity extends AppCompatActivity {
         } else if (id == R.id.menu_item_smstoall) {
             typeSMSdialog();
             return true;
-        } else if (id == R.id.menu_item_birthday_list) {
-            birthdayListDialog();
+        } else if (id == R.id.menu_item_inpur_url) {
+            urlInputDialog();
             return true;
         }
 
@@ -624,67 +628,63 @@ public class MainActivity extends AppCompatActivity {
         alert.show();
     }
 
-    private void birthdayListDialog() {
-        Dialog myDialog = new Dialog(this);
+    private void urlInputDialog() {
+        final Dialog myDialog = new Dialog(this);
         myDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        myDialog.setContentView(R.layout.birthday_list_dialog);
+        myDialog.setContentView(R.layout.input_url_dialog);
 
-        TextView tv01 = myDialog.findViewById(R.id.TV01);
-        TextView tv02 = myDialog.findViewById(R.id.TV02);
-        TextView tv03 = myDialog.findViewById(R.id.TV03);
-        TextView tv04 = myDialog.findViewById(R.id.TV04);
+        final EditText urlEt = myDialog.findViewById(R.id.etLink);
+        Button cancleBtn = myDialog.findViewById(R.id.CancelButton);
+        Button okBtn = myDialog.findViewById(R.id.OkButton);
 
-        ListView todayLv = myDialog.findViewById(R.id.TodayBirthdayListView);
-        ListView monthLv = myDialog.findViewById(R.id.MonthBirthdayListView);
-        ListView wentLv = myDialog.findViewById(R.id.WentAwayListview);
-        ArrayList<BirthdayListItems> list1 = new ArrayList<>();
-        ArrayList<BirthdayListItems> list2 = new ArrayList<>();
-        ArrayList<BirthdayListItems> list3 = new ArrayList<>();
-
-        Calendar c = Calendar.getInstance();
-        int currMonth = c.get(Calendar.MONTH)+1; // count month from 0 to 11
-        int currDay = c.get(Calendar.DATE);
-
-        dbHelper = new DBHelper(this);
-        cursor = dbHelper.retrieveDataInOrderToBirthdate();
-        while (cursor.moveToNext()){
-            String name = cursor.getString(1);
-            String date = cursor.getString(4);
-            String[] splitedDate = date.split("/");
-            if (Integer.parseInt(splitedDate[1]) == currMonth) {
-                if (Integer.parseInt(splitedDate[0]) == currDay) {
-                    BirthdayListItems bl = new BirthdayListItems(name, stringFormatOfDate(splitedDate[0], splitedDate[1]));
-                    list1.add(bl);
-                } else if (Integer.parseInt(splitedDate[0]) > currDay) {
-                    BirthdayListItems bl = new BirthdayListItems(name, stringFormatOfDate(splitedDate[0], splitedDate[1]));
-                    list2.add(bl);
+        okBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (urlEt.getText().toString().trim().length() <= 0) {
+                    Toast.makeText(getApplicationContext(), "Enter the url first!!", Toast.LENGTH_LONG).show();
+                } else if (!urlEt.getText().toString().contains("https://")) {
+                    Toast.makeText(getApplicationContext(), "Please Enter the actual URL address!!", Toast.LENGTH_LONG).show();
                 } else {
-                    BirthdayListItems bl = new BirthdayListItems(name, stringFormatOfDate(splitedDate[0], splitedDate[1]));
-                    list3.add(bl);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                    builder.setTitle(Html.fromHtml("<font color='#1DC4ED'>Warning!! This URL going to replace default one.</font>"));
+                    builder.setMessage(Html.fromHtml("<font color='#000000'>Are you sure this is your Json URL?</font>"));
+                    builder.setNegativeButton(Html.fromHtml("No"),new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            // TODO Auto-generated method stub
+                            dialog.cancel();
+                        }
+                    });
+                    builder.setPositiveButton(Html.fromHtml("Yes"),new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            // TODO Auto-generated method stub
+                            PreferenceManager.getDefaultSharedPreferences(MainActivity.this)
+                                    .edit()
+                                    .putString("MY_URL", urlEt.getText().toString())
+                                    .apply();
+                            Toast.makeText(getApplicationContext(), "URL address saved!", Toast.LENGTH_LONG).show();
+                            MY_DATA = PreferenceManager.getDefaultSharedPreferences(MainActivity.this)
+                                    .getString("MY_URL", "https://shhridoy.github.io/json/csteallstudent.js");
+                            dialog.cancel();
+                            myDialog.cancel();
+                        }
+                    });
+
+                    AlertDialog alert = builder.create();
+                    alert.show();
                 }
             }
-        }
+        });
 
-        CustomAdapter customAdapter1 = new CustomAdapter(this, 4, list1);
-        todayLv.setAdapter(customAdapter1);
-
-        CustomAdapter customAdapter2 = new CustomAdapter(this, 4, list2);
-        monthLv.setAdapter(customAdapter2);
-
-        CustomAdapter customAdapter3 = new CustomAdapter(this, 4, list3);
-        wentLv.setAdapter(customAdapter3);
-
-        ListUtils.setDynamicHeight(todayLv);
-        ListUtils.setDynamicHeight(monthLv);
-        ListUtils.setDynamicHeight(wentLv);
-
-        AnimationUtil.bottomToUpAnimation(tv01, 500);
-
-        AnimationUtil.bottomToUpAnimation(tv02, 800);
-        AnimationUtil.bottomToUpAnimation(tv03, 800);
-
-        AnimationUtil.bottomToUpAnimation(tv04, 1500);
-        AnimationUtil.bottomToUpAnimation(wentLv, 1500);
+        cancleBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                myDialog.cancel();
+            }
+        });
 
         myDialog.show();
     }
