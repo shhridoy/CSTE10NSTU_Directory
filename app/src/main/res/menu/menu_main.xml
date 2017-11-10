@@ -36,7 +36,7 @@
         app:showAsAction="never"
         android:icon="@android:drawable/arrow_down_float"
         android:id="@+id/menu_item_themes"
-        android:title="Themes"
+        android:title="App Modes"
         android:orderInCategory="104" />
 
 </menu>

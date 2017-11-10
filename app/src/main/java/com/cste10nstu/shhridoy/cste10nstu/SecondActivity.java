@@ -197,11 +197,11 @@ public class SecondActivity extends AppCompatActivity {
 
     private void changingThemes() {
         if (theme.equals("Dark")) {
-            scrollView.setBackgroundColor(getResources().getColor(R.color.md_grey_500));
-            rlSecond.setBackgroundColor(getResources().getColor(R.color.md_grey_500));
-            toolbar.setBackgroundColor(getResources().getColor(R.color.md_grey_800));
-            cardView.setCardBackgroundColor(getResources().getColor(R.color.md_grey_800));
-            rlSecondInside.setBackgroundColor(getResources().getColor(R.color.md_grey_800));
+            scrollView.setBackgroundColor(getResources().getColor(R.color.dark_color_primary));
+            rlSecond.setBackgroundColor(getResources().getColor(R.color.dark_color_primary));
+            toolbar.setBackgroundColor(getResources().getColor(R.color.dark_color_secondary));
+            cardView.setCardBackgroundColor(getResources().getColor(R.color.dark_color_secondary));
+            rlSecondInside.setBackgroundColor(getResources().getColor(R.color.dark_color_secondary));
             tvName.setTextColor(Color.WHITE);
             tvId.setTextColor(Color.WHITE);
             tvBirtDate.setTextColor(Color.WHITE);

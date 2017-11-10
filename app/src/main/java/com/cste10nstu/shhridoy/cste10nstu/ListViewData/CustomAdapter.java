@@ -25,7 +25,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -94,7 +93,7 @@ public class CustomAdapter extends BaseAdapter {
             tvName.setSelected(true);
             tvDate.setText(birthdayListItems.getDateOfBirth());
             if (theme.equals("Dark")) {
-                cardView.setCardBackgroundColor(context.getResources().getColor(R.color.md_grey_800));
+                cardView.setCardBackgroundColor(context.getResources().getColor(R.color.dark_color_secondary));
                 tvName.setTextColor(Color.WHITE);
                 tvDate.setTextColor(Color.WHITE);
             }
@@ -102,10 +101,12 @@ public class CustomAdapter extends BaseAdapter {
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(context, SecondActivity.class);
-                    intent.putExtra("Id", getId(birthdayListItems.getName()));
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    context.startActivity(intent);
+                    if (!birthdayListItems.getName().contains("No birthday!!")) {
+                        Intent intent = new Intent(context, SecondActivity.class);
+                        intent.putExtra("Id", getId(birthdayListItems.getName()));
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        context.startActivity(intent);
+                    }
                 }
             });
 
@@ -117,22 +118,34 @@ public class CustomAdapter extends BaseAdapter {
 
             if (tag == 2) {
                 imageView.setImageResource(R.drawable.ic_action_mail);
-                imageButton.setImageResource(R.drawable.ic_action_cpoy);
+                if (theme.equals("Dark")) {
+                    imageButton.setImageResource(R.drawable.ic_action_copy_white);
+                } else {
+                    imageButton.setImageResource(R.drawable.ic_action_cpoy);
+                }
             } else if (tag == 3) {
                 if (position == 0) {
                     imageView.setImageResource(R.drawable.ic_action_f);
                 } else {
-                    imageView.setImageResource(R.drawable.ic_action_others);
+                    if (theme.equals("Dark")) {
+                        imageView.setImageResource(R.drawable.ic_action_others_white);
+                    } else {
+                        imageView.setImageResource(R.drawable.ic_action_others);
+                    }
                 }
-                imageButton.setImageResource(R.drawable.ic_action_cpoy);
+                if (theme.equals("Dark")) {
+                    imageButton.setImageResource(R.drawable.ic_action_copy_white);
+                } else {
+                    imageButton.setImageResource(R.drawable.ic_action_cpoy);
+                }
             }
 
             textView.setText(arrayList.get(position));
             textView.setSelected(true); // for working marque effect to text
 
             if (theme.equals("Dark")) {
-                relativeLayout.setBackgroundColor(context.getResources().getColor(R.color.md_grey_800));
-                imageButton.setBackgroundColor(context.getResources().getColor(R.color.md_grey_800));
+                relativeLayout.setBackgroundColor(context.getResources().getColor(R.color.dark_color_secondary));
+                imageButton.setBackgroundColor(context.getResources().getColor(R.color.dark_color_secondary));
                 textView.setTextColor(Color.WHITE);
                 View view1 = view.findViewById(R.id.View);
                 view1.setBackgroundColor(Color.WHITE);

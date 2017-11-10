@@ -17,6 +17,7 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.style.AlignmentSpan;
+import android.text.style.BackgroundColorSpan;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -42,7 +43,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
     private List<ListItems> itemsList = null;
     private Context context;
-    private int previousPosition = 0;
+    private int previousPosition = -1;
     private int tag = 0;
     private String theme;
 
@@ -187,6 +188,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                     case 3:
                         if (tag == 2) {
                             deleteFromFav(textViewName.getText().toString().trim());
+                            itemsList.remove(getAdapterPosition());
+                            notifyItemRemoved(getAdapterPosition());
                         } else {
                             addToFav(
                                     textViewName.getText().toString().trim(),
@@ -229,7 +232,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
     private void themeChange(ViewHolder holder) {
         if (theme.equals("Dark")) {
-            holder.cardView.setCardBackgroundColor(context.getResources().getColor(R.color.md_grey_800));
+            holder.cardView.setCardBackgroundColor(context.getResources().getColor(R.color.dark_color_secondary));
             holder.textViewName.setTextColor(Color.WHITE);
             holder.textViewid.setTextColor(Color.WHITE);
             holder.textViewMobile.setTextColor(Color.WHITE);

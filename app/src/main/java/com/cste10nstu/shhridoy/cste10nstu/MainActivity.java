@@ -20,6 +20,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -116,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         if (theme.equals("Dark")) {
-            llContact.setBackgroundColor(getResources().getColor(R.color.md_grey_500));
+            llContact.setBackgroundColor(getResources().getColor(R.color.dark_color_primary));
         } else {
             llContact.setBackgroundColor(getResources().getColor(R.color.md_grey_300));
         }
@@ -178,9 +179,9 @@ public class MainActivity extends AppCompatActivity {
                 recyclerView.setVisibility(View.VISIBLE);
                 scrollView.setVisibility(View.INVISIBLE);
                 if (theme.equals("Dark")) {
-                    llContact.setBackgroundColor(getResources().getColor(R.color.md_grey_500));
-                    llBirthdays.setBackgroundColor(getResources().getColor(R.color.md_grey_800));
-                    llFavorite.setBackgroundColor(getResources().getColor(R.color.md_grey_800));
+                    llContact.setBackgroundColor(getResources().getColor(R.color.dark_color_primary));
+                    llBirthdays.setBackgroundColor(getResources().getColor(R.color.dark_color_secondary));
+                    llFavorite.setBackgroundColor(getResources().getColor(R.color.dark_color_secondary));
                 } else {
                     llContact.setBackgroundColor(getResources().getColor(R.color.md_grey_300));
                     llBirthdays.setBackgroundColor(Color.WHITE);
@@ -208,9 +209,9 @@ public class MainActivity extends AppCompatActivity {
                 recyclerView.setVisibility(View.VISIBLE);
                 scrollView.setVisibility(View.INVISIBLE);
                 if (theme.equals("Dark")) {
-                    llFavorite.setBackgroundColor(getResources().getColor(R.color.md_grey_500));
-                    llBirthdays.setBackgroundColor(getResources().getColor(R.color.md_grey_800));
-                    llContact.setBackgroundColor(getResources().getColor(R.color.md_grey_800));
+                    llFavorite.setBackgroundColor(getResources().getColor(R.color.dark_color_primary));
+                    llBirthdays.setBackgroundColor(getResources().getColor(R.color.dark_color_secondary));
+                    llContact.setBackgroundColor(getResources().getColor(R.color.dark_color_secondary));
                 } else {
                     llFavorite.setBackgroundColor(getResources().getColor(R.color.md_grey_300));
                     llContact.setBackgroundColor(Color.WHITE);
@@ -226,9 +227,9 @@ public class MainActivity extends AppCompatActivity {
                 recyclerView.setVisibility(View.INVISIBLE);
                 scrollView.setVisibility(View.VISIBLE);
                 if (theme.equals("Dark")) {
-                    llBirthdays.setBackgroundColor(getResources().getColor(R.color.md_grey_500));
-                    llContact.setBackgroundColor(getResources().getColor(R.color.md_grey_800));
-                    llFavorite.setBackgroundColor(getResources().getColor(R.color.md_grey_800));
+                    llBirthdays.setBackgroundColor(getResources().getColor(R.color.dark_color_primary));
+                    llContact.setBackgroundColor(getResources().getColor(R.color.dark_color_secondary));
+                    llFavorite.setBackgroundColor(getResources().getColor(R.color.dark_color_secondary));
                 } else {
                     llBirthdays.setBackgroundColor(getResources().getColor(R.color.md_grey_300));
                     llContact.setBackgroundColor(Color.WHITE);
@@ -288,10 +289,17 @@ public class MainActivity extends AppCompatActivity {
             return true;
 
         } else if (id == R.id.menu_item_downloadImage) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle(Html.fromHtml("<font color='#1DC4ED'>Warning!!</font>"));
-            builder.setMessage(Html.fromHtml("<font color='#000000'>Do you want to download images for offline?</font>"));
-            builder.setNegativeButton(Html.fromHtml("No"),new DialogInterface.OnClickListener() {
+            AlertDialog.Builder builder;
+            if (theme.equals("Dark")) {
+                builder = new AlertDialog.Builder(this, R.style.MyDialogThemeDark);
+                builder.setMessage(Html.fromHtml("<font color='#ffffff'>Do you want to download images for offline?</font>"));
+                builder.setTitle(Html.fromHtml("<font color='#FFFF00'>Warning!!</font>"));
+            } else {
+                builder = new AlertDialog.Builder(this);
+                builder.setMessage(Html.fromHtml("<font color='#000000'>Do you want to download images for offline?</font>"));
+                builder.setTitle(Html.fromHtml("<font color='#1DC4ED'>Warning!!</font>"));
+            }
+            builder.setNegativeButton("No",new DialogInterface.OnClickListener() {
 
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
@@ -299,7 +307,7 @@ public class MainActivity extends AppCompatActivity {
                     dialog.cancel();
                 }
             });
-            builder.setPositiveButton(Html.fromHtml("Yes"),new DialogInterface.OnClickListener() {
+            builder.setPositiveButton("Yes",new DialogInterface.OnClickListener() {
 
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
@@ -596,11 +604,19 @@ public class MainActivity extends AppCompatActivity {
         myDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         myDialog.setContentView(R.layout.message_dialog);
 
-        RelativeLayout relativeLayout = myDialog.findViewById(R.id.RLDIalog);
-        TextView textView = myDialog.findViewById(R.id.TVTitleDialog);
+        CardView cardViewMain = myDialog.findViewById(R.id.CardViewSMSMain);
+        CardView cardViewSMSType = myDialog.findViewById(R.id.CardViewSMSType);
+        TextView textView = myDialog.findViewById(R.id.TVTitleDialogSMS);
         final EditText editText = myDialog.findViewById(R.id.ETDialog);
         Button cancelBtn = myDialog.findViewById(R.id.BackButton);
         Button sendBtn = myDialog.findViewById(R.id.SendButton);
+
+        if (theme.equals("Dark")) {
+            cardViewMain.setCardBackgroundColor(getResources().getColor(R.color.dark_color_primary));
+            cardViewSMSType.setCardBackgroundColor(getResources().getColor(R.color.dark_color_secondary));
+            textView.setTextColor(Color.WHITE);
+            editText.setTextColor(Color.WHITE);
+        }
 
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -624,14 +640,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void sendSMStoAllWarningDialogs(final String msg) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(Html.fromHtml("<font color='#1DC4ED'>Warning!</font>"));
-        builder.setMessage(Html.fromHtml("<font color='#000000'>Do you want to send sms to all?</font>"));
+        AlertDialog.Builder builder;
+        if (theme.equals("Dark")) {
+            builder = new AlertDialog.Builder(this, R.style.MyDialogThemeDark);
+            builder.setMessage(Html.fromHtml("<font color='#ffffff'>Do you want to send sms to all?</font>"));
+            builder.setTitle(Html.fromHtml("<font color='#FFFF00'>Warning!!!</font>"));
+        } else {
+            builder = new AlertDialog.Builder(this);
+            builder.setMessage(Html.fromHtml("<font color='#000000'>Do you want to send sms to all?</font>"));
+            builder.setTitle(Html.fromHtml("<font color='#1DC4ED'>Warning!!!</font>"));
+        }
         builder.setNegativeButton(Html.fromHtml("No"),new DialogInterface.OnClickListener() {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                // TODO Auto-generated method stub
                 dialog.cancel();
             }
         });
@@ -639,15 +661,20 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                // TODO Auto-generated method stub
-                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                builder.setTitle(Html.fromHtml("<font color='#1DC4ED'>This may result in additional charges!!</font>"));
-                builder.setMessage(Html.fromHtml("<font color='#000000'>Do you really want to do it?</font>"));
+                AlertDialog.Builder builder;
+                if (theme.equals("Dark")) {
+                    builder = new AlertDialog.Builder(MainActivity.this, R.style.MyDialogThemeDark);
+                    builder.setTitle(Html.fromHtml("<font color='#FFFF00'>This may result in additional charges!!</font>"));
+                    builder.setMessage(Html.fromHtml("<font color='#ffffff'>Do you really want to do it?</font>"));
+                } else {
+                    builder = new AlertDialog.Builder(MainActivity.this);
+                    builder.setTitle(Html.fromHtml("<font color='#1DC4ED'>This may result in additional charges!!</font>"));
+                    builder.setMessage(Html.fromHtml("<font color='#000000'>Do you really want to do it?</font>"));
+                }
                 builder.setNegativeButton(Html.fromHtml("No"),new DialogInterface.OnClickListener() {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        // TODO Auto-generated method stub
                         dialog.cancel();
                     }
                 });
@@ -655,7 +682,6 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        // TODO Auto-generated method stub
                         SmsManager sms = SmsManager.getDefault();
                         for (int i=0; i<mobileNoList.size(); i++) {
                             sms.sendTextMessage(mobileNoList.get(i), null, msg, null, null);
@@ -677,9 +703,20 @@ public class MainActivity extends AppCompatActivity {
         myDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         myDialog.setContentView(R.layout.input_url_dialog);
 
+        CardView cardView1 = myDialog.findViewById(R.id.CardViewURL);
+        CardView cardViewEt = myDialog.findViewById(R.id.CardView1);
+        RelativeLayout rl = myDialog.findViewById(R.id.RLURL);
         final EditText urlEt = myDialog.findViewById(R.id.etLink);
         Button cancleBtn = myDialog.findViewById(R.id.CancelButton);
         Button okBtn = myDialog.findViewById(R.id.OkButton);
+
+        if (theme.equals("Dark")) {
+            cardView1.setCardBackgroundColor(getResources().getColor(R.color.dark_color_primary));
+            rl.setBackgroundColor(getResources().getColor(R.color.dark_color_primary));
+            cardViewEt.setCardBackgroundColor(getResources().getColor(R.color.dark_color_secondary));
+            urlEt.setTextColor(Color.WHITE);
+
+        }
 
         okBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -689,9 +726,16 @@ public class MainActivity extends AppCompatActivity {
                 } else if (!urlEt.getText().toString().contains("https://")) {
                     Toast.makeText(getApplicationContext(), "Please Enter the actual URL address!!", Toast.LENGTH_LONG).show();
                 } else {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                    builder.setTitle(Html.fromHtml("<font color='#1DC4ED'>Warning!! This URL going to replace default one.</font>"));
-                    builder.setMessage(Html.fromHtml("<font color='#000000'>Are you sure this is your Json URL?</font>"));
+                    AlertDialog.Builder builder;
+                    if (theme.equals("Dark")) {
+                        builder = new AlertDialog.Builder(MainActivity.this, R.style.MyDialogThemeDark);
+                        builder.setTitle(Html.fromHtml("<font color='#FFFF00'>Warning!! This URL going to replace default one.</font>"));
+                        builder.setMessage(Html.fromHtml("<font color='#ffffff'>Are you sure this is your Json URL?</font>"));
+                    } else {
+                        builder = new AlertDialog.Builder(MainActivity.this);
+                        builder.setTitle(Html.fromHtml("<font color='#1DC4ED'>Warning!! This URL going to replace default one.</font>"));
+                        builder.setMessage(Html.fromHtml("<font color='#000000'>Are you sure this is your Json URL?</font>"));
+                    }
                     builder.setNegativeButton(Html.fromHtml("No"),new DialogInterface.OnClickListener() {
 
                         @Override
@@ -933,6 +977,8 @@ public class MainActivity extends AppCompatActivity {
         int currMonth = c.get(Calendar.MONTH)+1; // count month from 0 to 11
         int currDay = c.get(Calendar.DATE);
 
+        String curr = stringFormatOfDate(String.valueOf(currDay), String.valueOf(currMonth));
+
         dbHelper = new DBHelper(this);
         cursor = dbHelper.retrieveDataInOrderToBirthdate();
         while (cursor.moveToNext()){
@@ -951,6 +997,21 @@ public class MainActivity extends AppCompatActivity {
                     list3.add(bl);
                 }
             }
+        }
+
+        if (list1.size() == 0) {
+            BirthdayListItems bl = new BirthdayListItems("No birthday!!", curr);
+            list1.add(bl);
+        }
+
+        if (list2.size() == 0) {
+            BirthdayListItems bl = new BirthdayListItems("No birthday!!", "");
+            list2.add(bl);
+        }
+
+        if (list3.size() == 0) {
+            BirthdayListItems bl = new BirthdayListItems("No birthday!!", "");
+            list2.add(bl);
         }
 
         CustomAdapter customAdapter1 = new CustomAdapter(this, 4, list1);
@@ -977,26 +1038,31 @@ public class MainActivity extends AppCompatActivity {
 
     private void themesDialog() {
         Dialog dialog = new Dialog(this);
-        dialog.setTitle("Choose app theme");
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.theme_dialog);
 
+        CardView cardView = dialog.findViewById(R.id.CardViewTheme);
+        if (theme.equals("Dark")) {
+            cardView.setCardBackgroundColor(getResources().getColor(R.color.dark_color_primary));
+        }
         CircleMenu circleMenu = dialog.findViewById(R.id.CircleMenu);
         circleMenu.setMainMenu(getResources().getColor(R.color.indigo_400),
                 R.drawable.ic_action_add,
                 R.drawable.ic_action_remove)
                 .addSubMenu(Color.WHITE, R.drawable.ic_action_sun_dark)
-                .addSubMenu(getResources().getColor(R.color.md_grey_800), R.drawable.ic_action_cloud)
+                .addSubMenu(getResources().getColor(R.color.dark_color_secondary), R.drawable.ic_action_cloud)
                 .setOnMenuSelectedListener(new OnMenuSelectedListener() {
                     @Override
                     public void onMenuSelected(int index) {
                         if (index == 0) {
                             PreferenceManager.getDefaultSharedPreferences(MainActivity.this).edit()
                                     .putString("Theme", "White").apply();
+                            Toast.makeText(getApplicationContext(), "Activating Light Mode...", Toast.LENGTH_LONG).show();
                         } else if (index == 1) {
                             PreferenceManager.getDefaultSharedPreferences(MainActivity.this).edit()
                                     .putString("Theme", "Dark").apply();
+                            Toast.makeText(getApplicationContext(), "Activating Dark Mode...", Toast.LENGTH_LONG).show();
                         }
-                        Toast.makeText(getApplicationContext(), "App theme changing", Toast.LENGTH_LONG).show();
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
@@ -1008,16 +1074,16 @@ public class MainActivity extends AppCompatActivity {
                 });
 
         dialog.show();
-
     }
 
     private void changingTheme() {
         if (theme.equals("Dark")) {
-            rlMain.setBackgroundColor(getResources().getColor(R.color.md_grey_500));
-            scrollView.setBackgroundColor(getResources().getColor(R.color.md_grey_500));
-            toolbar.setBackgroundColor(getResources().getColor(R.color.md_grey_800));
-            llFavorite.setBackgroundColor(getResources().getColor(R.color.md_grey_800));
-            llBirthdays.setBackgroundColor(getResources().getColor(R.color.md_grey_800));
+            rlMain.setBackgroundColor(getResources().getColor(R.color.dark_color_primary));
+            scrollView.setBackgroundColor(getResources().getColor(R.color.dark_color_primary));
+            toolbar.setBackgroundColor(getResources().getColor(R.color.dark_color_secondary));
+            toolbar.setPopupTheme(R.style.PopupMenuDark);
+            llFavorite.setBackgroundColor(getResources().getColor(R.color.dark_color_secondary));
+            llBirthdays.setBackgroundColor(getResources().getColor(R.color.dark_color_secondary));
             contactTv.setTextColor(Color.WHITE);
             favoriteTv.setTextColor(Color.WHITE);
             birthdayTv.setTextColor(Color.WHITE);

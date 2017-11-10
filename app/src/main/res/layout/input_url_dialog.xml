@@ -3,9 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/md_grey_200">
+    android:id="@+id/CardViewURL"
+    app:cardBackgroundColor="@color/md_grey_300">
 
     <RelativeLayout
+        android:id="@+id/RLURL"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 

@@ -1,13 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/md_grey_300">
+    android:id="@+id/CardViewTheme"
+    app:cardBackgroundColor="@color/md_grey_300">
 
-    <com.hitomi.cmlibrary.CircleMenu
-        android:id="@+id/CircleMenu"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/ThemeTitleTV"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="#ffffff"
+            android:text="Choose App Mode"
+            android:textStyle="bold"
+            android:background="@color/colorPrimary"
+            android:gravity="center"
+            android:textAlignment="center"
+            android:padding="10dp"/>
+
+        <com.hitomi.cmlibrary.CircleMenu
+            android:id="@+id/CircleMenu"
+            android:layout_below="@id/ThemeTitleTV"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </RelativeLayout>
+
+
+
+</android.support.v7.widget.CardView>

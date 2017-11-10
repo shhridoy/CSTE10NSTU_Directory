@@ -89,7 +89,7 @@
                     android:paddingStart="10dp"
                     android:paddingEnd="10dp"
                     android:paddingRight="10dp"
-                    android:background="@color/md_grey_500"/>
+                    android:background="@color/dark_color_primary"/>
 
                 <ListView
                     android:id="@+id/MobileListView"
@@ -114,7 +114,7 @@
                     android:paddingStart="10dp"
                     android:paddingEnd="10dp"
                     android:paddingRight="10dp"
-                    android:background="@color/md_grey_500"/>
+                    android:background="@color/dark_color_primary"/>
 
                 <ListView
                     android:id="@+id/EmailListView"
@@ -139,7 +139,7 @@
                     android:paddingStart="10dp"
                     android:paddingEnd="10dp"
                     android:paddingRight="10dp"
-                    android:background="@color/md_grey_500"/>
+                    android:background="@color/dark_color_primary"/>
 
                 <ListView
                     android:id="@+id/SocialListView"
@@ -164,7 +164,7 @@
                     android:paddingStart="10dp"
                     android:paddingEnd="10dp"
                     android:paddingRight="10dp"
-                    android:background="@color/md_grey_500"/>
+                    android:background="@color/dark_color_primary"/>
 
                 <LinearLayout
                     android:id="@+id/BirthDateLL"
@@ -181,7 +181,7 @@
                         android:text="Date of birth: "
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:textStyle="bold"
-                        android:textColor="@color/md_grey_800"
+                        android:textColor="@color/dark_color_secondary"
                         android:padding="10dp"/>
 
                     <TextView
@@ -212,7 +212,7 @@
                         android:text="Home city: "
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:textStyle="bold"
-                        android:textColor="@color/md_grey_800"
+                        android:textColor="@color/dark_color_secondary"
                         android:padding="10dp"/>
 
                     <TextView

@@ -10,13 +10,17 @@
     <color name="md_grey_200">#EEEEEE</color>
     <color name="md_grey_300">#E0E0E0</color>
     <color name="md_grey_400">#BDBDBD</color>
-    <color name="md_grey_500">#9E9E9E</color>
+    <color name="md_grey_500_1">#9E9E9E</color>
     <color name="md_grey_600">#757575</color>
     <color name="md_grey_700">#616161</color>
-    <color name="md_grey_800">#424242</color>
+    <color name="md_grey_800_1">#424242</color>
     <color name="md_grey_900">#212121</color>
+
     <color name="md_black_1000">#000000</color>
     <color name="md_white_1000">#ffffff</color>
+
+    <color name="dark_color_primary">#616161</color>
+    <color name="dark_color_secondary">#212121</color>
 
     <color name="indigo_300">#7986CB</color>
     <color name="indigo_400">#5C6BC0</color>

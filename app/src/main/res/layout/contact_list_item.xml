@@ -68,7 +68,7 @@
             android:layout_centerVertical="true"
             android:layout_toStartOf="@id/ImageButton"
             android:layout_toLeftOf="@id/ImageButton"
-            android:background="@color/md_grey_500"/>
+            android:background="@color/dark_color_primary"/>
 
         <ImageView
             android:id="@+id/ImageView"

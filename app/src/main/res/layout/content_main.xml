@@ -38,7 +38,7 @@
                 android:layout_height="wrap_content"
                 android:text="Contacts"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@color/md_grey_800"/>
+                android:textColor="@color/dark_color_secondary"/>
         </LinearLayout>
 
         <LinearLayout
@@ -64,7 +64,7 @@
                 android:layout_height="wrap_content"
                 android:text="Favorites"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@color/md_grey_800"/>
+                android:textColor="@color/dark_color_secondary"/>
         </LinearLayout>
 
         <LinearLayout
@@ -88,7 +88,7 @@
                 android:layout_height="wrap_content"
                 android:text="Birthday's"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@color/md_grey_800"/>
+                android:textColor="@color/dark_color_secondary"/>
         </LinearLayout>
 
     </LinearLayout>
@@ -121,7 +121,7 @@
                 android:text="Today's Birthday"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textStyle="bold"
-                android:textColor="@color/md_grey_800"
+                android:textColor="@color/dark_color_secondary"
                 android:textAlignment="center"
                 android:padding="5dp"/>
 
@@ -142,7 +142,7 @@
                 android:text="Birthday's of this Month"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textStyle="bold"
-                android:textColor="@color/md_grey_800"
+                android:textColor="@color/dark_color_secondary"
                 android:textAlignment="center"
                 android:padding="5dp" />
 
@@ -153,7 +153,7 @@
                 android:text="Upcoming"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textStyle="bold"
-                android:textColor="@color/md_grey_800"
+                android:textColor="@color/dark_color_secondary"
                 android:textAlignment="center"
                 android:padding="5dp" />
 
@@ -174,7 +174,7 @@
                 android:text="Went away"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textStyle="bold"
-                android:textColor="@color/md_grey_800"
+                android:textColor="@color/dark_color_secondary"
                 android:textAlignment="center"
                 android:padding="5dp" />
 
