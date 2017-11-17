@@ -1028,12 +1028,13 @@ public class MainActivity extends AppCompatActivity {
         ListUtils.setDynamicHeight(wentLv);
 
         AnimationUtil.bottomToUpAnimation(tv01, 500);
-
-        AnimationUtil.bottomToUpAnimation(tv02, 800);
-        AnimationUtil.bottomToUpAnimation(tv03, 800);
-
-        AnimationUtil.bottomToUpAnimation(tv04, 1500);
+        AnimationUtil.bottomToUpAnimation(todayLv, 700);
+        AnimationUtil.bottomToUpAnimation(tv02, 900);
+        AnimationUtil.bottomToUpAnimation(tv03, 900);
+        AnimationUtil.bottomToUpAnimation(monthLv, 1100);
+        AnimationUtil.bottomToUpAnimation(tv04, 1300);
         AnimationUtil.bottomToUpAnimation(wentLv, 1500);
+
     }
 
     private void themesDialog() {

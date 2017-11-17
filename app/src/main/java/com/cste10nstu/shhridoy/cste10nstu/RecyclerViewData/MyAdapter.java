@@ -187,9 +187,16 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
                     case 3:
                         if (tag == 2) {
-                            deleteFromFav(textViewName.getText().toString().trim());
-                            itemsList.remove(getAdapterPosition());
-                            notifyItemRemoved(getAdapterPosition());
+                            //deleteFromFav(textViewName.getText().toString().trim());
+                            DBHelperFav dbHelperFav = new DBHelperFav(context);
+                            boolean deleted = dbHelperFav.deleteFavData(textViewName.getText().toString().trim());
+                            if (deleted) {
+                                itemsList.remove(getAdapterPosition());
+                                notifyItemRemoved(getAdapterPosition());
+                                Toast.makeText(context, "Contact has been deleted from favorite!", Toast.LENGTH_LONG).show();
+                            } else {
+                                Toast.makeText(context, "Contact doesn't delete.", Toast.LENGTH_LONG).show();
+                            }
                         } else {
                             addToFav(
                                     textViewName.getText().toString().trim(),

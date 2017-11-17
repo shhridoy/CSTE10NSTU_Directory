@@ -25,6 +25,22 @@ public class AnimationUtil {
 
     }
 
+    public static void animate2(View view){
+        AnimatorSet animatorSet = new AnimatorSet();
+
+        ObjectAnimator animatorTranslateY = ObjectAnimator.ofFloat(view, "translationY", 200, 0);
+        animatorTranslateY.setDuration(1000);
+
+        ObjectAnimator animatorTranslateX = ObjectAnimator.ofFloat(view,"translationX",-50,50,-30,30,-20,20,-5,5,0);
+        animatorTranslateX.setDuration(1000);
+
+        animatorSet.playTogether(animatorTranslateX,animatorTranslateY);
+
+        //animatorSet.playTogether(animatorTranslateY);
+        animatorSet.start();
+
+    }
+
     public static void setFadeAnimation(View view) {
         AlphaAnimation anim = new AlphaAnimation(0.0f, 1.0f);
         anim.setDuration(1000);

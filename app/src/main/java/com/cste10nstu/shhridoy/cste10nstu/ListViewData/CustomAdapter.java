@@ -97,7 +97,7 @@ public class CustomAdapter extends BaseAdapter {
                 tvName.setTextColor(Color.WHITE);
                 tvDate.setTextColor(Color.WHITE);
             }
-            AnimationUtil.bottomToUpAnimation(view, 700+100*position);
+            //AnimationUtil.bottomToUpAnimation(view, 600+100*position);
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -125,13 +125,28 @@ public class CustomAdapter extends BaseAdapter {
                 }
             } else if (tag == 3) {
                 if (position == 0) {
-                    imageView.setImageResource(R.drawable.ic_action_f);
+                    imageView.setImageResource(R.drawable.facebook_icon2);
                 } else {
-                    if (theme.equals("Dark")) {
-                        imageView.setImageResource(R.drawable.ic_action_others_white);
+                    if (arrayList.get(position).contains("instagram")) {
+                        imageView.setImageResource(R.drawable.instagram_icon);
+                    } else if (arrayList.get(position).contains("github")) {
+                        if (theme.equals("Dark")) {
+                            imageView.setImageResource(R.drawable.github_icon_white);
+                        } else {
+                            imageView.setImageResource(R.drawable.github_icon);
+                        }
+                    } else if (arrayList.get(position).contains("twitter")) {
+                        imageView.setImageResource(R.drawable.twitter_icon);
+                    } else if (arrayList.get(position).contains("linkedin")) {
+                        imageView.setImageResource(R.drawable.linkedin_icon);
                     } else {
-                        imageView.setImageResource(R.drawable.ic_action_others);
+                        if (theme.equals("Dark")) {
+                            imageView.setImageResource(R.drawable.ic_action_others_white);
+                        } else {
+                            imageView.setImageResource(R.drawable.ic_action_others);
+                        }
                     }
+
                 }
                 if (theme.equals("Dark")) {
                     imageButton.setImageResource(R.drawable.ic_action_copy_white);
