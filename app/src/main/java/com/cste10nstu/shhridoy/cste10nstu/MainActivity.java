@@ -91,14 +91,14 @@ public class MainActivity extends AppCompatActivity {
 
     private DBHelper dbHelper;
     private Cursor cursor;
-    private Boolean noData;
+    private Boolean noData; // for checking if there are any data exists in the database
 
     private Toolbar toolbar;
     private RelativeLayout rlMain;
     private LinearLayout llContact, llBirthdays, llFavorite;
     private TextView contactTv, favoriteTv, birthdayTv;
     private ScrollView scrollView;
-    private String theme;
+    private String theme; // string value for app modes
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
