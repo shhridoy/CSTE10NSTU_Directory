@@ -6,14 +6,12 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import java.util.jar.Attributes;
-
 
 public class DBHelper extends SQLiteOpenHelper {
 
     private static final String DB_NAME = "CSTE.db";
-    private static final String TB_NAME = "STUDENT";
 
+    private static final String STUDENT_TB_NAME = "STUDENT";
     private static final String id = "ID";
     private static final String name = "TITLE";
     private static final String student_id = "STUDENT_ID";
@@ -27,16 +25,20 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String other_url = "OTHER_URL";
     private static final String home_city = "HOME_CITY";
 
+    private static final String FAVORITE_TB_NAME = "FAVORITE";
+    private static final String fav_id = "FAV_ID";
+    private static final String stud_id = "FAV_STUD_ID";
+
     private static final int DB_VERSION = 1;
 
-    private static final String CREATE_TB = "CREATE TABLE "+TB_NAME+
+    private static final String CREATE_TB_STUDENT = "CREATE TABLE "+ STUDENT_TB_NAME +
             "( " +
             id +" INTEGER PRIMARY KEY AUTOINCREMENT, " +
             name +" TEXT, " +
             student_id +" TEXT UNIQUE, " +
             mobile_no + " TEXT UNIQUE, " +
             date_of_birth + " TEXT, " +
-            down_image_url + " TEXT UNIQUE, " +
+            down_image_url + " TEXT, " +
             mobile_no_2 + " TEXT, " +
             email_1 + " TEXT , " +
             email_2 + " TEXT, " +
@@ -44,7 +46,12 @@ public class DBHelper extends SQLiteOpenHelper {
             other_url + " TEXT, " +
             home_city + " TEXT);";
 
-    private static final String DROP_TB = "DROP TABLE IF EXISTS " + TB_NAME;
+    private static final String CREATE_TABLE_FAVORITE = "CREATE TABLE " + FAVORITE_TB_NAME +
+            "( " +
+            fav_id + " INTEGER PRIMARY KEY AUTOINCREMENT, " ;
+
+
+    private static final String DROP_TB_STUDENT = "DROP TABLE IF EXISTS " + STUDENT_TB_NAME;
 
     public DBHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -52,12 +59,12 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        sqLiteDatabase.execSQL(CREATE_TB);
+        sqLiteDatabase.execSQL(CREATE_TB_STUDENT);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-        sqLiteDatabase.execSQL(DROP_TB);
+        sqLiteDatabase.execSQL(DROP_TB_STUDENT);
         onCreate(sqLiteDatabase);
     }
 
@@ -78,14 +85,14 @@ public class DBHelper extends SQLiteOpenHelper {
         contentValues.put(facebook_url, FB_Url);
         contentValues.put(other_url, Other_Url);
         contentValues.put(home_city, Home_City);
-        this.getWritableDatabase().insertOrThrow(TB_NAME, "", contentValues);
+        this.getWritableDatabase().insertOrThrow(STUDENT_TB_NAME, "", contentValues);
         this.getWritableDatabase().close();
 
     }
 
 
     public void updateData(String oldMobileNo, String newMobileNo) {
-        this.getWritableDatabase().execSQL("UPDATE "+TB_NAME+" SET "+mobile_no+" = '"+newMobileNo+"' "+" WHERE "+mobile_no+" = '"+oldMobileNo+"'");
+        this.getWritableDatabase().execSQL("UPDATE "+ STUDENT_TB_NAME +" SET "+mobile_no+" = '"+newMobileNo+"' "+" WHERE "+mobile_no+" = '"+oldMobileNo+"'");
         this.getWritableDatabase().close();
     }
 
@@ -106,18 +113,18 @@ public class DBHelper extends SQLiteOpenHelper {
         contentValues.put(other_url, Other_Url);
         contentValues.put(home_city, Home_City);
 
-        int result = this.getWritableDatabase().update(TB_NAME, contentValues, student_id+"='"+St_id+"'",null);
+        int result = this.getWritableDatabase().update(STUDENT_TB_NAME, contentValues, student_id+"='"+St_id+"'",null);
         this.getWritableDatabase().close();
         return result > 0;
     }
 
     public Cursor retrieveData (){
-        Cursor cursor = this.getReadableDatabase().rawQuery("SELECT * FROM "+TB_NAME, null);
+        Cursor cursor = this.getReadableDatabase().rawQuery("SELECT * FROM "+ STUDENT_TB_NAME, null);
         return cursor;
     }
 
     public Cursor retrieveDataInOrderToBirthdate () {
-        Cursor c = this.getReadableDatabase().rawQuery("SELECT * FROM "+TB_NAME+" ORDER BY "+date_of_birth+" ASC",null);
+        Cursor c = this.getReadableDatabase().rawQuery("SELECT * FROM "+ STUDENT_TB_NAME +" ORDER BY "+date_of_birth+" ASC",null);
         return c;
     }
 
