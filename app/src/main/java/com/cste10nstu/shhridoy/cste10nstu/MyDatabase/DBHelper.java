@@ -25,10 +25,6 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String other_url = "OTHER_URL";
     private static final String home_city = "HOME_CITY";
 
-    private static final String FAVORITE_TB_NAME = "FAVORITE";
-    private static final String fav_id = "FAV_ID";
-    private static final String stud_id = "FAV_STUD_ID";
-
     private static final int DB_VERSION = 1;
 
     private static final String CREATE_TB_STUDENT = "CREATE TABLE "+ STUDENT_TB_NAME +
@@ -45,10 +41,6 @@ public class DBHelper extends SQLiteOpenHelper {
             facebook_url + " TEXT UNIQUE, " +
             other_url + " TEXT, " +
             home_city + " TEXT);";
-
-    private static final String CREATE_TABLE_FAVORITE = "CREATE TABLE " + FAVORITE_TB_NAME +
-            "( " +
-            fav_id + " INTEGER PRIMARY KEY AUTOINCREMENT, " ;
 
 
     private static final String DROP_TB_STUDENT = "DROP TABLE IF EXISTS " + STUDENT_TB_NAME;
@@ -88,12 +80,6 @@ public class DBHelper extends SQLiteOpenHelper {
         this.getWritableDatabase().insertOrThrow(STUDENT_TB_NAME, "", contentValues);
         this.getWritableDatabase().close();
 
-    }
-
-
-    public void updateData(String oldMobileNo, String newMobileNo) {
-        this.getWritableDatabase().execSQL("UPDATE "+ STUDENT_TB_NAME +" SET "+mobile_no+" = '"+newMobileNo+"' "+" WHERE "+mobile_no+" = '"+oldMobileNo+"'");
-        this.getWritableDatabase().close();
     }
 
     public boolean updateData (String Name, String St_id, String Mbl_no,

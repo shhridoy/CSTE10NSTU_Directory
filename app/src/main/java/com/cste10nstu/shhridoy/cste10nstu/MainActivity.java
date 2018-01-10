@@ -117,12 +117,6 @@ public class MainActivity extends AppCompatActivity {
 
         setSupportActionBar(toolbar);
 
-        if (theme.equals("Dark")) {
-            llContact.setBackgroundColor(getResources().getColor(R.color.dark_color_primary));
-        } else {
-            llContact.setBackgroundColor(getResources().getColor(R.color.md_grey_300));
-        }
-
         scrollView.setVisibility(View.INVISIBLE);
 
         recyclerView.setHasFixedSize(true);
@@ -185,8 +179,11 @@ public class MainActivity extends AppCompatActivity {
                     llFavorite.setBackgroundColor(getResources().getColor(R.color.dark_color_secondary));
                 } else {
                     llContact.setBackgroundColor(getResources().getColor(R.color.md_grey_300));
-                    llBirthdays.setBackgroundColor(Color.WHITE);
-                    llFavorite.setBackgroundColor(Color.WHITE);
+                    llBirthdays.setBackgroundColor(getResources().getColor(R.color.indigo_400));
+                    llFavorite.setBackgroundColor(getResources().getColor(R.color.indigo_400));
+                    contactTv.setTextColor(Color.BLACK);
+                    favoriteTv.setTextColor(Color.WHITE);
+                    birthdayTv.setTextColor(Color.WHITE);
                 }
 
                 if (noData) {
@@ -215,8 +212,11 @@ public class MainActivity extends AppCompatActivity {
                     llContact.setBackgroundColor(getResources().getColor(R.color.dark_color_secondary));
                 } else {
                     llFavorite.setBackgroundColor(getResources().getColor(R.color.md_grey_300));
-                    llContact.setBackgroundColor(Color.WHITE);
-                    llBirthdays.setBackgroundColor(Color.WHITE);
+                    llContact.setBackgroundColor(getResources().getColor(R.color.indigo_400));
+                    llBirthdays.setBackgroundColor(getResources().getColor(R.color.indigo_400));
+                    contactTv.setTextColor(Color.WHITE);
+                    favoriteTv.setTextColor(Color.BLACK);
+                    birthdayTv.setTextColor(Color.WHITE);
                 }
                 loadFavoriteRyclerview();
             }
@@ -233,8 +233,11 @@ public class MainActivity extends AppCompatActivity {
                     llFavorite.setBackgroundColor(getResources().getColor(R.color.dark_color_secondary));
                 } else {
                     llBirthdays.setBackgroundColor(getResources().getColor(R.color.md_grey_300));
-                    llContact.setBackgroundColor(Color.WHITE);
-                    llFavorite.setBackgroundColor(Color.WHITE);
+                    llContact.setBackgroundColor(getResources().getColor(R.color.indigo_400));
+                    llFavorite.setBackgroundColor(getResources().getColor(R.color.indigo_400));
+                    contactTv.setTextColor(Color.WHITE);
+                    favoriteTv.setTextColor(Color.WHITE);
+                    birthdayTv.setTextColor(Color.BLACK);
                 }
                 scrollView.scrollTo(0, 0);
                 birthdayLists();
@@ -1081,6 +1084,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void changingTheme() {
         if (theme.equals("Dark")) {
+            llContact.setBackgroundColor(getResources().getColor(R.color.dark_color_primary));
             rlMain.setBackgroundColor(getResources().getColor(R.color.dark_color_primary));
             scrollView.setBackgroundColor(getResources().getColor(R.color.dark_color_primary));
             toolbar.setBackgroundColor(getResources().getColor(R.color.dark_color_secondary));
@@ -1088,6 +1092,12 @@ public class MainActivity extends AppCompatActivity {
             llFavorite.setBackgroundColor(getResources().getColor(R.color.dark_color_secondary));
             llBirthdays.setBackgroundColor(getResources().getColor(R.color.dark_color_secondary));
             contactTv.setTextColor(Color.WHITE);
+            favoriteTv.setTextColor(Color.WHITE);
+            birthdayTv.setTextColor(Color.WHITE);
+        } else {
+            llContact.setBackgroundColor(getResources().getColor(R.color.md_grey_300));
+            llBirthdays.setBackgroundColor(getResources().getColor(R.color.indigo_400));
+            llFavorite.setBackgroundColor(getResources().getColor(R.color.indigo_400));
             favoriteTv.setTextColor(Color.WHITE);
             birthdayTv.setTextColor(Color.WHITE);
         }
