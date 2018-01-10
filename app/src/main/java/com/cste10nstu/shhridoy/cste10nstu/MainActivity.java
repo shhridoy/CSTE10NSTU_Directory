@@ -115,6 +115,7 @@ public class MainActivity extends AppCompatActivity {
 
         changingTheme();
 
+
         setSupportActionBar(toolbar);
 
         scrollView.setVisibility(View.INVISIBLE);
