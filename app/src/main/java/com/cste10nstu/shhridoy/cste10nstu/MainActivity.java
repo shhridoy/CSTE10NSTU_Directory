@@ -112,10 +112,7 @@ public class MainActivity extends AppCompatActivity {
         theme = PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString("Theme", "White");
 
         initializeViews();
-
         changingTheme();
-
-
         setSupportActionBar(toolbar);
 
         scrollView.setVisibility(View.INVISIBLE);
