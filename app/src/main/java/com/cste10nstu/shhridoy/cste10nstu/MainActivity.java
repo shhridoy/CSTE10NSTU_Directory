@@ -53,7 +53,6 @@ import com.cste10nstu.shhridoy.cste10nstu.ListViewData.CustomAdapter;
 import com.cste10nstu.shhridoy.cste10nstu.ListViewData.ListUtils;
 import com.cste10nstu.shhridoy.cste10nstu.MyAnimations.AnimationUtil;
 import com.cste10nstu.shhridoy.cste10nstu.MyDatabase.DBHelper;
-import com.cste10nstu.shhridoy.cste10nstu.MyDatabase.DBHelperFav;
 import com.cste10nstu.shhridoy.cste10nstu.RecyclerViewData.ListItems;
 import com.cste10nstu.shhridoy.cste10nstu.RecyclerViewData.MyAdapter;
 import com.hitomi.cmlibrary.CircleMenu;
@@ -97,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private RelativeLayout rlMain;
     private LinearLayout llContact, llBirthdays, llFavorite;
-    private TextView contactTv, favoriteTv, birthdayTv;
+    private TextView contactTv, favoriteTv, birthdayTv, footerTv;
     private ScrollView scrollView;
     private String theme; // string value for app modes
 
@@ -116,6 +115,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         scrollView.setVisibility(View.INVISIBLE);
+        footerTv.setVisibility(View.INVISIBLE);
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -166,81 +166,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        llContact.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                recyclerView.setVisibility(View.VISIBLE);
-                scrollView.setVisibility(View.INVISIBLE);
-                if (theme.equals("Dark")) {
-                    llContact.setBackgroundColor(getResources().getColor(R.color.dark_color_primary));
-                    llBirthdays.setBackgroundColor(getResources().getColor(R.color.dark_color_secondary));
-                    llFavorite.setBackgroundColor(getResources().getColor(R.color.dark_color_secondary));
-                } else {
-                    llContact.setBackgroundColor(getResources().getColor(R.color.md_grey_300));
-                    llBirthdays.setBackgroundColor(getResources().getColor(R.color.indigo_400));
-                    llFavorite.setBackgroundColor(getResources().getColor(R.color.indigo_400));
-                    contactTv.setTextColor(Color.BLACK);
-                    favoriteTv.setTextColor(Color.WHITE);
-                    birthdayTv.setTextColor(Color.WHITE);
-                }
-
-                if (noData) {
-                    fab.show();
-                    if (isInternetOn()) {
-                        loadRecyclerViewFromJson();
-                    } else {
-                        Snackbar.make(findViewById(R.id.coordinatorMain), "Please turn your internet connection on to sync the data first time!!", Snackbar.LENGTH_LONG)
-                                .setAction("Action", null).show();
-                    }
-                } else {
-                    fab.hide();
-                    loadRecyclerViewFromDatabase();
-                }
-            }
-        });
-
-        llFavorite.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                recyclerView.setVisibility(View.VISIBLE);
-                scrollView.setVisibility(View.INVISIBLE);
-                if (theme.equals("Dark")) {
-                    llFavorite.setBackgroundColor(getResources().getColor(R.color.dark_color_primary));
-                    llBirthdays.setBackgroundColor(getResources().getColor(R.color.dark_color_secondary));
-                    llContact.setBackgroundColor(getResources().getColor(R.color.dark_color_secondary));
-                } else {
-                    llFavorite.setBackgroundColor(getResources().getColor(R.color.md_grey_300));
-                    llContact.setBackgroundColor(getResources().getColor(R.color.indigo_400));
-                    llBirthdays.setBackgroundColor(getResources().getColor(R.color.indigo_400));
-                    contactTv.setTextColor(Color.WHITE);
-                    favoriteTv.setTextColor(Color.BLACK);
-                    birthdayTv.setTextColor(Color.WHITE);
-                }
-                loadFavoriteRyclerview();
-            }
-        });
-
-        llBirthdays.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                recyclerView.setVisibility(View.INVISIBLE);
-                scrollView.setVisibility(View.VISIBLE);
-                if (theme.equals("Dark")) {
-                    llBirthdays.setBackgroundColor(getResources().getColor(R.color.dark_color_primary));
-                    llContact.setBackgroundColor(getResources().getColor(R.color.dark_color_secondary));
-                    llFavorite.setBackgroundColor(getResources().getColor(R.color.dark_color_secondary));
-                } else {
-                    llBirthdays.setBackgroundColor(getResources().getColor(R.color.md_grey_300));
-                    llContact.setBackgroundColor(getResources().getColor(R.color.indigo_400));
-                    llFavorite.setBackgroundColor(getResources().getColor(R.color.indigo_400));
-                    contactTv.setTextColor(Color.WHITE);
-                    favoriteTv.setTextColor(Color.WHITE);
-                    birthdayTv.setTextColor(Color.BLACK);
-                }
-                scrollView.scrollTo(0, 0);
-                birthdayLists();
-            }
-        });
+        selectionFunction();
 
         setNotification();
     }
@@ -377,6 +303,7 @@ public class MainActivity extends AppCompatActivity {
         contactTv = findViewById(R.id.ContactTV);
         favoriteTv = findViewById(R.id.FavoriteTV);
         birthdayTv = findViewById(R.id.BirthdayTv);
+        footerTv = findViewById(R.id.footerTV);
     }
 
     private void loadRecyclerViewFromJson() {
@@ -513,8 +440,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void loadFavoriteRyclerview () {
         itemsList.clear();
-        DBHelperFav dbHelperFav = new DBHelperFav(this);
-        Cursor cur = dbHelperFav.retrieveFavData();
+        dbHelper = new DBHelper(this);
+        Cursor cur = dbHelper.retrieveFavData();
         if (cur.getCount() == 0) {
             Toast.makeText(this, "Favorite is empty", Toast.LENGTH_LONG).show();
         } else {
@@ -1092,6 +1019,8 @@ public class MainActivity extends AppCompatActivity {
             contactTv.setTextColor(Color.WHITE);
             favoriteTv.setTextColor(Color.WHITE);
             birthdayTv.setTextColor(Color.WHITE);
+            footerTv.setTextColor(Color.WHITE);
+            footerTv.setBackgroundColor(getResources().getColor(R.color.dark_color_primary));
         } else {
             llContact.setBackgroundColor(getResources().getColor(R.color.md_grey_300));
             llBirthdays.setBackgroundColor(getResources().getColor(R.color.indigo_400));
@@ -1099,6 +1028,90 @@ public class MainActivity extends AppCompatActivity {
             favoriteTv.setTextColor(Color.WHITE);
             birthdayTv.setTextColor(Color.WHITE);
         }
+    }
+
+    private void selectionFunction() {
+        llContact.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                recyclerView.setVisibility(View.VISIBLE);
+                scrollView.setVisibility(View.INVISIBLE);
+                footerTv.setVisibility(View.INVISIBLE);
+                if (theme.equals("Dark")) {
+                    llContact.setBackgroundColor(getResources().getColor(R.color.dark_color_primary));
+                    llBirthdays.setBackgroundColor(getResources().getColor(R.color.dark_color_secondary));
+                    llFavorite.setBackgroundColor(getResources().getColor(R.color.dark_color_secondary));
+                } else {
+                    llContact.setBackgroundColor(getResources().getColor(R.color.md_grey_300));
+                    llBirthdays.setBackgroundColor(getResources().getColor(R.color.indigo_400));
+                    llFavorite.setBackgroundColor(getResources().getColor(R.color.indigo_400));
+                    contactTv.setTextColor(Color.BLACK);
+                    favoriteTv.setTextColor(Color.WHITE);
+                    birthdayTv.setTextColor(Color.WHITE);
+                }
+
+                noData = dbHelper.retrieveData().getCount() == 0;
+
+                if (noData) {
+                    fab.show();
+                    if (isInternetOn()) {
+                        loadRecyclerViewFromJson();
+                    } else {
+                        Snackbar.make(findViewById(R.id.coordinatorMain), "Please turn your internet connection on to sync the data first time!!", Snackbar.LENGTH_LONG)
+                                .setAction("Action", null).show();
+                    }
+                } else {
+                    fab.hide();
+                    loadRecyclerViewFromDatabase();
+                }
+            }
+        });
+
+        llFavorite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                noData = dbHelper.retrieveData().getCount() == 0;
+                recyclerView.setVisibility(View.VISIBLE);
+                scrollView.setVisibility(View.INVISIBLE);
+                footerTv.setVisibility(View.INVISIBLE);
+                if (theme.equals("Dark")) {
+                    llFavorite.setBackgroundColor(getResources().getColor(R.color.dark_color_primary));
+                    llBirthdays.setBackgroundColor(getResources().getColor(R.color.dark_color_secondary));
+                    llContact.setBackgroundColor(getResources().getColor(R.color.dark_color_secondary));
+                } else {
+                    llFavorite.setBackgroundColor(getResources().getColor(R.color.md_grey_300));
+                    llContact.setBackgroundColor(getResources().getColor(R.color.indigo_400));
+                    llBirthdays.setBackgroundColor(getResources().getColor(R.color.indigo_400));
+                    contactTv.setTextColor(Color.WHITE);
+                    favoriteTv.setTextColor(Color.BLACK);
+                    birthdayTv.setTextColor(Color.WHITE);
+                }
+                loadFavoriteRyclerview();
+            }
+        });
+
+        llBirthdays.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                recyclerView.setVisibility(View.INVISIBLE);
+                scrollView.setVisibility(View.VISIBLE);
+                footerTv.setVisibility(View.VISIBLE);
+                if (theme.equals("Dark")) {
+                    llBirthdays.setBackgroundColor(getResources().getColor(R.color.dark_color_primary));
+                    llContact.setBackgroundColor(getResources().getColor(R.color.dark_color_secondary));
+                    llFavorite.setBackgroundColor(getResources().getColor(R.color.dark_color_secondary));
+                } else {
+                    llBirthdays.setBackgroundColor(getResources().getColor(R.color.md_grey_300));
+                    llContact.setBackgroundColor(getResources().getColor(R.color.indigo_400));
+                    llFavorite.setBackgroundColor(getResources().getColor(R.color.indigo_400));
+                    contactTv.setTextColor(Color.WHITE);
+                    favoriteTv.setTextColor(Color.WHITE);
+                    birthdayTv.setTextColor(Color.BLACK);
+                }
+                scrollView.scrollTo(0, 0);
+                birthdayLists();
+            }
+        });
     }
 
 }

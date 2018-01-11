@@ -2,6 +2,7 @@ package com.cste10nstu.shhridoy.cste10nstu;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteException;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -16,6 +17,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cste10nstu.shhridoy.cste10nstu.ListViewData.CustomAdapter;
 import com.cste10nstu.shhridoy.cste10nstu.ListViewData.ListUtils;
@@ -45,6 +47,7 @@ public class SecondActivity extends AppCompatActivity {
     DBHelper dbHelper;
 
     private String theme;
+    private boolean added, removed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +60,9 @@ public class SecondActivity extends AppCompatActivity {
         imagePath = i.getStringExtra("ImagePath");
 
         theme = PreferenceManager.getDefaultSharedPreferences(this).getString("Theme", "White");
+
+        added = false;
+        removed = false;
 
         assignDataFromDatabase(Id);
 
@@ -136,16 +142,49 @@ public class SecondActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        //getMenuInflater().inflate(R.menu.menu_main, menu);
+        if (dbHelper.isExistsInFav(Id)) {
+            getMenuInflater().inflate(R.menu.menu_second_delete, menu);
+        } else {
+            getMenuInflater().inflate(R.menu.menu_second_add, menu);
+        }
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
+        dbHelper = new DBHelper(this);
 
         if (id == android.R.id.home) {
             finish();
+        } else if (id == R.id.menu_item_add) {
+            if ( dbHelper.isExistsInFav(Id) ) {
+                Toast.makeText(this, "Contact is already exists in favorite!", Toast.LENGTH_LONG).show();
+            } else {
+                if (added) {
+                    Toast.makeText(this, "Already added in favorite!", Toast.LENGTH_LONG).show();
+                } else {
+                    try {
+                        dbHelper.insertIntoFav(Id);
+                        added = true;
+                        Toast.makeText(this, "Contact added to favorite!", Toast.LENGTH_LONG).show();
+                    } catch (SQLiteException e) {
+                        Toast.makeText(this, "Contact can't be added to favorite!!", Toast.LENGTH_LONG).show();
+                    }
+                }
+            }
+        } else if (id == R.id.menu_item_delete) {
+            boolean deleted = dbHelper.deleteFromFav(Id);
+            if (removed) {
+                Toast.makeText(this, "Already removed from favorite!", Toast.LENGTH_LONG).show();
+            } else {
+                if (deleted) {
+                    removed = true;
+                    Toast.makeText(this, "Contact has been removed from favorite!", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(this, "Contact can't remove.", Toast.LENGTH_LONG).show();
+                }
+            }
         }
 
         return super.onOptionsItemSelected(item);

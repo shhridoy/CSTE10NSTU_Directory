@@ -194,4 +194,17 @@
 
     </ScrollView>
 
+    <TextView
+        android:id="@+id/footerTV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/md_grey_300"
+        android:text="Created by SH Hridoy"
+        android:textColor="@color/md_black_1000"
+        android:textStyle="italic"
+        android:textAlignment="center"
+        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
+        android:textAppearance="?android:attr/textAppearanceSmall"/>
+
 </RelativeLayout>
