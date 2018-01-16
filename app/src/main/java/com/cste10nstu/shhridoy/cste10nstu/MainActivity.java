@@ -1,5 +1,6 @@
 package com.cste10nstu.shhridoy.cste10nstu;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.Dialog;
@@ -8,17 +9,21 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
@@ -100,6 +105,21 @@ public class MainActivity extends AppCompatActivity {
     private ScrollView scrollView;
     private String theme; // string value for app modes
 
+    private static final int CALL_PERMISSION_CODE = 55;
+    private static final int WRITE_SD_PERMISSION_CODE = 77;
+    private static final int SMS_PERMISSION_CODE = 87;
+
+    public static final int MULTIPLE_PERMISSIONS = 10; // code you want.
+
+    String[] permissionsList = new String[]{
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.SEND_SMS,
+            Manifest.permission.CALL_PHONE,
+            Manifest.permission.SET_ALARM,
+            Manifest.permission.RECEIVE_BOOT_COMPLETED,
+            Manifest.permission.INTERNET
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -141,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
         dbHelper = new DBHelper(this);
         noData = dbHelper.retrieveData().getCount() == 0;
 
-        if (noData) {
+        /*if (noData) {
             fab.show();
             if (isInternetOn()) {
                 loadRecyclerViewFromJson();
@@ -152,6 +172,17 @@ public class MainActivity extends AppCompatActivity {
         } else {
             fab.hide();
             loadRecyclerViewFromDatabase();
+        }*/
+
+        if (isInternetOn()) {
+            loadRecyclerViewFromJson();
+        } else {
+            if(noData) {
+                Snackbar.make(findViewById(R.id.coordinatorMain), "Please turn your internet connection on to sync the data first time!!", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            } else {
+                loadRecyclerViewFromDatabase();
+            }
         }
 
         fab.setOnClickListener(new View.OnClickListener() {
@@ -167,6 +198,16 @@ public class MainActivity extends AppCompatActivity {
         });
 
         selectionFunction();
+
+        //callPermission();
+
+        int currentAPIVersion = Build.VERSION.SDK_INT;
+        if (currentAPIVersion >= android.os.Build.VERSION_CODES.M) {
+            Toast.makeText(MainActivity.this, "It's higher than lollipop.", Toast.LENGTH_LONG).show();
+            checkPermissions();
+        } else {
+            Toast.makeText(MainActivity.this, "It's lower than marshmallow.", Toast.LENGTH_LONG).show();
+        }
 
         setNotification();
     }
@@ -218,6 +259,7 @@ public class MainActivity extends AppCompatActivity {
 
         } else if (id == R.id.menu_item_downloadImage) {
             AlertDialog.Builder builder;
+            //writeInSDCardPermission();
             if (theme.equals("Dark")) {
                 builder = new AlertDialog.Builder(this, R.style.MyDialogThemeDark);
                 builder.setMessage(Html.fromHtml("<font color='#ffffff'>Do you want to download images for offline?</font>"));
@@ -258,6 +300,7 @@ public class MainActivity extends AppCompatActivity {
             return true;
 
         } else if (id == R.id.menu_item_smstoall) {
+            //smsPermission();
             typeSMSdialog();
             return true;
         } else if (id == R.id.menu_item_inpur_url) {
@@ -454,8 +497,8 @@ public class MainActivity extends AppCompatActivity {
                 adapter = new MyAdapter(itemsList, getApplicationContext(), 2);
                 recyclerView.setAdapter(adapter);
             }
+            adapter.notifyDataSetChanged();
         }
-        adapter.notifyDataSetChanged();
     }
 
     private void saveData (
@@ -529,6 +572,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void typeSMSdialog () {
+
         final Dialog myDialog = new Dialog(this);
         myDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         myDialog.setContentView(R.layout.message_dialog);
@@ -1052,7 +1096,7 @@ public class MainActivity extends AppCompatActivity {
 
                 noData = dbHelper.retrieveData().getCount() == 0;
 
-                if (noData) {
+                /*if (noData) {
                     fab.show();
                     if (isInternetOn()) {
                         loadRecyclerViewFromJson();
@@ -1060,6 +1104,14 @@ public class MainActivity extends AppCompatActivity {
                         Snackbar.make(findViewById(R.id.coordinatorMain), "Please turn your internet connection on to sync the data first time!!", Snackbar.LENGTH_LONG)
                                 .setAction("Action", null).show();
                     }
+                } else {
+                    fab.hide();
+                    loadRecyclerViewFromDatabase();
+                }*/
+
+                if (isInternetOn()) {
+                    fab.show();
+                    loadRecyclerViewFromJson();
                 } else {
                     fab.hide();
                     loadRecyclerViewFromDatabase();
@@ -1112,6 +1164,160 @@ public class MainActivity extends AppCompatActivity {
                 birthdayLists();
             }
         });
+    }
+
+    private void callPermission() {
+        int currentAPIVersion = Build.VERSION.SDK_INT;
+        if (currentAPIVersion >= android.os.Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CALL_PHONE)) {
+                    AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
+                    alertBuilder.setCancelable(true);
+                    alertBuilder.setTitle("Permission necessary");
+                    alertBuilder.setMessage("Call phone permission is necessary to make a call!!!");
+                    alertBuilder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.CALL_PHONE}, CALL_PERMISSION_CODE);
+                        }
+                    });
+                    AlertDialog alert = alertBuilder.create();
+                    alert.show();
+                } else {
+                    ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.CALL_PHONE}, CALL_PERMISSION_CODE);
+                }
+            }
+        }
+    }
+
+    private void writeInSDCardPermission() {
+        int currentAPIVersion = Build.VERSION.SDK_INT;
+        if (currentAPIVersion >= android.os.Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                    AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
+                    alertBuilder.setCancelable(true);
+                    alertBuilder.setTitle("Permission necessary");
+                    alertBuilder.setMessage("Write external storage permission is necessary to make directory for images!!!");
+                    alertBuilder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, WRITE_SD_PERMISSION_CODE);
+                        }
+                    });
+                    AlertDialog alert = alertBuilder.create();
+                    alert.show();
+                } else {
+                    ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, WRITE_SD_PERMISSION_CODE);
+                }
+            }
+        }
+    }
+
+    private void smsPermission() {
+        int currentAPIVersion = Build.VERSION.SDK_INT;
+        if (currentAPIVersion >= android.os.Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.SEND_SMS)) {
+                    AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
+                    alertBuilder.setCancelable(true);
+                    alertBuilder.setTitle("Permission necessary");
+                    alertBuilder.setMessage("Write external storage permission is necessary to make directory for images!!!");
+                    alertBuilder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.SEND_SMS}, SMS_PERMISSION_CODE);
+                        }
+                    });
+                    AlertDialog alert = alertBuilder.create();
+                    alert.show();
+                } else {
+                    ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.SEND_SMS}, SMS_PERMISSION_CODE);
+                }
+            }
+        }
+    }
+
+    /*
+    public void perm(){
+        int currentAPIVersion = Build.VERSION.SDK_INT;
+        if (currentAPIVersion >= android.os.Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "Already permitted", Toast.LENGTH_SHORT).show();
+            } else {
+                if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CALL_PHONE)) {
+                    Toast.makeText(this, "Call permission in needed!!", Toast.LENGTH_SHORT).show();
+                }
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CALL_PHONE}, CALL_PERMISSION_CODE);
+            }
+        }
+    }*/
+
+
+    private  void checkPermissions() {
+
+        /*if (checkPermissions()) {
+            //  permissions  granted.
+        }*/
+
+        int result;
+        List<String> listPermissionsNeeded = new ArrayList<>();
+        for (String p : permissionsList) {
+            result = ContextCompat.checkSelfPermission(this, p);
+            if (result != PackageManager.PERMISSION_GRANTED) {
+                listPermissionsNeeded.add(p);
+            }
+        }
+        if (!listPermissionsNeeded.isEmpty()) {
+            ActivityCompat.requestPermissions(this, listPermissionsNeeded.toArray(new String[listPermissionsNeeded.size()]),MULTIPLE_PERMISSIONS );
+            //return false;
+        }
+        //return true;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+
+            case MULTIPLE_PERMISSIONS:{
+                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    // permissions granted.
+                    Toast.makeText(this, "Permission granted.", Toast.LENGTH_SHORT).show();
+                } else {
+                    String permissionss = "";
+                    for (String per : permissionsList) {
+                        permissionss += "\n" + per;
+                    }
+                    // permissions list of don't granted permission
+                    Toast.makeText(this, "Permission doesn't granted.", Toast.LENGTH_SHORT).show();
+                }
+                return;
+            }
+
+            case CALL_PERMISSION_CODE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(this, "Access of making call is granted.", Toast.LENGTH_SHORT).show();
+                } else {
+                    //code for deny
+                    Toast.makeText(this, "Access of making call is denied.", Toast.LENGTH_SHORT).show();
+                }
+                break;
+
+            case WRITE_SD_PERMISSION_CODE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(this, "Access of write in sdcard is granted.", Toast.LENGTH_SHORT).show();
+                } else {
+                    //code for deny
+                    Toast.makeText(this, "Access of write in sdcard is denied.", Toast.LENGTH_SHORT).show();
+                }
+                break;
+
+            case SMS_PERMISSION_CODE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(this, "Access of sending SMS is granted.", Toast.LENGTH_SHORT).show();
+                } else {
+                    //code for deny
+                    Toast.makeText(this, "Access of sending SMS is denied.", Toast.LENGTH_SHORT).show();
+                }
+                break;
+        }
     }
 
 }
