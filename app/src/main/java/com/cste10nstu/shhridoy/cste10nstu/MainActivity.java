@@ -550,8 +550,9 @@ public class MainActivity extends AppCompatActivity {
         Cursor cur = dbHelper.retrieveFavData();
         if (cur.getCount() == 0) {
             ListItems listItems = new ListItems("No Contact", "ID: NULL", "CONTACT: NULL");
-            itemsList.add(listItems);
-            adapter = new MyAdapter(itemsList, getApplicationContext(), 2);
+            List<ListItems> dl = new ArrayList<>();
+            dl.add(listItems);
+            adapter = new MyAdapter(dl, getApplicationContext(), 2);
             recyclerView.setAdapter(adapter);
             Toast.makeText(this, "Favorite is empty", Toast.LENGTH_LONG).show();
         } else {
@@ -602,7 +603,7 @@ public class MainActivity extends AppCompatActivity {
                 );
 
                 if (updated) {
-                    toast = "Data has been up to dated!";
+                    //toast = "Data has been up to dated!";
                 } else {
                     toast = "Date doesn't updated!";
                 }
@@ -1179,12 +1180,7 @@ public class MainActivity extends AppCompatActivity {
                 }*/
 
                 if (isInternetOn()) {
-                    if(!dataSynced){
-                        loadRecyclerViewFromJson();
-                    } else {
-                        adapter = new MyAdapter(itemsList, getApplicationContext(), 1);
-                        recyclerView.setAdapter(adapter);
-                    }
+                    loadRecyclerViewFromJson();
                 } else {
                     fab.show();
                     loadRecyclerViewFromDatabase();
