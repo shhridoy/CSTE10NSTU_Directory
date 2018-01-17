@@ -37,6 +37,7 @@ import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.util.List;
+import java.util.Objects;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
@@ -92,13 +93,17 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         holder.callButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent callIntent = new Intent(Intent.ACTION_CALL);
-                callIntent.setData(Uri.parse("tel:"+Uri.encode(listItem.getMobile().substring(9).trim())));
-                if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                    return;
+                if ("NULL".equals(listItem.getMobile().substring(9).trim())) {
+                    Toast.makeText(context, "No contact available", Toast.LENGTH_SHORT).show();
+                } else {
+                    Intent callIntent = new Intent(Intent.ACTION_CALL);
+                    callIntent.setData(Uri.parse("tel:"+Uri.encode(listItem.getMobile().substring(9).trim())));
+                    if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                        return;
+                    }
+                    callIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(callIntent);
                 }
-                callIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(callIntent);
             }
 
         });
@@ -134,12 +139,16 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
         @Override
         public void onClick(View v) {
-            Intent intent = new Intent(context, SecondActivity.class);
-            intent.putExtra("Id", textViewid.getText().toString().substring(4).trim());
-            intent.putExtra("ImageUrl", imageUrl);
-            intent.putExtra("ImagePath", imagePath);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(intent);
+            if ("NULL".equals(textViewid.getText().toString().substring(4).trim())) {
+                Toast.makeText(context, "No favorite available", Toast.LENGTH_SHORT).show();
+            } else {
+                Intent intent = new Intent(context, SecondActivity.class);
+                intent.putExtra("Id", textViewid.getText().toString().substring(4).trim());
+                intent.putExtra("ImageUrl", imageUrl);
+                intent.putExtra("ImagePath", imagePath);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
+            }
         }
 
         @Override

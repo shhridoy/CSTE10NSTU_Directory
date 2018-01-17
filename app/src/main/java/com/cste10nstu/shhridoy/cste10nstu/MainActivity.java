@@ -42,6 +42,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -97,6 +98,7 @@ public class MainActivity extends AppCompatActivity {
     private DBHelper dbHelper;
     private Cursor cursor;
     private Boolean noData; // for checking if there are any data exists in the database
+    private boolean dataSynced, inFavorite, inBDlists;
 
     private Toolbar toolbar;
     private RelativeLayout rlMain;
@@ -105,19 +107,22 @@ public class MainActivity extends AppCompatActivity {
     private ScrollView scrollView;
     private String theme; // string value for app modes
 
+    // NOT NEEDED
     private static final int CALL_PERMISSION_CODE = 55;
     private static final int WRITE_SD_PERMISSION_CODE = 77;
     private static final int SMS_PERMISSION_CODE = 87;
 
-    public static final int MULTIPLE_PERMISSIONS = 10; // code you want.
+    // PERMISSION CODE
+    public static final int MULTIPLE_PERMISSIONS = 10;
 
-    String[] permissionsList = new String[]{
-            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            Manifest.permission.SEND_SMS,
+    // PERMISSION LIST
+    String[] permissionsList = new String[] {
             Manifest.permission.CALL_PHONE,
+            Manifest.permission.INTERNET,
+            Manifest.permission.SEND_SMS,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.SET_ALARM,
-            Manifest.permission.RECEIVE_BOOT_COMPLETED,
-            Manifest.permission.INTERNET
+            Manifest.permission.RECEIVE_BOOT_COMPLETED
     };
 
     @Override
@@ -137,13 +142,27 @@ public class MainActivity extends AppCompatActivity {
         scrollView.setVisibility(View.INVISIBLE);
         footerTv.setVisibility(View.INVISIBLE);
 
+        URL_List = new ArrayList<>();
+        itemsList = new ArrayList<>();
+        mobileNoList = new ArrayList<>();
+
+        dbHelper = new DBHelper(this);
+        noData = dbHelper.retrieveData().getCount() == 0;
+        dataSynced = false;
+        inFavorite = false;
+        inBDlists = false;
+
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         recyclerView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                fab.show();
+                if (inFavorite || inBDlists) {
+                    fab.hide();
+                } else {
+                    fab.show();
+                }
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -153,13 +172,6 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
-
-        URL_List = new ArrayList<>();
-        itemsList = new ArrayList<>();
-        mobileNoList = new ArrayList<>();
-
-        dbHelper = new DBHelper(this);
-        noData = dbHelper.retrieveData().getCount() == 0;
 
         /*if (noData) {
             fab.show();
@@ -175,9 +187,11 @@ public class MainActivity extends AppCompatActivity {
         }*/
 
         if (isInternetOn()) {
+            fab.hide();
             loadRecyclerViewFromJson();
         } else {
             if(noData) {
+                fab.show();
                 Snackbar.make(findViewById(R.id.coordinatorMain), "Please turn your internet connection on to sync the data first time!!", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             } else {
@@ -199,14 +213,9 @@ public class MainActivity extends AppCompatActivity {
 
         selectionFunction();
 
-        //callPermission();
-
         int currentAPIVersion = Build.VERSION.SDK_INT;
         if (currentAPIVersion >= android.os.Build.VERSION_CODES.M) {
-            Toast.makeText(MainActivity.this, "It's higher than lollipop.", Toast.LENGTH_LONG).show();
             checkPermissions();
-        } else {
-            Toast.makeText(MainActivity.this, "It's lower than marshmallow.", Toast.LENGTH_LONG).show();
         }
 
         setNotification();
@@ -334,6 +343,54 @@ public class MainActivity extends AppCompatActivity {
         }, 2000);
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+
+            case MULTIPLE_PERMISSIONS:{
+                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    // permissions granted.
+                    Toast.makeText(this, "Permission granted.", Toast.LENGTH_SHORT).show();
+                } else {
+                    String permissionss = "";
+                    for (String per : permissionsList) {
+                        permissionss += "\n" + per;
+                    }
+                    // permissions list of don't granted permission
+                    Toast.makeText(this, "Permission doesn't granted.", Toast.LENGTH_SHORT).show();
+                }
+                return;
+            }
+
+            case CALL_PERMISSION_CODE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(this, "Access of making call is granted.", Toast.LENGTH_SHORT).show();
+                } else {
+                    //code for deny
+                    Toast.makeText(this, "Access of making call is denied.", Toast.LENGTH_SHORT).show();
+                }
+                break;
+
+            case WRITE_SD_PERMISSION_CODE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(this, "Access of write in sdcard is granted.", Toast.LENGTH_SHORT).show();
+                } else {
+                    //code for deny
+                    Toast.makeText(this, "Access of write in sdcard is denied.", Toast.LENGTH_SHORT).show();
+                }
+                break;
+
+            case SMS_PERMISSION_CODE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(this, "Access of sending SMS is granted.", Toast.LENGTH_SHORT).show();
+                } else {
+                    //code for deny
+                    Toast.makeText(this, "Access of sending SMS is denied.", Toast.LENGTH_SHORT).show();
+                }
+                break;
+        }
+    }
+
     private void initializeViews() {
         toolbar = findViewById(R.id.toolbar);
         rlMain = findViewById(R.id.RLContentMain);
@@ -353,7 +410,12 @@ public class MainActivity extends AppCompatActivity {
         final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Loading data....");
         progressDialog.setCancelable(false);
-        progressDialog.show();
+        if (!dataSynced) {
+            progressDialog.show();
+        } else {
+            progressDialog.hide();
+        }
+        //ProgressBar progressBar = new ProgressBar(this, null, android.R.attr.progressBarStyle);
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, MY_DATA,
 
@@ -362,6 +424,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onResponse(String response) {
 
                         progressDialog.dismiss();
+                        dataSynced = true;
 
                         try {
                             itemsList.clear();
@@ -486,6 +549,10 @@ public class MainActivity extends AppCompatActivity {
         dbHelper = new DBHelper(this);
         Cursor cur = dbHelper.retrieveFavData();
         if (cur.getCount() == 0) {
+            ListItems listItems = new ListItems("No Contact", "ID: NULL", "CONTACT: NULL");
+            itemsList.add(listItems);
+            adapter = new MyAdapter(itemsList, getApplicationContext(), 2);
+            recyclerView.setAdapter(adapter);
             Toast.makeText(this, "Favorite is empty", Toast.LENGTH_LONG).show();
         } else {
             while (cur.moveToNext()) {
@@ -1078,6 +1145,8 @@ public class MainActivity extends AppCompatActivity {
         llContact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                inFavorite = false;
+                inBDlists = false;
                 recyclerView.setVisibility(View.VISIBLE);
                 scrollView.setVisibility(View.INVISIBLE);
                 footerTv.setVisibility(View.INVISIBLE);
@@ -1110,10 +1179,14 @@ public class MainActivity extends AppCompatActivity {
                 }*/
 
                 if (isInternetOn()) {
-                    fab.show();
-                    loadRecyclerViewFromJson();
+                    if(!dataSynced){
+                        loadRecyclerViewFromJson();
+                    } else {
+                        adapter = new MyAdapter(itemsList, getApplicationContext(), 1);
+                        recyclerView.setAdapter(adapter);
+                    }
                 } else {
-                    fab.hide();
+                    fab.show();
                     loadRecyclerViewFromDatabase();
                 }
             }
@@ -1123,6 +1196,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 noData = dbHelper.retrieveData().getCount() == 0;
+                inFavorite = true;
+                fab.hide();
                 recyclerView.setVisibility(View.VISIBLE);
                 scrollView.setVisibility(View.INVISIBLE);
                 footerTv.setVisibility(View.INVISIBLE);
@@ -1145,6 +1220,8 @@ public class MainActivity extends AppCompatActivity {
         llBirthdays.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                fab.hide();
+                inBDlists = true;
                 recyclerView.setVisibility(View.INVISIBLE);
                 scrollView.setVisibility(View.VISIBLE);
                 footerTv.setVisibility(View.VISIBLE);
@@ -1164,6 +1241,27 @@ public class MainActivity extends AppCompatActivity {
                 birthdayLists();
             }
         });
+    }
+
+    private  void checkPermissions() {
+
+        /*if (checkPermissions()) {
+            //  permissions  granted.
+        }*/
+
+        int result;
+        List<String> listPermissionsNeeded = new ArrayList<>();
+        for (String p : permissionsList) {
+            result = ContextCompat.checkSelfPermission(this, p);
+            if (result != PackageManager.PERMISSION_GRANTED) {
+                listPermissionsNeeded.add(p);
+            }
+        }
+        if (!listPermissionsNeeded.isEmpty()) {
+            ActivityCompat.requestPermissions(this, listPermissionsNeeded.toArray(new String[listPermissionsNeeded.size()]),MULTIPLE_PERMISSIONS );
+            //return false;
+        }
+        //return true;
     }
 
     private void callPermission() {
@@ -1232,91 +1330,6 @@ public class MainActivity extends AppCompatActivity {
                     ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.SEND_SMS}, SMS_PERMISSION_CODE);
                 }
             }
-        }
-    }
-
-    /*
-    public void perm(){
-        int currentAPIVersion = Build.VERSION.SDK_INT;
-        if (currentAPIVersion >= android.os.Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this, "Already permitted", Toast.LENGTH_SHORT).show();
-            } else {
-                if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CALL_PHONE)) {
-                    Toast.makeText(this, "Call permission in needed!!", Toast.LENGTH_SHORT).show();
-                }
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CALL_PHONE}, CALL_PERMISSION_CODE);
-            }
-        }
-    }*/
-
-
-    private  void checkPermissions() {
-
-        /*if (checkPermissions()) {
-            //  permissions  granted.
-        }*/
-
-        int result;
-        List<String> listPermissionsNeeded = new ArrayList<>();
-        for (String p : permissionsList) {
-            result = ContextCompat.checkSelfPermission(this, p);
-            if (result != PackageManager.PERMISSION_GRANTED) {
-                listPermissionsNeeded.add(p);
-            }
-        }
-        if (!listPermissionsNeeded.isEmpty()) {
-            ActivityCompat.requestPermissions(this, listPermissionsNeeded.toArray(new String[listPermissionsNeeded.size()]),MULTIPLE_PERMISSIONS );
-            //return false;
-        }
-        //return true;
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-
-            case MULTIPLE_PERMISSIONS:{
-                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                    // permissions granted.
-                    Toast.makeText(this, "Permission granted.", Toast.LENGTH_SHORT).show();
-                } else {
-                    String permissionss = "";
-                    for (String per : permissionsList) {
-                        permissionss += "\n" + per;
-                    }
-                    // permissions list of don't granted permission
-                    Toast.makeText(this, "Permission doesn't granted.", Toast.LENGTH_SHORT).show();
-                }
-                return;
-            }
-
-            case CALL_PERMISSION_CODE:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(this, "Access of making call is granted.", Toast.LENGTH_SHORT).show();
-                } else {
-                    //code for deny
-                    Toast.makeText(this, "Access of making call is denied.", Toast.LENGTH_SHORT).show();
-                }
-                break;
-
-            case WRITE_SD_PERMISSION_CODE:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(this, "Access of write in sdcard is granted.", Toast.LENGTH_SHORT).show();
-                } else {
-                    //code for deny
-                    Toast.makeText(this, "Access of write in sdcard is denied.", Toast.LENGTH_SHORT).show();
-                }
-                break;
-
-            case SMS_PERMISSION_CODE:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(this, "Access of sending SMS is granted.", Toast.LENGTH_SHORT).show();
-                } else {
-                    //code for deny
-                    Toast.makeText(this, "Access of sending SMS is denied.", Toast.LENGTH_SHORT).show();
-                }
-                break;
         }
     }
 

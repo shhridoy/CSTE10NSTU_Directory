@@ -293,10 +293,9 @@ public class CustomAdapter extends BaseAdapter {
         String Name = "Saiful Haque";
         while (c.moveToNext()){
             String name = c.getString(1);
-            String st_id = c.getString(2);
             String st_mobile = c.getString(3);
-            String date_of_birth = c.getString(4);
-            if (mobile_no.equals(st_mobile)) {
+            String st_mobile2 = c.getString(6);
+            if (mobile_no.equals(st_mobile) || mobile_no.equals(st_mobile2)) {
                 Name = name;
                 break;
             }

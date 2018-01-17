@@ -25,8 +25,6 @@
             android:gravity="center"
             android:orientation="vertical"
             android:background="#ffffff">
-            <!-- android:layout_marginRight="2dp"
-            android:layout_marginEnd="2dp"-->
             <ImageView
                 android:src="@drawable/ic_action_contacts"
                 android:layout_width="wrap_content"
@@ -50,10 +48,6 @@
             android:orientation="vertical"
             android:background="#ffffff">
 
-            <!--  android:layout_marginRight="2dp"
-            android:layout_marginEnd="2dp"
-            android:layout_marginLeft="2dp"
-            android:layout_marginStart="2dp" -->
             <ImageView
                 android:src="@android:drawable/star_big_on"
                 android:layout_width="wrap_content"
@@ -76,8 +70,6 @@
             android:gravity="center"
             android:orientation="vertical"
             android:background="#ffffff">
-            <!--android:layout_marginLeft="2dp"
-            android:layout_marginStart="2dp" -->
 
             <ImageView
                 android:src="@drawable/ic_action_birthday_red"
@@ -186,7 +178,8 @@
                 android:layout_height="wrap_content"
                 android:dividerHeight="0dp"
                 android:divider="@color/md_grey_300"
-                tools:ignore="NestedScrolling">
+                tools:ignore="NestedScrolling"
+                android:layout_marginBottom="20dp">
 
             </ListView>
 
