@@ -83,7 +83,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static String MY_DATA;
+    private static String MY_DATA; // URL ADDRESS OF JSON DATA
     private static List<String> URL_List; // contains all downloadable image URL
     private static int num = 0; // controls the sync task operation while downloading images
     private static int LENGTH; // contains the length of the json array or number of rows in database
@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
     private List<ListItems> itemsList;
     private String toast;
     private List<String> mobileNoList; // contains all mobile no. for messaging
-    FloatingActionButton fab;
+    FloatingActionButton fab; // SYNC FLOATING ACTION BUTTON
 
     private DBHelper dbHelper;
     private Cursor cursor;
