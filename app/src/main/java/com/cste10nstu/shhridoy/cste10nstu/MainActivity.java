@@ -42,7 +42,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -83,7 +82,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static String MY_DATA; // URL ADDRESS OF JSON DATA
+    private static String URL_LINK; // URL ADDRESS OF JSON DATA
     private static List<String> URL_List; // contains all downloadable image URL
     private static int num = 0; // controls the sync task operation while downloading images
     private static int LENGTH; // contains the length of the json array or number of rows in database
@@ -130,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        MY_DATA = PreferenceManager.getDefaultSharedPreferences(this)
+        URL_LINK = PreferenceManager.getDefaultSharedPreferences(this)
                 .getString("MY_URL", "https://shhridoy.github.io/json/csteallstudent.js");
 
         theme = PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString("Theme", "White");
@@ -172,19 +171,6 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
-
-        /*if (noData) {
-            fab.show();
-            if (isInternetOn()) {
-                loadRecyclerViewFromJson();
-            } else {
-                Snackbar.make(findViewById(R.id.coordinatorMain), "Please turn your internet connection on to sync the data first time!!", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        } else {
-            fab.hide();
-            loadRecyclerViewFromDatabase();
-        }*/
 
         if (isInternetOn()) {
             fab.hide();
@@ -310,7 +296,7 @@ public class MainActivity extends AppCompatActivity {
 
         } else if (id == R.id.menu_item_smstoall) {
             //smsPermission();
-            typeSMSdialog();
+            typeSMSDialog();
             return true;
         } else if (id == R.id.menu_item_inpur_url) {
             urlInputDialog();
@@ -323,22 +309,22 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    boolean backButoonPressedOnce = false;
+    boolean backButtonPressedOnce = false; // to check how many click occurs in back button
     @Override
     public void onBackPressed() {
-        if(backButoonPressedOnce){
+        if(backButtonPressedOnce){
             super.onBackPressed();
             return;
         }
 
-        this.backButoonPressedOnce = true;
+        this.backButtonPressedOnce = true;
         Snackbar snackbar = Snackbar.make(findViewById(R.id.coordinatorMain), "Please Press Back Again to Exit", Snackbar.LENGTH_SHORT);
         snackbar.show();
 
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                backButoonPressedOnce = false;
+                backButtonPressedOnce = false;
             }
         }, 2000);
     }
@@ -415,9 +401,8 @@ public class MainActivity extends AppCompatActivity {
         } else {
             progressDialog.hide();
         }
-        //ProgressBar progressBar = new ProgressBar(this, null, android.R.attr.progressBarStyle);
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, MY_DATA,
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL_LINK,
 
                 new Response.Listener<String>() {
                     @Override
@@ -544,7 +529,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void loadFavoriteRyclerview () {
+    public void loadFavoriteRecyclerView() {
         itemsList.clear();
         dbHelper = new DBHelper(this);
         Cursor cur = dbHelper.retrieveFavData();
@@ -639,7 +624,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void typeSMSdialog () {
+    private void typeSMSDialog() {
 
         final Dialog myDialog = new Dialog(this);
         myDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -791,7 +776,7 @@ public class MainActivity extends AppCompatActivity {
                             PreferenceManager.getDefaultSharedPreferences(MainActivity.this).edit()
                                     .putString("MY_URL", urlEt.getText().toString()).apply();
                             Toast.makeText(getApplicationContext(), "URL address saved!", Toast.LENGTH_LONG).show();
-                            MY_DATA = PreferenceManager.getDefaultSharedPreferences(MainActivity.this)
+                            URL_LINK = PreferenceManager.getDefaultSharedPreferences(MainActivity.this)
                                     .getString("MY_URL", "https://shhridoy.github.io/json/csteallstudent.js");
                             dialog.cancel();
                             myDialog.cancel();
@@ -1209,7 +1194,7 @@ public class MainActivity extends AppCompatActivity {
                     favoriteTv.setTextColor(Color.BLACK);
                     birthdayTv.setTextColor(Color.WHITE);
                 }
-                loadFavoriteRyclerview();
+                loadFavoriteRecyclerView();
             }
         });
 
