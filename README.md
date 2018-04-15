@@ -23,7 +23,6 @@ Twitter, Linkedin, Github etc.
 <p align="center">
 <img src="https://github.com/shhridoy/CSTE10NSTU_Directory/blob/master/ScreenShots/Screenshot_2018-03-09-00-53-42-899_com.cste10nstu.shhridoy.cste10nstu.png?raw=true" width="222">
 <img src="https://github.com/shhridoy/CSTE10NSTU_Directory/blob/master/ScreenShots/Screenshot_2018-03-09-00-54-33-595_com.cste10nstu.shhridoy.cste10nstu.png?raw=true" width="222">
-<img src="https://github.com/shhridoy/CSTE10NSTU_Directory/blob/master/ScreenShots/Screenshot_2018-03-09-00-55-26-720_com.cste10nstu.shhridoy.cste10nstu.png?raw=true" width="222">
 <img src="https://github.com/shhridoy/CSTE10NSTU_Directory/blob/master/ScreenShots/Screenshot_2018-03-09-00-55-33-332_com.cste10nstu.shhridoy.cste10nstu.png?raw=true" width="222">
 <img src="https://github.com/shhridoy/CSTE10NSTU_Directory/blob/master/ScreenShots/Screenshot_2018-03-09-00-54-50-663_com.cste10nstu.shhridoy.cste10nstu.png?raw=true" width="222">
 <img src="https://github.com/shhridoy/CSTE10NSTU_Directory/blob/master/ScreenShots/Screenshot_2018-03-09-00-55-41-541_com.cste10nstu.shhridoy.cste10nstu.png?raw=true" width="222">
