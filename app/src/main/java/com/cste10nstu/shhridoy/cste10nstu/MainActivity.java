@@ -99,6 +99,8 @@ public class MainActivity extends AppCompatActivity {
     private Boolean noData; // for checking if there are any data exists in the database
     private boolean dataSynced, inFavorite, inBDlists;
 
+    private static int link_turn = 0;
+
     private Toolbar toolbar;
     private RelativeLayout rlMain;
     private LinearLayout llContact, llBirthdays, llFavorite;
@@ -130,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         URL_LINK = PreferenceManager.getDefaultSharedPreferences(this)
-                .getString("MY_URL", "https://shhridoy.github.io/json/csteallstudent.js");
+                .getString("MY_URL", "https://shhridoy.github.io/json/csteallstudent.json");
 
         theme = PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString("Theme", "White");
 
@@ -488,8 +490,15 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         progressDialog.dismiss();
-                        Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
-                        loadRecyclerViewFromDatabase();
+                        Toast.makeText(getApplicationContext(), "First URL Failed!!", Toast.LENGTH_SHORT).show();
+                        link_turn++;
+                        // SECOND URL LINK WILL WORK IF FIRST ONE IS FAILED
+                        URL_LINK = "https://jsonblob.com/ec5ace46-4be8-11e8-97b7-91c794b0e723";
+                        if (link_turn > 1) {
+                            loadRecyclerViewFromDatabase();
+                        } else {
+                            loadRecyclerViewFromJson();
+                        }
                     }
                 });
 
