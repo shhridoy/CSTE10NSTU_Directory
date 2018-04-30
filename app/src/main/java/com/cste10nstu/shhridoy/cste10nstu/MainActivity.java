@@ -98,8 +98,7 @@ public class MainActivity extends AppCompatActivity {
     private Cursor cursor;
     private Boolean noData; // for checking if there are any data exists in the database
     private boolean dataSynced, inFavorite, inBDlists;
-
-    private static int link_turn = 0;
+    private static int trn = 0;
 
     private Toolbar toolbar;
     private RelativeLayout rlMain;
@@ -491,13 +490,13 @@ public class MainActivity extends AppCompatActivity {
                     public void onErrorResponse(VolleyError error) {
                         progressDialog.dismiss();
                         Toast.makeText(getApplicationContext(), "First URL Failed!!", Toast.LENGTH_SHORT).show();
-                        link_turn++;
                         // SECOND URL LINK WILL WORK IF FIRST ONE IS FAILED
-                        URL_LINK = "https://jsonblob.com/ec5ace46-4be8-11e8-97b7-91c794b0e723";
-                        if (link_turn > 1) {
-                            loadRecyclerViewFromDatabase();
-                        } else {
+                        URL_LINK = "https://jsonblob.com/api/ec5ace46-4be8-11e8-97b7-91c794b0e723";
+                        trn++;
+                        if (trn == 1) {
                             loadRecyclerViewFromJson();
+                        } else {
+                            loadRecyclerViewFromDatabase();
                         }
                     }
                 });
