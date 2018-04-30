@@ -79,7 +79,11 @@ public class SecondActivity extends AppCompatActivity {
         if (imageUrl != null) {
             Picasso.with(this).load(imageUrl).into(imageView);
         } else if (imagePath != null) {
-            Picasso.with(this).load(new File(imagePath)).into(imageView);
+            if (new File(imagePath).exists()) {
+                Picasso.with(this).load(new File(imagePath)).into(imageView);
+            } else {
+                Picasso.with(this).load(R.drawable.ic_action_contacts).into(imageView);
+            }
         } else {
             Picasso.with(this).load(new File("sdcard/cste10nstu/"+Id+".jpg")).into(imageView);
         }

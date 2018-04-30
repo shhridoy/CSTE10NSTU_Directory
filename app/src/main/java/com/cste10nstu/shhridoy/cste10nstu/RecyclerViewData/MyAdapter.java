@@ -85,7 +85,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         } else {
             String fileName = listItem.getId().substring(4)+".jpg";
             String path = "sdcard/cste10nstu/"+fileName;
-            Picasso.with(context).load(new File(path)).into(holder.imageView);
+            if (new File(path).exists()) {
+                Picasso.with(context).load(new File(path)).into(holder.imageView);
+            } else {
+                Picasso.with(context).load(R.drawable.ic_action_contacts).into(holder.imageView);
+            }
             holder.imagePath = path;
         }
 
