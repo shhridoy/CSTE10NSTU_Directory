@@ -80,7 +80,7 @@
                     android:layout_alignStart="@+id/nameTV" />
 
 
-                <ImageView
+                <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/imageTV"
                     android:src="@mipmap/ic_launcher"
                     android:layout_width="60dp"

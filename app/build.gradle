@@ -33,4 +33,5 @@ dependencies {
     implementation 'com.android.support:cardview-v7:26.1.0'
 
     compile 'com.github.Hitomis:CircleMenu:v1.0.2'
+    compile 'de.hdodenhof:circleimageview:2.2.0'
 }

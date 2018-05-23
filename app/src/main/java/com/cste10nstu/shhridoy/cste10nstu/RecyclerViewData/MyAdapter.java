@@ -39,6 +39,8 @@ import java.io.File;
 import java.util.List;
 import java.util.Objects;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
     private List<ListItems> itemsList = null;
@@ -122,7 +124,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnCreateContextMenuListener{
 
         TextView textViewName, textViewid, textViewMobile;
-        ImageView imageView;
+        CircleImageView imageView;
         ImageButton callButton;
         RelativeLayout rlItem;
         CardView cardView;
