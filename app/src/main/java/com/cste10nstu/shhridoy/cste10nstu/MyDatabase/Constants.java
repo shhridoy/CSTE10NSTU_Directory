@@ -4,7 +4,7 @@ package com.cste10nstu.shhridoy.cste10nstu.MyDatabase;
  * Created by Dream Land on 1/29/2018.
  */
 
-public class Contants {
+public class Constants {
 
     public static final String DB_NAME = "CSTE.db";
     public static final int DB_VERSION = 1;

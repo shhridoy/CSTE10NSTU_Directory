@@ -10,19 +10,19 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DBHelper extends SQLiteOpenHelper {
 
     public DBHelper(Context context) {
-        super(context, Contants.DB_NAME, null, Contants.DB_VERSION);
+        super(context, Constants.DB_NAME, null, Constants.DB_VERSION);
     }
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        sqLiteDatabase.execSQL(Contants.CREATE_TB_STUDENT);
-        sqLiteDatabase.execSQL(Contants.CREATE_TB_FAVORITE);
+        sqLiteDatabase.execSQL(Constants.CREATE_TB_STUDENT);
+        sqLiteDatabase.execSQL(Constants.CREATE_TB_FAVORITE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-        sqLiteDatabase.execSQL(Contants.DROP_TB_STUDENT);
-        sqLiteDatabase.execSQL(Contants.DROP_TB_FAVORITE);
+        sqLiteDatabase.execSQL(Constants.DROP_TB_STUDENT);
+        sqLiteDatabase.execSQL(Constants.DROP_TB_FAVORITE);
         onCreate(sqLiteDatabase);
     }
 
@@ -33,18 +33,18 @@ public class DBHelper extends SQLiteOpenHelper {
             String FB_Url, String Other_Url, String Home_City) {
 
         ContentValues contentValues = new ContentValues();
-        contentValues.put(Contants.name, Name);
-        contentValues.put(Contants.student_id, St_id);
-        contentValues.put(Contants.mobile_no, Mbl_no);
-        contentValues.put(Contants.date_of_birth, DateOfBirth);
-        contentValues.put(Contants.down_image_url, dwn_img_url);
-        contentValues.put(Contants.mobile_no_2, Mbl_no_2);
-        contentValues.put(Contants.email_1, Email_1);
-        contentValues.put(Contants.email_2, Email_2);
-        contentValues.put(Contants.facebook_url, FB_Url);
-        contentValues.put(Contants.other_url, Other_Url);
-        contentValues.put(Contants.home_city, Home_City);
-        this.getWritableDatabase().insertOrThrow(Contants.STUDENT_TABLE, "", contentValues);
+        contentValues.put(Constants.name, Name);
+        contentValues.put(Constants.student_id, St_id);
+        contentValues.put(Constants.mobile_no, Mbl_no);
+        contentValues.put(Constants.date_of_birth, DateOfBirth);
+        contentValues.put(Constants.down_image_url, dwn_img_url);
+        contentValues.put(Constants.mobile_no_2, Mbl_no_2);
+        contentValues.put(Constants.email_1, Email_1);
+        contentValues.put(Constants.email_2, Email_2);
+        contentValues.put(Constants.facebook_url, FB_Url);
+        contentValues.put(Constants.other_url, Other_Url);
+        contentValues.put(Constants.home_city, Home_City);
+        this.getWritableDatabase().insertOrThrow(Constants.STUDENT_TABLE, "", contentValues);
         this.getWritableDatabase().close();
 
     }
@@ -55,54 +55,54 @@ public class DBHelper extends SQLiteOpenHelper {
                             String Email_2, String FB_Url, String Other_Url, String Home_City ) {
 
         ContentValues contentValues = new ContentValues();
-        contentValues.put(Contants.name, Name);
-        contentValues.put(Contants.student_id, St_id);
-        contentValues.put(Contants.mobile_no, Mbl_no);
-        contentValues.put(Contants.date_of_birth, DateOfBirth);
-        contentValues.put(Contants.down_image_url, dwn_img_url);
-        contentValues.put(Contants.mobile_no_2, Mbl_no_2);
-        contentValues.put(Contants.email_1, Email_1);
-        contentValues.put(Contants.email_2, Email_2);
-        contentValues.put(Contants.facebook_url, FB_Url);
-        contentValues.put(Contants.other_url, Other_Url);
-        contentValues.put(Contants.home_city, Home_City);
+        contentValues.put(Constants.name, Name);
+        contentValues.put(Constants.student_id, St_id);
+        contentValues.put(Constants.mobile_no, Mbl_no);
+        contentValues.put(Constants.date_of_birth, DateOfBirth);
+        contentValues.put(Constants.down_image_url, dwn_img_url);
+        contentValues.put(Constants.mobile_no_2, Mbl_no_2);
+        contentValues.put(Constants.email_1, Email_1);
+        contentValues.put(Constants.email_2, Email_2);
+        contentValues.put(Constants.facebook_url, FB_Url);
+        contentValues.put(Constants.other_url, Other_Url);
+        contentValues.put(Constants.home_city, Home_City);
 
         int result = this.getWritableDatabase()
-                .update(Contants.STUDENT_TABLE, contentValues, Contants.student_id+"='"+St_id+"'",null);
+                .update(Constants.STUDENT_TABLE, contentValues, Constants.student_id+"='"+St_id+"'",null);
         this.getWritableDatabase().close();
         return result > 0;
     }
 
     // RETRIEVE ALL DATA FROM STUDENT TABLE
     public Cursor retrieveData (){
-        Cursor cursor = this.getReadableDatabase().rawQuery("SELECT * FROM "+ Contants.STUDENT_TABLE, null);
+        Cursor cursor = this.getReadableDatabase().rawQuery("SELECT * FROM "+ Constants.STUDENT_TABLE, null);
         return cursor;
     }
 
     // RETRIEVE ALL DATA FROM STUDENT TABLE ORDERED BY BIRTH DATE
     public Cursor retrieveDataInOrderToBirthdate () {
         Cursor c = this.getReadableDatabase()
-                .rawQuery("SELECT * FROM "+ Contants.STUDENT_TABLE +" ORDER BY "+Contants.date_of_birth+" ASC",null);
+                .rawQuery("SELECT * FROM "+ Constants.STUDENT_TABLE +" ORDER BY "+ Constants.date_of_birth+" ASC",null);
         return c;
     }
 
     // ADD DATA IN FAVORITE TABLE
     public void insertIntoFav(String sId) {
         ContentValues contentValues = new ContentValues();
-        contentValues.put(Contants.FAV_STUD_ID, sId);
-        this.getWritableDatabase().insertOrThrow(Contants.FAVORITE_TABLE, "", contentValues);
+        contentValues.put(Constants.FAV_STUD_ID, sId);
+        this.getWritableDatabase().insertOrThrow(Constants.FAVORITE_TABLE, "", contentValues);
         this.getWritableDatabase().close();
     }
 
     // CHECK IF DATA IS EXISTS IN FAVORITE TABLE
     public boolean isExistsInFav(String searchItem) {
-        String[] columns = { Contants.FAV_STUD_ID };
-        String selection = Contants.FAV_STUD_ID + " =?";
+        String[] columns = { Constants.FAV_STUD_ID };
+        String selection = Constants.FAV_STUD_ID + " =?";
         String[] selectionArgs = { searchItem };
         String limit = "1";
 
         Cursor cursor = this.getReadableDatabase()
-                .query(Contants.FAVORITE_TABLE, columns, selection, selectionArgs, null, null, null, limit);
+                .query(Constants.FAVORITE_TABLE, columns, selection, selectionArgs, null, null, null, limit);
 
         boolean exists = (cursor.getCount() > 0);
         cursor.close();
@@ -112,15 +112,15 @@ public class DBHelper extends SQLiteOpenHelper {
     // REMOVE A ROW FROM FAVORITE TABLE BASED ON STUDENT ID
     public boolean deleteFromFav(String sId){
         SQLiteDatabase db = this.getWritableDatabase();
-        int result = db.delete(Contants.FAVORITE_TABLE, Contants.FAV_STUD_ID +" = '"+sId+"'", null);
+        int result = db.delete(Constants.FAVORITE_TABLE, Constants.FAV_STUD_ID +" = '"+sId+"'", null);
         db.close();
         return result > 0;
     }
 
     // GET ALL STUDENT DATA WHICH IS ADDED IN FAVORITE TABLE
     public Cursor retrieveFavData () {
-        String sql = "SELECT * FROM "+Contants.STUDENT_TABLE+" INNER JOIN "+Contants.FAVORITE_TABLE+" ON "+
-                Contants.STUDENT_TABLE+"."+Contants.student_id+" = "+Contants.FAVORITE_TABLE+"."+Contants.FAV_STUD_ID;
+        String sql = "SELECT * FROM "+ Constants.STUDENT_TABLE+" INNER JOIN "+ Constants.FAVORITE_TABLE+" ON "+
+                Constants.STUDENT_TABLE+"."+ Constants.student_id+" = "+ Constants.FAVORITE_TABLE+"."+ Constants.FAV_STUD_ID;
 
         return this.getReadableDatabase().rawQuery(sql, null);
     }
