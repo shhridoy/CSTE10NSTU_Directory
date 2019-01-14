@@ -57,7 +57,9 @@ import com.cste10nstu.shhridoy.cste10nstu.ListViewData.BirthdayListItems;
 import com.cste10nstu.shhridoy.cste10nstu.ListViewData.CustomAdapter;
 import com.cste10nstu.shhridoy.cste10nstu.ListViewData.ListUtils;
 import com.cste10nstu.shhridoy.cste10nstu.MyAnimations.AnimationUtil;
+import com.cste10nstu.shhridoy.cste10nstu.MyDatabase.Constants;
 import com.cste10nstu.shhridoy.cste10nstu.MyDatabase.DBHelper;
+import com.cste10nstu.shhridoy.cste10nstu.MyValues.Values;
 import com.cste10nstu.shhridoy.cste10nstu.RecyclerViewData.ListItems;
 import com.cste10nstu.shhridoy.cste10nstu.RecyclerViewData.MyAdapter;
 import com.hitomi.cmlibrary.CircleMenu;
@@ -131,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         URL_LINK = PreferenceManager.getDefaultSharedPreferences(this)
-                .getString("MY_URL", "https://shhridoy.github.io/json/csteallstudent.json");
+                .getString("MY_URL", Values.FIRST_URL);
 
         theme = PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString("Theme", "White");
 
@@ -491,7 +493,7 @@ public class MainActivity extends AppCompatActivity {
                         progressDialog.dismiss();
                         Toast.makeText(getApplicationContext(), "First URL Failed!!", Toast.LENGTH_SHORT).show();
                         // SECOND URL LINK WILL WORK IF FIRST ONE IS FAILED
-                        URL_LINK = "https://jsonblob.com/api/ec5ace46-4be8-11e8-97b7-91c794b0e723";
+                        URL_LINK = Values.SECOND_URL;
                         trn++;
                         if (trn == 1) {
                             loadRecyclerViewFromJson();
