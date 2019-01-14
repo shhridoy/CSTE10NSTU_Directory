@@ -135,6 +135,7 @@ public class MainActivity extends AppCompatActivity {
         URL_LINK = PreferenceManager.getDefaultSharedPreferences(this)
                 .getString("MY_URL", Values.FIRST_URL);
 
+
         theme = PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString("Theme", "White");
 
         initializeViews();
